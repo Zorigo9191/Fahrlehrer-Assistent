@@ -1,7 +1,7 @@
 import "./index.css";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types/database.types";
-import Root from "./dashboards/root";
+import Root from "./dashboards/Root";
 
 const supabase = createClient<Database>(
   import.meta.env.VITE_SUPABASE_URL,

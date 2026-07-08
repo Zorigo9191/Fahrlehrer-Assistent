@@ -1,10 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Student from "./student/Student";
-import Instructor from "./instructor/Instructor";
-import Office from "./office/Office";
-
 import RoleSelection from "./login/RoleSelection";
 import LoginPage from "./login/LoginPage";
+import InstructorDashBoard from "./instructorDashBoard/InstructorDashBoard";
+import OfficeDashBoard from "./officeDashBoard/OfficeDashBoard";
+import StudentDashBoard from "./studentDashBoard/StudentDashBoard";
 
 export function Root() {
   const router = createBrowserRouter([
@@ -17,18 +16,19 @@ export function Root() {
           path: "/login/:role",
           element: <LoginPage />,
         },
+        {
+          path: "/dashboard/instructor",
+          element: <InstructorDashBoard />,
+        },
 
         {
-          path: "/student",
-          element: <Student />,
+          path: "/dashboard/student",
+          element: <StudentDashBoard />,
         },
+
         {
-          path: "/instructor",
-          element: <Instructor />,
-        },
-        {
-          path: "/office",
-          element: <Office />,
+          path: "/dashboard/office",
+          element: <OfficeDashBoard />,
         },
       ],
     },

@@ -3,28 +3,52 @@ import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface InputFieldgroupProps {
+type Role = "student" | "instructor" | "office";
+
+interface LoginFormProps {
   buttonColor: string;
+  role: Role | undefined;
 }
 
-export function InputFieldgroup({ buttonColor }: InputFieldgroupProps) {
+export function LoginForm({ buttonColor, role }: LoginFormProps) {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
+  function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+
+    switch (role) {
+      case "student":
+        navigate("/dashboard/student");
+        break;
+
+      case "instructor":
+        navigate("/dashboard/instructor");
+        break;
+
+      case "office":
+        navigate("/dashboard/office");
+        break;
+
+      default:
+        navigate("/");
+    }
+  }
 
   return (
     <form
+      onSubmit={handleLogin}
       className="
     w-full
     max-w-md
-    mx-auto
- 
-  "
+    mx-auto"
     >
       <FieldGroup
         className="
           space-y-5
-          sm:space-y-6
-        "
+          sm:space-y-6"
       >
         <Field>
           <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -39,7 +63,6 @@ export function InputFieldgroup({ buttonColor }: InputFieldgroupProps) {
               rounded-xl
               px-4
               text-base
-
               md:h-14
             "
           />
@@ -81,7 +104,6 @@ export function InputFieldgroup({ buttonColor }: InputFieldgroupProps) {
             w-full
             rounded-xl
             text-white
-
             md:h-14
 
             ${buttonColor}

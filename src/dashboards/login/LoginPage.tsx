@@ -1,11 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Briefcase, GraduationCap, User } from "lucide-react";
 import { Button } from "@/components/button";
-import { InputFieldgroup } from "@/dashboards/login/components/LoginForm";
+import { LoginForm } from "@/dashboards/login/components/LoginForm";
+
+type Role = "student" | "instructor" | "office";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { role } = useParams();
+  const { role } = useParams<{ role: Role }>();
 
   let title = "";
   let titleColor = "";
@@ -61,9 +63,9 @@ export default function LoginPage() {
           {title}
         </h1>
       </div>
-      {/* Inputfeld */}
+      {/* LoginForm */}
       <div className="w-full px-6 md:max-w-lg lg:max-w-xl mx-auto ">
-        <InputFieldgroup buttonColor={buttonColor} />
+        <LoginForm buttonColor={buttonColor} role={role} />
       </div>
 
       {/* Footer */}
