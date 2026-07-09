@@ -55,27 +55,44 @@ export default function LoginPage() {
 
   const content = (
     <div className="flex h-full items-center flex-col px-6 py-10 bg-white">
-      <div className="mt-10 flex flex-col items-center md:flex-row md:justify-center md:gap-6">
+      {/* Header */}
+      <div className="mt-10 mb-8 flex flex-col items-center md:flex-row md:justify-center md:gap-6">
         <h1
-          className={`text-center mt-15 text-2xl font-bold leading-14 bg-clip-text md:text-left ${titleColor}`}
+          className={`text-center text-2xl font-bold bg-clip-text ${titleColor}`}
         >
-          <Icon className="inline-block mr-2 " size={32} />
+          <Icon className="inline-block mr-2" size={32} />
           {title}
         </h1>
       </div>
-      {/* LoginForm */}
-      <div className="w-full px-6 md:max-w-lg lg:max-w-xl mx-auto ">
+
+      {/* Formular-Container */}
+      <div className="w-full max-w-md mx-auto">
         <LoginForm buttonColor={buttonColor} role={role} />
       </div>
 
-      {/* Footer */}
-      <div className="mt-auto flex flex-col items-start gap-3 pb-3 text-slate-700 md:flex-row md:justify-center md:items-center">
+      {/* Footer-Container mit exakt gleicher Breite (max-w-md) und Abstand nach oben */}
+      <div className="w-full max-w-md mx-auto mt-6 pb-3">
         <Button
           onClick={() => navigate("/")}
-          className={`mb-20 w-70 h-15 justify-center items-center gap-4 rounded-xl px-5 py-4 ${textColor} ${borderColor} border-2`}
+          className={`
+            w-full
+            h-12
+            md:h-14
+            flex
+            justify-center
+            items-center
+            gap-4
+            rounded-xl
+            px-5
+            font-medium
+            bg-transparent
+            ${textColor}
+            ${borderColor}
+            border-2
+          `}
         >
-          <Icon size={24} />
-          <span className="font-semibold">Zurück zur Rollenauswahl</span>
+          <Icon size={20} />
+          <span>Zurück zur Rollenauswahl</span>
         </Button>
       </div>
     </div>
@@ -85,16 +102,16 @@ export default function LoginPage() {
     <div className="min-h-screen w-full bg-slate-100 flex justify-center">
       <div
         className="
-        w-full 
-        min-h-screen 
-        bg-white
-        md:max-w-3xl
-        md:my-8
-        md:min-h-[calc(100vh-4rem)]
-        md:rounded-2xl
-        md:shadow-xl
-        lg:max-w-5xl
-      "
+          w-full 
+          min-h-screen 
+          bg-white
+          md:max-w-3xl
+          md:my-8
+          md:min-h-[calc(100vh-4rem)]
+          md:rounded-2xl
+          md:shadow-xl
+          lg:max-w-5xl
+        "
       >
         {content}
       </div>

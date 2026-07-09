@@ -1,4 +1,6 @@
 import { Button } from "@/components/button";
+import Footer from "@/components/footer";
+
 import {
   CalendarDays,
   User,
@@ -7,23 +9,21 @@ import {
   Trash2,
   LogOut,
   GraduationCap,
-  Users,
-  ClipboardList,
-  House,
 } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-let Icon = GraduationCap;
+import ExamList from "../examLists/ExamList";
 
 export default function InstructorDashBoard() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const instructorDashBoard = (
-    <div className="flex flex-col w-full  gap-8 px-6 py-8 bg-white">
+    <div className="flex flex-col w-full gap-8 py-8 bg-white">
       <div className="flex gap-1 w-full h-full bg-blue-700 py-4 px-3 rounded-xl  text-white">
         <div className=" flex  items-center w-full justify-between">
           <h1 className="text-2xl text-white font-bold items-center flex gap-2 ">
-            <Icon size={32} />
+            <GraduationCap size={32} />
             Fahrlehrer Dashboard
           </h1>
           <p className="py-4 px-3">Max MusterMann</p>
@@ -136,30 +136,30 @@ export default function InstructorDashBoard() {
           md:rounded-2xl
           md:shadow-xl
           lg:max-w-5xl
+          flex flex-col       
+          overflow-hidden
         "
       >
-        {/* Inhalt wächst */}
-        <main className="flex-1">{instructorDashBoard}</main>
+        <main className="flex-1 p-4 pb-8">
+          <div className="flex-1">
+            {activeTab === "dashboard" && instructorDashBoard}
 
-        {/* Footer */}
-        <footer className="border-t bg-white">
-          <div className="flex h-16 items-center justify-around">
-            <button className="flex flex-col items-center text-blue-600">
-              <House size={22} />
-              <span className="text-xs mt-1">Dashboard</span>
-            </button>
+            {activeTab === "pruefungsliste" && <ExamList />}
 
-            <button className="flex flex-col items-center text-slate-500">
-              <ClipboardList size={22} />
-              <span className="text-xs mt-1">Prüfungsliste</span>
-            </button>
-
-            <button className="flex flex-col items-center text-slate-500">
-              <Users size={22} />
-              <span className="text-xs mt-1">Schülerliste</span>
-            </button>
+            {activeTab === "schuelerliste" && (
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-blue-700 mb-4">
+                  Schülerliste
+                </h2>
+                <p className="text-slate-600">Hier kommen Schüler hin...</p>
+              </div>
+            )}
           </div>
-        </footer>
+
+          <div className="w-full mt-auto pt-4">
+            <Footer activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
+        </main>
       </div>
     </div>
   );
