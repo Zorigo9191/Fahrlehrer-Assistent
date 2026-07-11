@@ -1,4 +1,6 @@
 import { Button } from "@/components/button";
+import Statuslight, { type Status } from "@/components/statusLights";
+
 import { Zap, Pencil, Trash2, Clock, Car, Bike } from "lucide-react";
 import { useState } from "react";
 
@@ -15,17 +17,19 @@ const licenseClasses = [
 
 export default function ExamList() {
   const [selectedClass, setSelectedClass] = useState("B197");
+  const [status, setStatus] = useState<Status>("red");
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
   );
 
   return (
-    <div className="rounded-xl border border-blue-700 p-4 overflow-hidden">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="rounded-xl border border-blue-700 p-4 overflow-hidden ">
+      <div className="flex items-center gap-4 mb-4">
         <Zap className="text-yellow-500" size={20} />
 
         <h2 className="text-lg font-bold text-blue-700">Termin 1</h2>
+        <Statuslight status={status} />
       </div>
 
       <div className="flex items-center gap-10 flex-wrap">

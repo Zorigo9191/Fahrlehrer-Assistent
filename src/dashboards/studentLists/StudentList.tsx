@@ -11,6 +11,9 @@ import {
   MessageSquareQuote,
   ExternalLink,
 } from "lucide-react";
+import { useState } from "react";
+import StudentRegisterForm from "./StudentRegisterForm";
+import FeedbackForm from "./FeedbackForm";
 
 type StudentListProps = {
   setActiveTab: (tab: string) => void;
@@ -41,6 +44,9 @@ const students = [
 ];
 
 export default function StudentList({ setActiveTab }: StudentListProps) {
+  const [showRegister, setShowRegister] = useState(false);
+  const [feedbackGive, setFeedbackGive] = useState(false);
+
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
@@ -56,11 +62,32 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
       <div className="flex justify-between gap-2">
         <Button
           variant="ghost"
+          onClick={() => setShowRegister(true)}
           className="flex w-52 items-center gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
         >
           <Plus />
           Schüler hinzufügen
         </Button>
+
+        {showRegister && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+              <Button
+                variant="ghost"
+                onClick={() => setShowRegister(false)}
+                className="absolute right-4 top-3 text-gray-500 hover:text-black"
+              >
+                <X />
+              </Button>
+
+              <StudentRegisterForm
+                onClose={() => {
+                  setShowRegister(false);
+                }}
+              />
+            </div>
+          </div>
+        )}
 
         <Button
           variant="ghost"
@@ -127,13 +154,36 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
               Bearbeiten
             </Button>
 
+            {/* Feedback geben Button
+               Feedback wird in einem Fenster angezeigt */}
             <Button
               variant="ghost"
+              onClick={() => setFeedbackGive(true)}
               className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
             >
               <MessageSquareQuote size={14} />
               Feedback geben
             </Button>
+
+            {feedbackGive && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4">
+                <div className="relative w-full max-w-md max-h-[90vh]  overflow-y-auto rounded-xl bg-white p-6 shadow-2xl">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setFeedbackGive(false)}
+                    className="absolute right-4 top-3 text-gray-500 hover:text-black"
+                  >
+                    <X />
+                  </Button>
+
+                  <FeedbackForm
+                    onClose={() => {
+                      setFeedbackGive(false);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
             <Button
               variant="ghost"

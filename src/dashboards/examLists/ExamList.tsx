@@ -9,15 +9,7 @@ type ExamListProps = {
 
 export default function ExamList({ setActiveTab }: ExamListProps) {
   const examDates = ["Datum 1", "Datum 2", "Datum 3", "Datum 4"];
-  const examAppointments = [
-    "08:00",
-    "08:55",
-    "09:50",
-    "10:45",
-    "11:40",
-    "12:55",
-    "13:50",
-  ];
+
   const [activeDate, setActiveDate] = useState("Datum 1");
 
   return (
