@@ -9,72 +9,100 @@ import {
   Trash2,
   LogOut,
   GraduationCap,
+  Clock,
+  Bell,
+  ClipboardList,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ExamList from "../examLists/ExamList";
+import StudentList from "../studentLists/StudentList";
 
 export default function InstructorDashBoard() {
   const navigate = useNavigate();
+  const notificationCount = 12;
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const instructorDashBoard = (
-    <div className="flex flex-col w-full gap-8 py-8 bg-white">
-      <div className="flex gap-1 w-full h-full bg-blue-700 py-4 px-3 rounded-xl  text-white">
-        <div className=" flex  items-center w-full justify-between">
-          <h1 className="text-2xl text-white font-bold items-center flex gap-2 ">
-            <GraduationCap size={32} />
+    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+      {/* Header */}
+      <div className="flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white">
+        <div className="flex items-center w-full justify-between">
+          <h1 className="text-xl text-white font-bold flex items-center gap-2">
+            <GraduationCap size={28} />
             Fahrlehrer Dashboard
           </h1>
-          <p className="py-4 px-3">Max MusterMann</p>
+
+          <p className="text-sm font-semibold">Max MusterMann</p>
         </div>
       </div>
 
-      <div className="flex w-full justify-end">
+      {/* Abmelden */}
+      <div className="flex justify-between gap-4">
+        {/* Benachritigungen */}
+        <div className="flex gap-2">
+          <ClipboardList size={22} /> Prüfungsliste
+          <div className="relative">
+            <Bell className="text-yellow-500" size={20} />
+
+            {notificationCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {notificationCount > 99 ? "99+" : notificationCount}
+              </span>
+            )}
+          </div>
+        </div>
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 px-3 text-blue-700  hover:bg-blue-100 font-bold border border-blue-700 transition"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
         >
-          <LogOut className="h-5 w-5 text-blue-700  hover:bg-blue-500 " />
+          <LogOut size={16} />
           Abmelden
         </Button>
       </div>
 
-      {/* Fahrstunde vergeben*/}
-      <div className="rounded-xl border border-blue-700 p-6">
-        <div className="flex items-center gap-3 mb-5">
-          <Zap className="text-yellow-500" size={22} />
-          <h2 className="text-xl font-bold text-blue-700">
+      {/* Fahrstunde vergeben */}
+      <div className="rounded-xl border border-blue-700 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Zap className="text-yellow-500" size={20} />
+
+          <h2 className="text-lg font-bold text-blue-700">
             Fahrstunde zu vergeben
           </h2>
         </div>
 
-        <div className="space-y-2 text-slate-700 p-5">
-          <p className="font-bold">Montag • 25.07.2026</p>
+        <div className="flex  gap-4 space-y-2 text-slate-700 p-3">
+          <div className="flex gap-2">
+            <CalendarDays size={16} />
+            <p className="text-sm font-semibold">Montag - 25.07.2026,</p>
+          </div>
 
-          <p className="font-bold">14:00 - 15:30 Uhr</p>
+          <div className="flex gap-1">
+            <Clock className="text-blue-700" size={18} />
+            <p className="text-sm font-semibold">14:00 - 15:30 Uhr</p>
+          </div>
         </div>
 
-        <div className="flex flex-row gap-4 max-md:flex-col mt-6 p-5">
+        <div className="flex gap-2 mt-5 flex-wrap">
           <Button
             variant="ghost"
-            className="flex items-center gap-2 px-3 text-blue-700  hover:bg-blue-100 font-bold border border-blue-700 transition"
+            className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
             Terminanfrage senden
           </Button>
 
           <Button
             variant="ghost"
-            className="flex items-center gap-2 px-3 text-blue-700  hover:bg-blue-100 font-bold border border-blue-700 transition"
+            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
-            <Pencil size={16} />
+            <Pencil size={14} />
             Bearbeiten
           </Button>
 
           <Button
             variant="ghost"
-            className="flex items-center gap-2 px-3  hover:bg-blue-100 font-bold border border-red-500 text-red-500 transition"
+            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
           >
             Abbrechen
           </Button>
@@ -82,39 +110,48 @@ export default function InstructorDashBoard() {
       </div>
 
       {/* Angenommene Fahrstunde */}
-      <div className="flex flex-col  rounded-xl border border-blue-700 p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <CalendarDays className="text-slate-700" size={22} />
-          <h2 className="text-xl font-semibold text-blue-700">
+      <div className="rounded-xl border border-blue-700 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarDays className="text-slate-700" size={20} />
+
+          <h2 className="text-lg font-bold text-blue-700">
             Angenommene Fahrstunde
           </h2>
         </div>
 
-        <div className="rounded-lg p-5">
-          <div className="flex items-center gap-3 mb-3 text-slate-700">
-            <CalendarDays size={18} />
+        <div className="rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
+            <CalendarDays size={16} />
+
             <span>
               Vergebene Fahrstunde:
               <strong> 20.07.2026, 08:30 Uhr</strong>
             </span>
           </div>
 
-          <div className="flex items-center gap-3 mb-6 text-slate-700">
-            <User size={18} />
+          <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+            <User size={16} />
+
             <span>
               Angenommen von:
               <strong> Thomas Bauer B197</strong>
             </span>
           </div>
 
-          <div className="flex flex-row gap-4 max-md:flex-col ">
-            <Button className="flex items-center gap-2 rounded-lg border border-blue-500 px-5 py-2 text-blue-600 hover:bg-blue-50 transition">
-              <Pencil size={16} />
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="ghost"
+              className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+            >
+              <Pencil size={14} />
               Bearbeiten
             </Button>
 
-            <Button className="flex items-center gap-2 rounded-lg border border-red-500 px-5 py-2 text-red-500 hover:bg-red-50 transition">
-              <Trash2 size={16} />
+            <Button
+              variant="ghost"
+              className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
+            >
+              <Trash2 size={14} />
               Löschen
             </Button>
           </div>
@@ -136,23 +173,18 @@ export default function InstructorDashBoard() {
           md:rounded-2xl
           md:shadow-xl
           lg:max-w-5xl
-          flex flex-col       
+          flex flex-col
           overflow-hidden
         "
       >
         <main className="flex-1 p-4 pb-8">
           <div className="flex-1">
             {activeTab === "dashboard" && instructorDashBoard}
-
-            {activeTab === "pruefungsliste" && <ExamList />}
-
+            {activeTab === "pruefungsliste" && (
+              <ExamList setActiveTab={setActiveTab} />
+            )}
             {activeTab === "schuelerliste" && (
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-blue-700 mb-4">
-                  Schülerliste
-                </h2>
-                <p className="text-slate-600">Hier kommen Schüler hin...</p>
-              </div>
+              <StudentList setActiveTab={setActiveTab} />
             )}
           </div>
 

@@ -1,134 +1,72 @@
 import { Button } from "@/components/button";
-import { Zap, Pencil, Trash2, List, X } from "lucide-react";
+import { List, X } from "lucide-react";
+import ExamCard from "./ExamCard";
+import { useState } from "react";
 
-export default function ExamList() {
-  const licenseClasses = ["B197", "B78", "B", "BE", "AM", "A1", "A2", "A"];
+type ExamListProps = {
+  setActiveTab: (tab: string) => void;
+};
+
+export default function ExamList({ setActiveTab }: ExamListProps) {
+  const examDates = ["Datum 1", "Datum 2", "Datum 3", "Datum 4"];
+  const examAppointments = [
+    "08:00",
+    "08:55",
+    "09:50",
+    "10:45",
+    "11:40",
+    "12:55",
+    "13:50",
+  ];
+  const [activeDate, setActiveDate] = useState("Datum 1");
 
   return (
-    <div className="flex flex-col w-full gap-8 py-8 bg-white">
+    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
-      <div className="flex gap-1 w-full h-full bg-blue-700 py-4 px-3 rounded-xl  text-white">
-        <div className=" flex  items-center w-full justify-between">
-          <h1 className="text-2xl text-white font-bold items-center flex gap-2 ">
+      <div className="flex gap-1 w-full h-full bg-blue-700 py-2 px-3 rounded-xl text-white">
+        <div className="flex items-center w-full justify-between">
+          <h2 className="text-xl text-white font-bold flex items-center gap-2">
             <List size={32} />
             Prüfungsliste
-          </h1>
-          <p className="py-4 px-3">Max MusterMann</p>
+          </h2>
         </div>
       </div>
 
-      {/* Schließen Button */}
-      <div className="flex w-full justify-end">
+      {/* Schließen */}
+      <div className="flex justify-end">
         <Button
           variant="ghost"
-          className="
-            flex items-center gap-2 px-3 
-            text-blue-700 
-            hover:bg-blue-100 
-            font-bold 
-            border border-blue-700 
-            transition
-          "
+          onClick={() => setActiveTab("dashboard")}
+          className="flex items-center gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
         >
-          <X /> Schließen
+          <X />
+          schließen
         </Button>
       </div>
 
-      {/* Datum Buttons */}
+      {/* Datum */}
       <div className="flex gap-2 flex-wrap">
-        {["Datum 1", "Datum 2", "Datum 3", "Datum 4"].map((date) => (
+        {examDates.map((date) => (
           <Button
             key={date}
             variant="ghost"
-            className="
-              px-3 
-              text-blue-700 
-              hover:bg-blue-100 
-              font-bold 
-              border 
-              border-blue-700
-            "
+            onClick={() => setActiveDate(date)}
+            className={`border
+          >
+            ${
+              activeDate === date
+                ? "bg-blue-700 text-white hover:bg-blue-800"
+                : "text-blue-700 hover:bg-blue-100"
+            }
+            `}
           >
             {date}
           </Button>
         ))}
       </div>
 
-      {/* Prüfung */}
-      <div className="rounded-xl border border-blue-700 p-6">
-        <div className="flex items-center gap-3 mb-5">
-          <Zap className="text-yellow-500" size={22} />
-
-          <h2 className="text-xl font-bold text-blue-700">
-            Prüfungstermin buchen
-          </h2>
-        </div>
-
-        <div className="space-y-4 text-slate-700 p-5">
-          <p className="font-bold">14:00 - 15:30 Uhr</p>
-
-          <span className="font-bold">Name des Schülers</span>
-
-          <select
-            className="
-              w-full 
-              rounded-md 
-              border 
-              border-slate-300 
-              p-2
-            "
-          >
-            <option>Führerscheinklasse wählen</option>
-
-            {licenseClasses.map((category) => (
-              <option key={category}>{category}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-row gap-4 max-md:flex-col mt-6 p-5">
-          <Button
-            variant="ghost"
-            className="
-              flex items-center gap-2 px-3 
-              text-blue-700 
-              hover:bg-blue-100 
-              font-bold 
-              border border-blue-700
-            "
-          >
-            Speichern
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="
-              flex items-center gap-2 px-3 
-              text-blue-700 
-              hover:bg-blue-100 
-              font-bold 
-              border border-blue-700
-            "
-          >
-            <Pencil size={16} />
-            Bearbeiten
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="
-              flex items-center gap-2 px-3 
-              hover:bg-red-50 
-              font-bold 
-              border border-red-500 
-              text-red-500
-            "
-          >
-            <Trash2 size={16} />
-            Schüler Löschen
-          </Button>
-        </div>
-      </div>
+      {/* PrüfungsKastchen*/}
+      <ExamCard />
     </div>
   );
 }
