@@ -2,6 +2,7 @@ import { Button } from "@/components/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
 import Textarea from "@/components/textArea";
+import { Ban, Save } from "lucide-react";
 
 type FeedbackFormProps = {
   onClose: () => void;
@@ -9,10 +10,12 @@ type FeedbackFormProps = {
 
 export default function FeedbackForm({ onClose }: FeedbackFormProps) {
   return (
-    <form className="w-full max-w-md mx-auto">
+    <form className="w-full mt-2 max-w-md mx-auto">
       <FieldGroup className="space-y-4">
         <Field>
-          <FieldLabel htmlFor="date">Datum der Fahrstunde</FieldLabel>
+          <FieldLabel htmlFor="date">
+            <strong>Datum der Fahrstunde</strong>
+          </FieldLabel>
 
           <Input id="date" type="date" className="h-10 rounded-xl" />
         </Field>
@@ -59,6 +62,8 @@ export default function FeedbackForm({ onClose }: FeedbackFormProps) {
             variant="ghost"
             className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
+            {" "}
+            <Save className="mr-2 h-4 w-4" />
             Speichern
           </Button>
 
@@ -68,6 +73,7 @@ export default function FeedbackForm({ onClose }: FeedbackFormProps) {
             onClick={onClose}
             className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
+            <Ban className="mr-2 h-4 w-4" />
             Abbrechen
           </Button>
         </div>

@@ -8,7 +8,7 @@ type ExamListProps = {
 };
 
 export default function ExamList({ setActiveTab }: ExamListProps) {
-  const examDates = ["Datum 1", "Datum 2", "Datum 3", "Datum 4"];
+  const examDates = ["25.04.2026", "04.05.2026 ", "17.05.2026", "03.06.2026"];
 
   const [activeDate, setActiveDate] = useState("Datum 1");
 
@@ -37,6 +37,7 @@ export default function ExamList({ setActiveTab }: ExamListProps) {
       </div>
 
       {/* Datum */}
+
       <div className="flex gap-2 flex-wrap">
         {examDates.map((date) => (
           <Button
@@ -56,9 +57,13 @@ export default function ExamList({ setActiveTab }: ExamListProps) {
           </Button>
         ))}
       </div>
-
-      {/* PrüfungsKastchen*/}
-      <ExamCard />
+      <div className="border flex flex-col gap-4 p-4 rounded-sm border-blue-700">
+        {/* PrüfungsKastchen*/}
+        <ExamCard />
+        <ExamCard />
+        <ExamCard />
+        <ExamCard />
+      </div>
     </div>
   );
 }

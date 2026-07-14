@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import Statuslight, { type Status } from "@/components/statusLights";
 
-import { Zap, Pencil, Trash2, Clock, Car, Bike } from "lucide-react";
+import { Zap, Pencil, Trash2, Clock, Car, Bike, Save } from "lucide-react";
 import { useState } from "react";
 
 const licenseClasses = [
@@ -24,7 +24,7 @@ export default function ExamList() {
   );
 
   return (
-    <div className="rounded-xl border border-blue-700 p-4 overflow-hidden ">
+    <div className="rounded-xl p-4 overflow-hidden bg-gray-100 ">
       <div className="flex items-center gap-4 mb-4">
         <Zap className="text-yellow-500" size={20} />
 
@@ -68,6 +68,7 @@ export default function ExamList() {
           variant="ghost"
           className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
         >
+          <Save className="mr-2 h-4 w-4" />
           Speichern
         </Button>
 

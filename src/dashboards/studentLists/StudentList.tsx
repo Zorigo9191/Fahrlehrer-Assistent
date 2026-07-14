@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import StudentRegisterForm from "./StudentRegisterForm";
 import FeedbackForm from "./FeedbackForm";
+import FeedbackOverview from "./FeedbackOverview";
 
 type StudentListProps = {
   setActiveTab: (tab: string) => void;
@@ -46,6 +47,7 @@ const students = [
 export default function StudentList({ setActiveTab }: StudentListProps) {
   const [showRegister, setShowRegister] = useState(false);
   const [feedbackGive, setFeedbackGive] = useState(false);
+  const [feedbackView, setFeedbackView] = useState(false);
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
@@ -70,12 +72,12 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
         </Button>
 
         {showRegister && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-            <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+          <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="relative  w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
               <Button
                 variant="ghost"
                 onClick={() => setShowRegister(false)}
-                className="absolute right-4 top-3 text-gray-500 hover:text-black"
+                className="absolute border right-4 top-3 text-gray-500 hover:text-black"
               >
                 <X />
               </Button>
@@ -92,7 +94,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
         >
           <X />
           schließen
@@ -119,13 +121,29 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <Button>
+              <Button onClick={() => setFeedbackView(true)}>
                 <ExternalLink />
               </Button>
               <span>
                 Feedbacks:
                 <strong> {student.feedbacks}</strong>
               </span>
+
+              {feedbackView && (
+                <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4">
+                  <div className="relative max-w-md max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-2xl">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setFeedbackView(false)}
+                      className="border absolute right-4 top-3 text-gray-500 hover:text-black"
+                    >
+                      <X />
+                    </Button>
+
+                    <FeedbackOverview />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -171,7 +189,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                   <Button
                     variant="ghost"
                     onClick={() => setFeedbackGive(false)}
-                    className="absolute right-4 top-3 text-gray-500 hover:text-black"
+                    className="border absolute right-4 top-3 text-gray-500 hover:text-black"
                   >
                     <X />
                   </Button>

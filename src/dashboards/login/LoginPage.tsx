@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Briefcase, GraduationCap, User } from "lucide-react";
 import { Button } from "@/components/button";
-import { LoginForm } from "@/dashboards/login/components/LoginForm";
+import { LoginForm } from "./LoginForm";
 
 type Role = "student" | "instructor" | "office";
 

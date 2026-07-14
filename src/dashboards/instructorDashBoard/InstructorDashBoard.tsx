@@ -12,11 +12,32 @@ import {
   Clock,
   Bell,
   ClipboardList,
+  Send,
+  House,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ExamList from "../examLists/ExamList";
 import StudentList from "../studentLists/StudentList";
+
+const footerItems = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: House,
+  },
+  {
+    id: "pruefungsliste",
+    label: "Prüfungsliste",
+    icon: ClipboardList,
+  },
+  {
+    id: "schuelerliste",
+    label: "Schülerliste",
+    icon: Users,
+  },
+];
 
 export default function InstructorDashBoard() {
   const navigate = useNavigate();
@@ -89,6 +110,7 @@ export default function InstructorDashBoard() {
             variant="ghost"
             className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
+            <Send className="mr-2 h-4 w-4" />
             Terminanfrage senden
           </Button>
 
@@ -189,7 +211,11 @@ export default function InstructorDashBoard() {
           </div>
 
           <div className="w-full mt-auto pt-4">
-            <Footer activeTab={activeTab} setActiveTab={setActiveTab} />
+            <Footer
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              items={footerItems}
+            />
           </div>
         </main>
       </div>

@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
-import { Bike, Car, Eye, EyeOff } from "lucide-react";
+import { Bike, Car, Eye, EyeOff, Save } from "lucide-react";
 import { useState } from "react";
 
 type StudentRegisterFormProps = {
@@ -9,14 +9,14 @@ type StudentRegisterFormProps = {
 };
 
 const licenseClasses = [
-  { value: "B197", type: "car" },
-  { value: "B78", type: "car" },
-  { value: "B", type: "car" },
-  { value: "BE", type: "car" },
-  { value: "AM", type: "bike" },
-  { value: "A1", type: "bike" },
-  { value: "A2", type: "bike" },
-  { value: "A", type: "bike" },
+  { value: "B197", type: "car", color: "text-blue-700" },
+  { value: "B78", type: "car", color: "text-blue-700" },
+  { value: "B", type: "car", color: "text-blue-700" },
+  { value: "BE", type: "car", color: "text-blue-700" },
+  { value: "AM", type: "bike", color: "text-blue-700" },
+  { value: "A1", type: "bike", color: "text-blue-700" },
+  { value: "A2", type: "bike", color: "text-blue-700" },
+  { value: "A", type: "bike", color: "text-blue-700" },
 ];
 
 export default function StudentRegisterForm({
@@ -33,6 +33,7 @@ export default function StudentRegisterForm({
     <form
       className="
     w-full
+    mt-2
     max-w-md
     mx-auto"
     >
@@ -96,10 +97,14 @@ export default function StudentRegisterForm({
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
-            className="rounded-md border border-slate-300 px-2 py-1 text-sm"
+            className="rounded-md border text-blue-700 border-blue-700 px-2 py-1 text-sm"
           >
             {licenseClasses.map((category) => (
-              <option key={category.value} value={category.value}>
+              <option
+                key={category.value}
+                value={category.value}
+                color={category.color}
+              >
                 {category.value}
               </option>
             ))}
@@ -110,6 +115,7 @@ export default function StudentRegisterForm({
             variant="ghost"
             className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
           >
+            <Save className="mr-2 h-4 w-4" />
             Speichern
           </Button>
 
