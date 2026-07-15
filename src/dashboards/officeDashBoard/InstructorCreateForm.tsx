@@ -9,14 +9,21 @@ import {
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
 import { Button } from "@/components/button";
-import { Eye, EyeOff, Save } from "lucide-react";
+import { Ban, Eye, EyeOff, Save, X } from "lucide-react";
 import { useState } from "react";
 
-export default function InstructorCreateForm() {
+type instructorCreateFormProps = {
+  onClose: () => void;
+};
+
+export default function InstructorCreateForm({
+  onClose,
+}: instructorCreateFormProps) {
   const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4 ">
-      <Card className="w-full max-w-lg shadow-lg border-orange-600">
+    <div className="flex justify-center items-center min-h-90 bg-gray-50 p-4 overflow-x-hidden">
+      <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-orange-500">
             Fahrlehrer-Konto erstellen
@@ -30,9 +37,9 @@ export default function InstructorCreateForm() {
           *
           <div className="space-y-2">
             <Label htmlFor="id">Fahrlehrer-ID</Label>
-            <Input id="id" type="text" placeholder="z.B. FL-1002" required />
+            <Input id="id" type="text" placeholder="Fl-4" required />
           </div>
-          {/* 2. Name */}
+          {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Name, Vorname</Label>
             <Input
@@ -42,7 +49,7 @@ export default function InstructorCreateForm() {
               required
             />
           </div>
-          {/* 3. Passwort */}
+          {/* Passwort */}
           <div className="space-y-2">
             <Label htmlFor="password">Passwort</Label>
             <div className="relative">
@@ -62,36 +69,43 @@ export default function InstructorCreateForm() {
               </button>
             </div>
           </div>
-          {/* 4. Klasse (z.B. Klasse B, A, C) */}
+          {/* Klasse  */}
           <div className="space-y-2">
             <Label htmlFor="klasse">Führerscheinklassen</Label>
             <Input id="klasse" type="text" placeholder="B, BE, A" required />
           </div>
-          {/* 5. Telefonnummer */}
+          {/*  Telefonnummer */}
           <div className="space-y-2">
             <Label htmlFor="telefon">Telefonnummer</Label>
             <Input
               id="telefon"
               type="tel"
-              placeholder="+49 170 1234567"
+              placeholder="+49 ..........."
               required
             />
-          </div>
-          <div className=" gap-2 flex items-center justify-center ">
-            <Label htmlFor="student_count">Schülerzahl</Label>
-            <span>0</span>
           </div>
         </CardContent>
 
         <CardFooter>
-          <Button
-            variant="ghost"
-            type="submit"
-            className=" h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            Speichern
-          </Button>
+          <div className="flex w-full gap-2 ">
+            <Button
+              variant="ghost"
+              type="submit"
+              className=" h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              Speichern
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              className="h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+            >
+              <Ban className="mr-2 h-4 w-4" />
+              Abbrechen
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>

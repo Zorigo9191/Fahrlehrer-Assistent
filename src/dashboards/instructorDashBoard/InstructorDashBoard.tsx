@@ -203,7 +203,7 @@ export default function InstructorDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && instructorDashBoard}
             {activeTab === "pruefungsliste" && (
-              <ExamList setActiveTab={setActiveTab} />
+              <ExamList role="instructor" setActiveTab={setActiveTab} />
             )}
             {activeTab === "schuelerliste" && (
               <StudentList setActiveTab={setActiveTab} />

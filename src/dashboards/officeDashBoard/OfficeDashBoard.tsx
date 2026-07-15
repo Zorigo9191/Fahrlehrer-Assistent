@@ -1,10 +1,12 @@
 import { Button } from "@/components/button";
 import Footer from "@/components/footer";
 
-import { LogOut, Briefcase, Plus, House, User } from "lucide-react";
+import { LogOut, Briefcase, Plus, House, User, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstructoAccountItems from "./InstructorAccountItems";
+import DateCreateForm from "./DateCreateFrom";
+import ExamList from "../examLists/ExamList";
 
 const footerItems = [
   {
@@ -24,6 +26,7 @@ const footerItems = [
 export default function OfficeDashBoard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [createDate, setCreateDate] = useState(false);
 
   const officeDashBoard = (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
@@ -39,26 +42,44 @@ export default function OfficeDashBoard() {
         </div>
       </div>
 
-      {/* Abmelden */}
-      <div className="flex justify-end gap-4">
+      <div className="flex items-center justify-between gap-2 font-bold text-black">
+        <Button
+          onClick={() => setCreateDate(true)}
+          className="border text-md text-orange-500 font-bold hover:bg-orange-500 hover:text-white"
+        >
+          <Plus />
+          Datum hinzufügen
+        </Button>
+        {createDate && (
+          <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="relative  w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+              <Button
+                variant="ghost"
+                onClick={() => setCreateDate(false)}
+                className="absolute border right-4 top-3 text-gray-500 hover:text-black"
+              >
+                <X />
+              </Button>
+
+              <DateCreateForm
+                onClose={() => {
+                  setCreateDate(false);
+                }}
+              />
+            </div>
+          </div>
+        )}
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500 hover:bg-orange-100 font-bold border border-orange-500 transition "
+          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500  hover:bg-orange-500 hover:text-white font-bold border border-orange-500 transition "
         >
           <LogOut size={16} />
           Abmelden
         </Button>
       </div>
-      <div className="flex flex-col border w-full min-h-90 rounded-2xl overflow-hidden">
-        <h2 className=" flex items-center bg-orange-200 p-4 justify-between gap-2 font-bold text-black">
-          Prüfungsdatum
-          <Button className=" bg-orange-500 text-md text-white font-bold hover:bg-orange-400">
-            <Plus />
-            Datum hinzufügen
-          </Button>
-        </h2>
-      </div>
+
+      <ExamList setActiveTab={setActiveTab} role={"office"} />
     </div>
   );
 

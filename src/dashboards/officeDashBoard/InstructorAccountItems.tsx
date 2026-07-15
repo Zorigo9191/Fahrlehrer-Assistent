@@ -82,7 +82,7 @@ export default function InstructoAccountItems({
           <p className="text-sm font-semibold">Max MusterMann</p>
         </div>
       </div>
-      <div className="flex justify-between gap-2">
+      <div className="flex  justify-between gap-2 ">
         <Button
           variant="ghost"
           onClick={() => setCreateInstructor(true)}
@@ -102,7 +102,11 @@ export default function InstructoAccountItems({
                 <X />
               </Button>
 
-              <InstructorCreateForm />
+              <InstructorCreateForm
+                onClose={() => {
+                  setCreateInstructor(false);
+                }}
+              />
             </div>
           </div>
         )}
