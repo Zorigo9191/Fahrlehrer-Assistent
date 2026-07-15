@@ -79,7 +79,11 @@ export default function OfficeDashBoard() {
         </Button>
       </div>
 
-      <ExamList setActiveTab={setActiveTab} role={"office"} />
+      <ExamList
+        setActiveTab={setActiveTab}
+        showActions={true}
+        role={"office"}
+      />
     </div>
   );
 

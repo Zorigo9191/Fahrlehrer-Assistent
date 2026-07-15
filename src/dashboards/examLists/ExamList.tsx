@@ -1,17 +1,17 @@
-import { Button } from "@/components/button";
-import { List } from "lucide-react";
 import ExamCard from "./ExamCard";
 import { useState } from "react";
 import ExamListHeader from "./ExamListHeader";
+import { Check, Pencil, X } from "lucide-react";
 
 type ExamListProps = {
   setActiveTab: (tab: string) => void;
   role: Role;
+  showActions?: boolean;
 };
 
 type Role = "instructor" | "office";
 
-export default function ExamList({ role }: ExamListProps) {
+export default function ExamList({ role, showActions = false }: ExamListProps) {
   let titleColor = "";
   let textColor = "";
   let borderColor = "";
@@ -46,7 +46,13 @@ export default function ExamList({ role }: ExamListProps) {
       bgColor = "bg-orange-500";
   }
 
-  const examDates = ["25.04.2026", "04.05.2026 ", "17.05.2026", "03.06.2026"];
+  const [examDates, setExamDates] = useState([
+    "25.04.2026",
+    "04.05.2026 ",
+    "17.05.2026",
+    "03.06.2026",
+  ]);
+
   const examAppointmenst = [
     { time: "08:55" },
     { time: "09:50" },
@@ -55,7 +61,18 @@ export default function ExamList({ role }: ExamListProps) {
     { time: "12:30" },
     { time: "13:25" },
   ];
-  const [activeDate, setActiveDate] = useState("Datum 1");
+  const [activeDate, setActiveDate] = useState("");
+  const [editingDate, setEditingDate] = useState<string | null>(null);
+
+  const updateDate = (oldDate: string, newDate: string) => {
+    setExamDates((prev) =>
+      prev.map((date) => (date === oldDate ? newDate : date)),
+    );
+  };
+
+  const removeDate = (date: string) => {
+    setExamDates((prev) => prev.filter((d) => d !== date));
+  };
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
@@ -66,21 +83,50 @@ export default function ExamList({ role }: ExamListProps) {
 
       <div className="flex gap-2 flex-wrap">
         {examDates.map((date) => (
-          <Button
+          <div
             key={date}
-            variant="ghost"
-            onClick={() => setActiveDate(date)}
-            className={`border
-          
-            ${
-              activeDate === date
-                ? `${bgColor} text-white ${buttonColor}`
-                : `${textColor} hover:${buttonHover}`
-            }
-            `}
+            className={`flex items-center gap-2 border px-3 py-2 rounded-md ${
+              activeDate === date ? `${bgColor} text-white` : textColor
+            }`}
           >
-            {date}
-          </Button>
+            {editingDate === date ? (
+              <>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => updateDate(date, e.target.value)}
+                  className="text-black rounded px-2"
+                />
+
+                <Check
+                  size={18}
+                  className="cursor-pointer"
+                  onClick={() => setEditingDate(null)}
+                />
+              </>
+            ) : (
+              <>
+                {showActions && (
+                  <>
+                    <Pencil
+                      size={16}
+                      className="cursor-pointer  hover:text-black "
+                      onClick={() => setEditingDate(date)}
+                    />
+
+                    <X
+                      size={20}
+                      className="cursor-pointer hover:text-black "
+                      onClick={() => removeDate(date)}
+                    />
+                  </>
+                )}
+                <button onClick={() => setActiveDate(date)}>
+                  {new Date(date).toLocaleDateString("de-DE")}
+                </button>
+              </>
+            )}
+          </div>
         ))}
       </div>
       <div
