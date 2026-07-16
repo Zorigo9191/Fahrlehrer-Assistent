@@ -1,18 +1,34 @@
 import { Button } from "@/components/button";
 import Footer from "@/components/footer";
 
-import { LogOut, Briefcase, Plus, House, User, X } from "lucide-react";
+import {
+  LogOut,
+  Briefcase,
+  Plus,
+  House,
+  User,
+  X,
+  ListCheck,
+} from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstructoAccountItems from "./InstructorAccountItems";
 import DateCreateForm from "./DateCreateFrom";
 import ExamList from "../examLists/ExamList";
+import StudentCheck from "./StudentCheck";
 
 const footerItems = [
   {
     id: "dashboard",
     label: "Dashboard",
     icon: House,
+    color: "text-blue-600 bg-transparent",
+  },
+
+  {
+    id: "student_check",
+    label: "Schüler überprüfen",
+    icon: ListCheck,
     color: "text-blue-600 bg-transparent",
   },
   {
@@ -109,6 +125,9 @@ export default function OfficeDashBoard() {
             {activeTab === "dashboard" && officeDashBoard}
             {activeTab === "instructor_acc" && (
               <InstructoAccountItems setActiveTab={setActiveTab} />
+            )}
+            {activeTab === "student_check" && (
+              <StudentCheck setActiveTab={setActiveTab} />
             )}
           </div>
 

@@ -12,37 +12,26 @@ type ExamListProps = {
 type Role = "instructor" | "office";
 
 export default function ExamList({ role, showActions = false }: ExamListProps) {
-  let titleColor = "";
   let textColor = "";
   let borderColor = "";
-  let buttonColor = "";
   let bgColor = "";
-  let buttonHover = "";
 
   switch (role) {
     case "instructor":
-      titleColor = "text-blue-700";
       textColor = "text-blue-700";
       borderColor = "border-blue-700";
-      buttonColor = "bg-blue-700 hover:bg-blue-600";
       bgColor = "bg-blue-700";
-      buttonHover = "bg-blue-100";
       break;
 
     case "office":
-      titleColor = "text-orange-500";
       textColor = "text-orange-700";
       borderColor = "border-orange-500";
-      buttonColor = "bg-orange-500 hover:bg-orange-400";
       bgColor = "bg-orange-500";
-      buttonHover = "bg-orange-200";
       break;
 
     default:
-      titleColor = "text-black";
       textColor = "text-black";
       borderColor = "border-black";
-      buttonColor = "bg-slate-700 hover:bg-slate-600";
       bgColor = "bg-orange-500";
   }
 
@@ -62,7 +51,7 @@ export default function ExamList({ role, showActions = false }: ExamListProps) {
     { time: "13:25" },
   ];
   const [activeDate, setActiveDate] = useState("");
-  const [editingDate, setEditingDate] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<string | null>("");
 
   const updateDate = (oldDate: string, newDate: string) => {
     setExamDates((prev) =>

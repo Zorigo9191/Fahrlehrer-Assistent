@@ -76,7 +76,7 @@ export default function InstructoAccountItems({
         <div className="flex items-center w-full justify-between">
           <h1 className="text-xl text-white font-bold flex items-center gap-2">
             <Briefcase size={28} />
-            Büro Dashboard
+            Fahrlehrer Konto
           </h1>
 
           <p className="text-sm font-semibold">Max MusterMann</p>
