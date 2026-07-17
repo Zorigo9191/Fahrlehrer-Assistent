@@ -4,15 +4,12 @@ import Footer from "@/components/footer";
 import {
   CalendarDays,
   User,
-  Zap,
   Pencil,
   Trash2,
   LogOut,
   GraduationCap,
-  Clock,
   Bell,
   ClipboardList,
-  Send,
   House,
   Users,
 } from "lucide-react";
@@ -20,6 +17,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ExamList from "../examLists/ExamList";
 import StudentList from "../studentLists/StudentList";
+import DrivingLessonAppointment from "../apointmentCards/DrivingLessonAppointment";
 
 const footerItems = [
   {
@@ -84,52 +82,7 @@ export default function InstructorDashBoard() {
       </div>
 
       {/* Fahrstunde vergeben */}
-      <div className="rounded-xl border border-blue-700 p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Zap className="text-yellow-500" size={20} />
-
-          <h2 className="text-lg font-bold text-blue-700">
-            Fahrstunde zu vergeben
-          </h2>
-        </div>
-
-        <div className="flex  gap-4 space-y-2 text-slate-700 p-3">
-          <div className="flex gap-2">
-            <CalendarDays size={16} />
-            <p className="text-sm font-semibold">Montag - 25.07.2026,</p>
-          </div>
-
-          <div className="flex gap-1">
-            <Clock className="text-blue-700" size={18} />
-            <p className="text-sm font-semibold">14:00 - 15:30 Uhr</p>
-          </div>
-        </div>
-
-        <div className="flex gap-2 mt-5 flex-wrap">
-          <Button
-            variant="ghost"
-            className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
-          >
-            <Send className="mr-2 h-4 w-4" />
-            Terminanfrage senden
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
-          >
-            <Pencil size={14} />
-            Bearbeiten
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
-          >
-            Abbrechen
-          </Button>
-        </div>
-      </div>
+      <DrivingLessonAppointment role={"instructor"} />
 
       {/* Angenommene Fahrstunde */}
       <div className="rounded-xl border border-blue-700 p-4">

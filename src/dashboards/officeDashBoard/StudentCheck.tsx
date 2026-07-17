@@ -31,11 +31,11 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
     setColumns((prev) => {
       let movedStudent;
 
-      // Object.fromEntries = aus Objekt -> Array
-      // Object.entries = aus Array -> Objekt
-
       const updatedColumns = Object.fromEntries(
         Object.entries(prev).map(([columnId, students]) => {
+          // Object.entries = aus Objekt -> Array
+          // Object.fromEntries = aus Array -> Objekt
+
           const filtered = students.filter((student) => {
             if (student.id === StudentId) {
               movedStudent = student;
@@ -47,7 +47,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
 
           return [columnId, filtered]; // Neue Version der aktuellen Spalte zurückgeben.
         }),
-      ) as typeof prev;
+      ) as typeof prev; // nimmt den Typ der Variable prev
 
       if (movedStudent) {
         updatedColumns[newColumn] = [
@@ -66,7 +66,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
         <div className="flex items-center w-full justify-between">
           <h1 className="text-xl text-white font-bold flex items-center gap-2">
             <Briefcase size={28} />
-            Schüler Überprüfung
+            Bearbeitung des Schülerstatus
           </h1>
 
           <p className="text-sm font-semibold">Max MusterMann</p>

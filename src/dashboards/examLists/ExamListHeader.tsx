@@ -1,26 +1,41 @@
-import { List } from "lucide-react";
+import { Button } from "@/components/button";
+import { List, X } from "lucide-react";
 
 type Role = "instructor" | "office";
 
 type ExamListHeaderProps = {
   role: Role;
   className?: string;
+  setActiveTab: (tab: string) => void;
 };
 
 export default function ExamListHeader({
   role,
   className,
+  setActiveTab,
 }: ExamListHeaderProps) {
   if (role === "instructor") {
     return (
-      <div
-        className={`flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white ${className} `}
-      >
-        <div className="flex items-center w-full justify-between">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <List size={32} />
-            Prüfungsliste
-          </h2>
+      <div>
+        <div
+          className={`flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white ${className} `}
+        >
+          <div className="flex items-center w-full justify-between">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <List size={32} />
+              Prüfungsliste
+            </h2>
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            onClick={() => setActiveTab("dashboard")}
+            className="flex items-center justify-end gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition mt-6 "
+          >
+            <X />
+            schließen
+          </Button>
         </div>
       </div>
     );

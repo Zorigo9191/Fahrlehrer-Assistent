@@ -11,7 +11,11 @@ type ExamListProps = {
 
 type Role = "instructor" | "office";
 
-export default function ExamList({ role, showActions = false }: ExamListProps) {
+export default function ExamList({
+  role,
+  showActions = false,
+  setActiveTab,
+}: ExamListProps) {
   let textColor = "";
   let borderColor = "";
   let bgColor = "";
@@ -66,7 +70,7 @@ export default function ExamList({ role, showActions = false }: ExamListProps) {
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
-      <ExamListHeader role={role} className="" />
+      <ExamListHeader role={role} setActiveTab={setActiveTab} />
 
       {/* Datum */}
 
