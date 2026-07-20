@@ -33,7 +33,7 @@ const instructorItems = [
     student_count: "32",
   },
   {
-    id: 3,
+    id: 7,
     name: "Tomas Stelzer",
     password: "as121231",
     klasse: "A,B,  BE , CE",
@@ -42,7 +42,7 @@ const instructorItems = [
     student_count: "32",
   },
   {
-    id: 3,
+    id: 4,
     name: "Tomas Stelzer",
     password: "as121231",
     klasse: "A,B,  BE , CE",
@@ -51,7 +51,7 @@ const instructorItems = [
     student_count: "32",
   },
   {
-    id: 3,
+    id: 5,
     name: "Tomas Stelzer",
     password: "as121231",
     klasse: "A,B,  BE , CE",
@@ -92,8 +92,8 @@ export default function InstructoAccountItems({
           Fahrlehrer hinzufügen
         </Button>
         {createInstructor && (
-          <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-            <div className=" relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+          <div className=" fixed overflow-y-auto inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="relative w-full  max-w-md rounded-xl bg-white p-6 shadow-2xl ">
               <Button
                 variant="ghost"
                 onClick={() => setCreateInstructor(false)}

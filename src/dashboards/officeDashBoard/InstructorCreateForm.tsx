@@ -11,6 +11,7 @@ import { Label } from "@/components/label";
 import { Button } from "@/components/button";
 import { Ban, Eye, EyeOff, Save, X } from "lucide-react";
 import { useState } from "react";
+import { createInstructor } from "./instructorService/InstructorService";
 
 type instructorCreateFormProps = {
   onClose: () => void;
@@ -21,9 +22,35 @@ export default function InstructorCreateForm({
 }: instructorCreateFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [teachingClasses, setTeachingClasses] = useState<string[]>([]);
+
+  const handleSave = async () => {
+    console.log("SAVE BUTTON GEDRÜCKT");
+    const { error } = await createInstructor({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+      phone_number: phoneNumber,
+      teaching_classes: teachingClasses,
+    });
+
+    if (error) {
+      console.log("Supabase error:", error);
+      return;
+    }
+    console.log("Instructor saved");
+    onClose();
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-90 bg-gray-50 p-4 overflow-x-hidden">
-      <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8">
+    <div className="flex justify-center items-center min-h-90 bg-gray-50 p-4 overflow-x-hidden ">
+      <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8 ">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-orange-500">
             Fahrlehrer-Konto erstellen
@@ -39,24 +66,49 @@ export default function InstructorCreateForm({
             <Label htmlFor="id">Fahrlehrer-ID</Label>
             <Input id="id" type="text" placeholder="Fl-4" required />
           </div>
-          {/* Name */}
+          {/* Namen */}
           <div className="space-y-2">
-            <Label htmlFor="name">Name, Vorname</Label>
+            <Label htmlFor="name"> Vorname</Label>
             <Input
-              id="name"
+              id="firstName"
               type="text"
-              placeholder="Max Mustermann"
+              placeholder="Vorname"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="name"> Nachname</Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Nachname"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+          {/* Emmail Adresse */}
+          <div className="space-y-2">
+            <Label htmlFor="name"> E-mail</Label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="max@example.com"
             />
           </div>
           {/* Passwort */}
           <div className="space-y-2">
-            <Label htmlFor="password">Passwort</Label>
+            <Label htmlFor="password">Passwort vergeben</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="pr-10"
               />
@@ -69,10 +121,20 @@ export default function InstructorCreateForm({
               </button>
             </div>
           </div>
-          {/* Klasse  */}
+          {/* AusbildungsKlasse  */}
           <div className="space-y-2">
-            <Label htmlFor="klasse">Führerscheinklassen</Label>
-            <Input id="klasse" type="text" placeholder="B, BE, A" required />
+            <Label htmlFor="klasse">Ausbildungsklasse</Label>
+            <Input
+              id="klasse"
+              type="text"
+              placeholder="B, BE, A"
+              onChange={(e) =>
+                setTeachingClasses(
+                  e.target.value.split(",").map((item) => item.trim()),
+                )
+              }
+              required
+            />
           </div>
           {/*  Telefonnummer */}
           <div className="space-y-2">
@@ -80,6 +142,8 @@ export default function InstructorCreateForm({
             <Input
               id="telefon"
               type="tel"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="+49 ..........."
               required
             />
@@ -90,7 +154,8 @@ export default function InstructorCreateForm({
           <div className="flex w-full gap-2 ">
             <Button
               variant="ghost"
-              type="submit"
+              type="button"
+              onClick={handleSave}
               className=" h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
             >
               <Save className="mr-2 h-4 w-4" />

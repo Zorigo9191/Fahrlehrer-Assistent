@@ -14,18 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
-      licence_categories: {
+      instructors: {
         Row: {
-          id: number
-          licence_category: string
+          created_at: string
+          first_name: string
+          id: string
+          last_name: string
+          phone_number: string | null
+          student_count: number
+          teaching_classes: string[]
         }
         Insert: {
-          id?: never
-          licence_category: string
+          created_at?: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone_number?: string | null
+          student_count?: number
+          teaching_classes: string[]
         }
         Update: {
-          id?: never
-          licence_category?: string
+          created_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone_number?: string | null
+          student_count?: number
+          teaching_classes?: string[]
         }
         Relationships: []
       }
