@@ -1,7 +1,25 @@
 import { Button } from "@/components/button";
-import { Pencil, Save } from "lucide-react";
+import { Bike, Car, Pencil, Save } from "lucide-react";
+import { useState } from "react";
 
 export default function FeedbackCard() {
+  const licenseClasses = [
+    { value: "B197", type: "car", color: "text-blue-700" },
+    { value: "B78", type: "car", color: "text-blue-700" },
+    { value: "B", type: "car", color: "text-blue-700" },
+    { value: "BE", type: "car", color: "text-blue-700" },
+    { value: "AM", type: "bike", color: "text-blue-700" },
+    { value: "A1", type: "bike", color: "text-blue-700" },
+    { value: "A2", type: "bike", color: "text-blue-700" },
+    { value: "A", type: "bike", color: "text-blue-700" },
+  ];
+
+  const [selectedClass] = useState("A");
+
+  const selectedLicense = licenseClasses.find(
+    (license) => license.value === selectedClass,
+  );
+
   return (
     <div
       className="flex   
@@ -18,9 +36,19 @@ export default function FeedbackCard() {
       max-h-[90vh]
       break-all "
     >
-      <h2 className="flex items-center justify-center">
-        <strong> Feedback vom 12.05.2026 </strong>
-      </h2>
+      <div className="flex gap-2">
+        <h2 className="flex items-center justify-center">
+          <strong> Feedback vom 12.05.2026 </strong>
+        </h2>
+        <div className="flex items-center gap-2 ">
+          <strong className="text-gray-400">Klasse:</strong>
+          {selectedLicense?.type === "bike" ? (
+            <Bike className="text-blue-700" size={18} />
+          ) : (
+            <Car className="text-blue-700" size={18} />
+          )}
+        </div>
+      </div>
       <div
         className="
       w-full 
@@ -58,14 +86,12 @@ export default function FeedbackCard() {
               sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja
             </p>
           </div>
-
           <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
             <h3 className="text-blue-700">
               <strong>Geschwindigkeit:</strong>
             </h3>
             <p>Unzureichende VK BeoBach</p>
           </div>
-
           <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
             <h3 className="text-blue-700">
               <strong>Fahrzeugpositionierung:</strong>
@@ -78,14 +104,12 @@ export default function FeedbackCard() {
             </h3>
             <p>Unzureichende VK BeoBach</p>
           </div>
-
           <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
             <h3 className="text-blue-700">
               <strong>Fahrzeugbedienung:</strong>
             </h3>
             <p>Unzureichende VK BeoBach</p>
           </div>
-
           <div className="flex w-full flex-col border rounded-md bg-blue-300 p-2">
             <h3>
               <strong>Allgemein:</strong>

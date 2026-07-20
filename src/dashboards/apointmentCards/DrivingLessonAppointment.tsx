@@ -1,13 +1,17 @@
 import { Button } from "@/components/button";
 import {
   Ban,
+  Bike,
   CalendarDays,
+  Car,
   Check,
   Clock,
+  IdCard,
   Pencil,
   Send,
   Zap,
 } from "lucide-react";
+import { useState } from "react";
 
 type Role = "student" | "instructor";
 
@@ -41,6 +45,23 @@ export default function DrivingLessonAppointment({
       borderColor = "border-black";
   }
 
+  const licenseClasses = [
+    { value: "B197", type: "car", color: "text-blue-700" },
+    { value: "B78", type: "car", color: "text-blue-700" },
+    { value: "B", type: "car", color: "text-blue-700" },
+    { value: "BE", type: "car", color: "text-blue-700" },
+    { value: "AM", type: "bike", color: "text-blue-700" },
+    { value: "A1", type: "bike", color: "text-blue-700" },
+    { value: "A2", type: "bike", color: "text-blue-700" },
+    { value: "A", type: "bike", color: "text-blue-700" },
+  ];
+
+  const [selectedClass] = useState("B");
+
+  const selectedLicense = licenseClasses.find(
+    (license) => license.value === selectedClass,
+  );
+
   return (
     <div className={`rounded-xl border p-4 ${borderColor}`}>
       <div className="flex items-center gap-2 mb-4">
@@ -60,6 +81,18 @@ export default function DrivingLessonAppointment({
         <div className="flex gap-1">
           <Clock className={`${textColor} size={18}`} />
           <p className="text-sm font-semibold">14:00 - 15:30 Uhr</p>
+        </div>
+        <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+          <IdCard size={20} className={` ${textColor}  `} />
+
+          <span className="flex gap-2">
+            <strong> Klasse: {selectedClass} </strong>
+            {selectedLicense?.type === "bike" ? (
+              <Bike className={` ${textColor} `} size={18} />
+            ) : (
+              <Car className={` ${textColor} `} size={18} />
+            )}
+          </span>
         </div>
       </div>
 

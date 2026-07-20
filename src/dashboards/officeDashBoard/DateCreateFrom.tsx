@@ -63,7 +63,7 @@ export default function DateCreateForm({ onClose }: DateCreateFormProps) {
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+              className="h-8 w-full px-3 text-sm border border-red-500 text-red-500 hover:bg-red-200"
             >
               <Ban className="mr-2 h-4 w-4" />
               Abbrechen

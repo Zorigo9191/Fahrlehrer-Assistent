@@ -15,6 +15,7 @@ import { useState } from "react";
 import StudentRegisterForm from "./StudentRegisterForm";
 import FeedbackForm from "./FeedbackForm";
 import FeedbackOverview from "./FeedbackOverview";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 
 type StudentListProps = {
   setActiveTab: (tab: string) => void;
@@ -109,7 +110,12 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
         >
           <div className="flex items-center gap-2 mb-4 justify-between">
             <div className="flex gap-2 items-center">
-              <User size={20} className="text-slate-700" />
+              <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200">
+                <AvatarImage src="/profil1.png" />
+                <AvatarFallback>
+                  <Plus className="text-white" />
+                </AvatarFallback>
+              </Avatar>
 
               <h3 className="text-lg font-bold text-blue-700">
                 {student.name}
@@ -131,7 +137,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
 
               {feedbackView && (
                 <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4">
-                  <div className="relative max-w-md max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-2xl">
+                  <div className="relative  max-w-md max-h-[90vh] overflow-y-auto scrollbar-none rounded-xl bg-white p-6 shadow-2xl">
                     <Button
                       variant="ghost"
                       onClick={() => setFeedbackView(false)}
@@ -156,7 +162,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
               )}
 
               <span>
-                Führerschein:
+                Klasse:
                 <strong> {student.license}</strong>
               </span>
             </div>

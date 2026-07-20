@@ -8,20 +8,20 @@ type StudentRegisterFormProps = {
   onClose: () => void;
 };
 
-const licenseClasses = [
-  { value: "B197", type: "car", color: "text-blue-700" },
-  { value: "B78", type: "car", color: "text-blue-700" },
-  { value: "B", type: "car", color: "text-blue-700" },
-  { value: "BE", type: "car", color: "text-blue-700" },
-  { value: "AM", type: "bike", color: "text-blue-700" },
-  { value: "A1", type: "bike", color: "text-blue-700" },
-  { value: "A2", type: "bike", color: "text-blue-700" },
-  { value: "A", type: "bike", color: "text-blue-700" },
-];
-
 export default function StudentRegisterForm({
   onClose,
 }: StudentRegisterFormProps) {
+  const licenseClasses = [
+    { value: "B197", type: "car", color: "text-blue-700" },
+    { value: "B78", type: "car", color: "text-blue-700" },
+    { value: "B", type: "car", color: "text-blue-700" },
+    { value: "BE", type: "car", color: "text-blue-700" },
+    { value: "AM", type: "bike", color: "text-blue-700" },
+    { value: "A1", type: "bike", color: "text-blue-700" },
+    { value: "A2", type: "bike", color: "text-blue-700" },
+    { value: "A", type: "bike", color: "text-blue-700" },
+  ];
+
   const [showPassword, setShowPassword] = useState(false);
   const [selectedClass, setSelectedClass] = useState("B197");
 

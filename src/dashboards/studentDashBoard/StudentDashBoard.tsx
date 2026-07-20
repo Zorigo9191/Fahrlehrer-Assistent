@@ -2,41 +2,44 @@ import { Button } from "@/components/button";
 import Footer from "@/components/footer";
 
 import {
-  CalendarDays,
   User,
   Pencil,
   Trash2,
   LogOut,
   Bell,
-  ClipboardList,
   House,
-  Users,
   CalendarPlus,
+  MessagesSquare,
+  FileX,
   Plus,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ExamList from "../examLists/ExamList";
-import StudentList from "../studentLists/StudentList";
 import DrivingLessonAppointment from "../apointmentCards/DrivingLessonAppointment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import AcceptedDrivingLesson from "../apointmentCards/AcceptedDrivingLesson";
+import ReceivedFeedback from "./ReceivedFeedback";
+import HiddenLessons from "./HiddenLessons";
 
 const footerItems = [
   {
     id: "dashboard",
     label: "Dashboard",
     icon: House,
+    color: "",
+  },
+
+  {
+    id: "feedbacks",
+    label: "Rückmeldungen",
+    icon: MessagesSquare,
+    color: "",
   },
   {
-    id: "pruefungsliste",
-    label: "Prüfungsliste",
-    icon: ClipboardList,
-  },
-  {
-    id: "schuelerliste",
-    label: "Schülerliste",
-    icon: Users,
+    id: "archived",
+    label: "Ausgeblendet",
+    icon: FileX,
+    color: "",
   },
 ];
 
@@ -61,10 +64,12 @@ export default function InstructorDashBoard() {
             <div className="relative">
               <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200">
                 <AvatarImage src="/profil1.png" />
-                <AvatarFallback></AvatarFallback>
+                <AvatarFallback>
+                  <Plus className="text-white" />
+                </AvatarFallback>
               </Avatar>
 
-              {/* Buttons über dem Bild */}
+              {/* Buttons unter dem Bild */}
               <div className="absolute -bottom-2 -right-1 flex gap-1">
                 <Button
                   size="icon"
@@ -142,11 +147,11 @@ export default function InstructorDashBoard() {
         <main className="flex-1 p-4 pb-8">
           <div className="flex-1">
             {activeTab === "dashboard" && studentDashBoard}
-            {activeTab === "pruefungsliste" && (
-              <ExamList role="instructor" setActiveTab={setActiveTab} />
+            {activeTab === "feedbacks" && (
+              <ReceivedFeedback setActiveTab={setActiveTab} />
             )}
-            {activeTab === "schuelerliste" && (
-              <StudentList setActiveTab={setActiveTab} />
+            {activeTab === "archived" && (
+              <HiddenLessons setActiveTab={setActiveTab} />
             )}
           </div>
 
@@ -155,6 +160,7 @@ export default function InstructorDashBoard() {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               items={footerItems}
+              color="text-green-700"
             />
           </div>
         </main>
