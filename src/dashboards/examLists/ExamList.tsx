@@ -114,7 +114,7 @@ export default function ExamList({
                     />
                   </>
                 )}
-                <button onClick={() => setActiveDate(date)}>
+                <button type="button" onClick={() => setActiveDate(date)}>
                   {new Date(date).toLocaleDateString("de-DE")}
                 </button>
               </>
@@ -128,6 +128,7 @@ export default function ExamList({
         {/* PrüfungsKastchen*/}
         {examAppointmenst.map((appointment) => (
           <ExamCard
+            key={appointment.time}
             color={role === "instructor" ? "instructor" : "office"}
             time={appointment.time}
           />

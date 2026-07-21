@@ -1,74 +1,44 @@
 import { Briefcase, Plus, X } from "lucide-react";
 import InstructorAccountCard from "./InstructorAccountCard";
 import { Button } from "@/components/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InstructorCreateForm from "./InstructorCreateForm";
-
-const instructorItems = [
-  {
-    id: 1,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.12.2018",
-    student_count: "32",
-  },
-  {
-    id: 2,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.10.2020",
-    student_count: "32",
-  },
-  {
-    id: 3,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.12.2023",
-    student_count: "32",
-  },
-  {
-    id: 7,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.12.2023",
-    student_count: "32",
-  },
-  {
-    id: 4,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.12.2023",
-    student_count: "32",
-  },
-  {
-    id: 5,
-    name: "Tomas Stelzer",
-    password: "as121231",
-    klasse: "A,B,  BE , CE",
-    telefon: "01767575752",
-    created_at: "01.12.2023",
-    student_count: "32",
-  },
-];
+import { getInstructors } from "./instructorService/InstructorService";
 
 type InstructorAccountItemsProps = {
   setActiveTab: (tab: string) => void;
+};
+
+type Instructor = {
+  created_at: string;
+  first_name: string;
+  id: string;
+  last_name: string;
+  phone_number: string | null;
+  student_count: number;
+  teaching_classes: string[];
 };
 
 export default function InstructoAccountItems({
   setActiveTab,
 }: InstructorAccountItemsProps) {
   const [createInstructor, setCreateInstructor] = useState(false);
+  const [instructors, setInstructors] = useState<Instructor[]>([]);
+
+  const loadInstructors = async () => {
+    const { data: instructorData, error: instructorError } =
+      await getInstructors();
+
+    if (instructorError) {
+      console.error(instructorError);
+      return;
+    }
+    setInstructors(instructorData ?? []);
+  };
+
+  useEffect(() => {
+    loadInstructors();
+  }, []);
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm">
@@ -105,6 +75,7 @@ export default function InstructoAccountItems({
               <InstructorCreateForm
                 onClose={() => {
                   setCreateInstructor(false);
+                  loadInstructors();
                 }}
               />
             </div>
@@ -120,8 +91,12 @@ export default function InstructoAccountItems({
         </Button>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 transition-all duration-900 ease-in-out">
-        {instructorItems.map((instructor) => (
-          <InstructorAccountCard key={instructor.id} instructor={instructor} />
+        {instructors.map((instructor) => (
+          <InstructorAccountCard
+            key={instructor.id}
+            instructor={instructor}
+            refresh={loadInstructors}
+          />
         ))}
       </div>
     </div>
