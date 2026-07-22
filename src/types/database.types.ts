@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      exam_list: {
+        Row: {
+          created_at: string
+          exam_date: string
+          exam_time: string
+          id: string
+          instructor_name: string | null
+          license_class: string
+          notes: string | null
+          status: string | null
+          student_name: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exam_date: string
+          exam_time: string
+          id?: string
+          instructor_name?: string | null
+          license_class: string
+          notes?: string | null
+          status?: string | null
+          student_name?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exam_date?: string
+          exam_time?: string
+          id?: string
+          instructor_name?: string | null
+          license_class?: string
+          notes?: string | null
+          status?: string | null
+          student_name?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       instructors: {
         Row: {
           created_at: string

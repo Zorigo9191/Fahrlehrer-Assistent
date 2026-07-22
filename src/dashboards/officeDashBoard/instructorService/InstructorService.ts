@@ -1,17 +1,20 @@
 import { supabase } from "@/lib/supabase";
 
 // Daten für Instructor holen
-
 export async function getInstructors() {
-  const { data: instructorData, error: instructorError } = await supabase
+  const { data, error } = await supabase
     .from("instructors")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (instructorError) {
-    return { data: null, error: instructorError };
+  if (error) {
+    return { data: null, error };
   }
-  return { data: instructorData, error: null };
+
+  return {
+    data,
+    error: null,
+  };
 }
 
 // Instructor erstellen
@@ -38,6 +41,7 @@ export async function createInstructor(instructor: {
 
   if (authError) {
     return {
+      data: null,
       error: authError,
     };
   }
@@ -46,12 +50,12 @@ export async function createInstructor(instructor: {
 
   if (!userId) {
     return {
+      data: null,
       error: new Error("User ID wurde nicht erstellt"),
     };
   }
 
   // Profil in instructors speichern
-
   const { data, error } = await supabase
     .from("instructors")
     .insert({
@@ -65,13 +69,20 @@ export async function createInstructor(instructor: {
     .select()
     .single();
 
+  if (error) {
+    return {
+      data: null,
+      error,
+    };
+  }
+
   return {
     data,
-    error,
+    error: null,
   };
 }
 
-// instructor Bearbeiten (Update)
+// Instructor bearbeiten (Update)
 export async function updateInstructor(
   id: string,
   instructor: {
@@ -81,58 +92,27 @@ export async function updateInstructor(
     teaching_classes: string[];
   },
 ) {
-  const { data: instructorData, error: instructorError } = await supabase
+  const { data, error } = await supabase
     .from("instructors")
     .update(instructor)
     .eq("id", id)
     .select()
     .single();
 
-  if (instructorError) {
-    return { data: null, error: instructorError };
+  if (error) {
+    return {
+      data: null,
+      error,
+    };
   }
-  return { data: instructorData, error: null };
+
+  return {
+    data,
+    error: null,
+  };
 }
 
-// Delete instructor
-
-// export async function deleteInstructor(id: string) {
-//   const { error: instructorError } = await supabase
-//     .from("instructors")
-//     .delete()
-//     .eq("id", id);
-
-//   if (instructorError) {
-//     return {
-//       error: instructorError,
-//     };
-//   }
-//   return {
-//     error: null,
-//   };
-// }
-
-// export async function deleteInstructor(id: string) {
-//   const { data, error } = await supabase.functions.invoke("delete-instructor", {
-//     body: {
-//       instructorId: id,
-//     },
-//   });
-
-//   if (error) {
-//     console.error("Edge Function Fehler:", error);
-//     return {
-//       data: null,
-//       error,
-//     };
-//   }
-
-//   return {
-//     data,
-//     error: null,
-//   };
-// }
-
+// Instructor löschen
 export async function deleteInstructor(id: string) {
   const { data, error } = await supabase.functions.invoke("delete-instructor", {
     body: {
@@ -140,16 +120,24 @@ export async function deleteInstructor(id: string) {
     },
   });
 
-  // / CORS- / Invocation-Fehler
+  // CORS-/Invocation-Fehler
   if (error) {
     console.error("Edge Function Invoke Fehler:", error);
-    return { data: null, error };
+
+    return {
+      data: null,
+      error,
+    };
   }
 
   // Logischer Fehler aus der Edge Function selbst
   if (data?.error) {
     console.error("Edge Function Logik-Fehler:", data.error);
-    return { data: null, error: new Error(data.error) };
+
+    return {
+      data: null,
+      error: new Error(data.error),
+    };
   }
 
   return {

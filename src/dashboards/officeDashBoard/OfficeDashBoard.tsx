@@ -64,7 +64,7 @@ export default function OfficeDashBoard() {
           className="border text-md text-orange-500 font-bold hover:bg-orange-500 hover:text-white"
         >
           <Plus />
-          Datum hinzufügen
+          Prüfungsdatum hinzufügen
         </Button>
         {createDate && (
           <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/30">
