@@ -15,11 +15,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DrivingLessonAppointment from "../apointmentCards/DrivingLessonAppointment";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import AcceptedDrivingLesson from "../apointmentCards/AcceptedDrivingLesson";
+
 import ReceivedFeedback from "./ReceivedFeedback";
 import HiddenLessons from "./HiddenLessons";
+import AcceptedDrivingLesson from "../appointmentCards/AcceptedDrivingLesson.tsx";
+import DrivingLessonAppointment from "../appointmentCards/drivingLessonAppointment.tsx";
 
 const footerItems = [
   {

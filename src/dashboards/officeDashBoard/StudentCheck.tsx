@@ -1,62 +1,234 @@
 import { Button } from "@/components/button";
-import { Briefcase, Plus, X } from "lucide-react";
+import { Ban, Briefcase, Plus, Save, X } from "lucide-react";
 import StudentDataBox from "./StudentDataBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import DropColumn from "./DropColumn";
+import { toast } from "sonner";
+import { getExamDays, updateExamSlot } from "./officeService/OfficeService.ts";
 
 type StudentCheckProps = {
   setActiveTab: (tab: string) => void;
 };
 
+type ExamSlot = {
+  id: string;
+  student_name: string;
+  license_class: string | null;
+  instructor_name: string | null;
+  exam_date: string;
+  student_appointment: string | null;
+  exam_time: string;
+  status: string;
+  notes: string | null;
+};
+
 type ColumnId = "check" | "blocked" | "missing" | "ready";
 
 export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
-  const [columns, setColumns] = useState({
-    check: [{ id: "1" }, { id: "2" }, { id: "3" }],
-    blocked: [{ id: "4" }, { id: "11" }, { id: "12" }],
-    missing: [{ id: "5" }, { id: "6" }, { id: "7" }, { id: "22" }],
-    ready: [{ id: "8" }, { id: "9" }],
+  const [columns, setColumns] = useState<{
+    check: ExamSlot[];
+    blocked: ExamSlot[];
+    missing: ExamSlot[];
+    ready: ExamSlot[];
+  }>({
+    check: [],
+    blocked: [],
+    missing: [],
+    ready: [],
   });
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  // Schüler der gerade bearbeitet wird
+  const [editingStudentDataBox, setEditingStudentDataBox] =
+    useState<ExamSlot | null>(null);
+  // Notiz Bearbeitung
+  const [editingNoteStudent, setEditingNoteStudent] = useState<ExamSlot | null>(
+    null,
+  );
+
+  // 1. Daten laden und nach Status verteilen
+  async function loadAndDistributeData() {
+    const { data, error } = await getExamDays();
+
+    if (error) {
+      toast.error("Fehler beim Laden der Prüfungsdaten");
+      return;
+    }
+
+    if (data) {
+      const newColumns = {
+        check: [] as ExamSlot[],
+        blocked: [] as ExamSlot[],
+        missing: [] as ExamSlot[],
+        ready: [] as ExamSlot[],
+      };
+
+      data.forEach((day) => {
+        if (day.exam_slots && day.exam_slots.length > 0) {
+          // Nur Slots filtern, bei denen ein Schüler eingetragen ist
+          const filledSlots = day.exam_slots.filter(
+            (slot: ExamSlot) =>
+              slot.student_name && slot.student_name.trim() !== "",
+          );
+
+          filledSlots.forEach((slot: ExamSlot) => {
+            const slotWithDate = {
+              ...slot,
+              exam_date: day.exam_date,
+            };
+
+            const currentStatus = slot.status || "check";
+            if (currentStatus === "blocked" || currentStatus === "red") {
+              newColumns.blocked.push(slotWithDate);
+            } else if (
+              currentStatus === "missing" ||
+              currentStatus === "orange"
+            ) {
+              newColumns.missing.push(slotWithDate);
+            } else if (currentStatus === "ready" || currentStatus === "green") {
+              newColumns.ready.push(slotWithDate);
+            } else {
+              newColumns.check.push(slotWithDate); // Standard / Grau
+            }
+          });
+        }
+      });
+
+      setColumns(newColumns);
+    }
+  }
+
+  // Wird direkt beim Laden der Komponente ausgeführt
+  useEffect(() => {
+    loadAndDistributeData();
+  }, []);
+
+  // 2. Drag & Drop Logik inklusive Speicherung in Supabase
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!over) return;
 
-    const StudentId = active.id.toString();
-    const newColumn = over.id.toString() as ColumnId;
+    const studentId = active.id.toString();
+    const newColumnId = over.id.toString() as ColumnId;
+
+    // herausfinden, in welcher Spalte der Schüler vorher war
+    let oldColumnId: ColumnId | null = null;
+    Object.entries(columns).forEach(([colId, students]) => {
+      if (students.some((s) => s.id === studentId)) {
+        oldColumnId = colId as ColumnId;
+      }
+    });
+
+    if (oldColumnId === newColumnId) {
+      return;
+    }
+
+    const statusMap: Record<ColumnId, string> = {
+      check: "gray",
+      blocked: "red",
+      missing: "orange",
+      ready: "green",
+    };
+
+    const newDbStatus = statusMap[newColumnId];
+
+    // In Supabase speichern, damit es beim Neuladen erhalten bleibt
+    const updateData =
+      newDbStatus === "green"
+        ? {
+            status: newDbStatus,
+            notes: null,
+          }
+        : {
+            status: newDbStatus,
+          };
+
+    const { error } = await updateExamSlot(studentId, updateData);
+
+    if (error) {
+      toast.error("Fehler beim Speichern des Status!");
+      return;
+    }
 
     setColumns((prev) => {
-      let movedStudent;
+      let movedStudent: any;
 
       const updatedColumns = Object.fromEntries(
         Object.entries(prev).map(([columnId, students]) => {
-          // Object.entries = aus Objekt -> Array
-          // Object.fromEntries = aus Array -> Objekt
-
           const filtered = students.filter((student) => {
-            if (student.id === StudentId) {
+            if (student.id === studentId) {
               movedStudent = student;
-              return false; //   entfernt diese Karte aus der alten Spalte.
+              return false;
             }
-
-            return true; // Alle anderen Karten bleiben in der Spalte.
+            return true;
           });
 
-          return [columnId, filtered]; // Neue Version der aktuellen Spalte zurückgeben.
+          return [columnId, filtered];
         }),
-      ) as typeof prev; // nimmt den Typ der Variable prev
+      ) as typeof prev;
 
       if (movedStudent) {
-        updatedColumns[newColumn] = [
-          ...updatedColumns[newColumn],
-          movedStudent,
+        updatedColumns[newColumnId] = [
+          ...updatedColumns[newColumnId],
+          // { ...movedStudent, status: newDbStatus },
+
+          {
+            ...movedStudent,
+            status: newDbStatus,
+            notes: newDbStatus === "green" ? null : movedStudent.notes,
+          },
         ];
       }
       return updatedColumns;
     });
+
+    toast.success("Status aktualisiert!");
+  };
+
+  const handleSaveStudent = async () => {
+    if (!editingStudentDataBox) return;
+
+    const { error } = await updateExamSlot(editingStudentDataBox.id, {
+      student_name: editingStudentDataBox.student_name,
+      license_class: editingStudentDataBox.license_class,
+      instructor_name: editingStudentDataBox.instructor_name,
+      student_appointment: editingStudentDataBox.student_appointment,
+      exam_time: editingStudentDataBox.exam_time,
+    });
+
+    if (error) {
+      toast.error("Fehler beim Aktualisieren");
+      return;
+    }
+
+    toast.success("Schülerdaten gespeichert");
+
+    // Fenster schließen
+    setEditingStudentDataBox(null);
+
+    // Daten neu laden
+    loadAndDistributeData();
+  };
+
+  const handleSaveNote = async () => {
+    if (!editingNoteStudent) return;
+
+    const { error } = await updateExamSlot(editingNoteStudent.id, {
+      notes: editingNoteStudent.notes,
+    });
+
+    if (error) {
+      toast.error("Fehler beim Speichern der Notiz");
+      return;
+    }
+
+    toast.success("Notiz gespeichert");
+
+    setEditingNoteStudent(null);
+
+    loadAndDistributeData();
   };
 
   return (
@@ -84,101 +256,243 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
       </div>
 
       {/* Titels */}
-
       <div className="grid grid-cols-4 w-full gap-2 rounded-2xl text-white bg-orange-500 p-1 overflow-x-hidden break-all">
         <h2 className="border-r border-gray-300 w-full flex justify-center font-bold">
           Zum Überprüfen
         </h2>
-
-        <h2 className="border-r border-gray-300  flex justify-center font-bold">
+        <h2 className="border-r border-gray-300 flex justify-center font-bold">
           Antritt nicht möglich
         </h2>
-        <h2 className="border-r border-gray-300  flex justify-center font-bold">
+        <h2 className="border-r border-gray-300 flex justify-center font-bold">
           Einiges fehlt
         </h2>
         <h2 className="flex justify-center font-bold">Antritt möglich</h2>
       </div>
 
-      {/* Columns  */}
+      {/* Columns */}
       <DndContext onDragEnd={handleDragEnd}>
+        {/* Schüler update inputs für Studentdatabox */}
+        {editingStudentDataBox && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-5 w-96 space-y-3">
+              <h2 className="flex justify-center font-bold text-lg text-orange-500">
+                Schüler bearbeiten
+              </h2>
+
+              <label className="text-orange-500 font-bold">Name:</label>
+              <input
+                className="border rounded p-2 w-full"
+                value={editingStudentDataBox.student_name}
+                onChange={(e) =>
+                  setEditingStudentDataBox({
+                    ...editingStudentDataBox,
+                    student_name: e.target.value,
+                  })
+                }
+              />
+              <label className="text-orange-500 font-bold">Klasse:</label>
+              <input
+                className="border rounded p-2 w-full"
+                value={editingStudentDataBox.license_class ?? ""}
+                onChange={(e) =>
+                  setEditingStudentDataBox({
+                    ...editingStudentDataBox,
+                    license_class: e.target.value,
+                  })
+                }
+              />
+              <label className="text-orange-500 font-bold">Fahrlehrer:</label>
+              <input
+                className="border rounded p-2 w-full"
+                value={editingStudentDataBox.instructor_name ?? ""}
+                onChange={(e) =>
+                  setEditingStudentDataBox({
+                    ...editingStudentDataBox,
+                    instructor_name: e.target.value,
+                  })
+                }
+              />
+
+              <label className="text-orange-500 font-bold">Uhrzeit:</label>
+              <input
+                className="border rounded p-2 w-full"
+                type="time"
+                value={editingStudentDataBox.student_appointment ?? ""}
+                onChange={(e) =>
+                  setEditingStudentDataBox({
+                    ...editingStudentDataBox,
+                    student_appointment: e.target.value,
+                  })
+                }
+              />
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => setEditingStudentDataBox(null)}
+                  className="flex-1 text-gray-500 border border-gray-500 hover:bg-orange-200"
+                >
+                  <Ban className="text-red-500" />
+                  Abbrechen
+                </Button>
+
+                <Button
+                  onClick={handleSaveStudent}
+                  className="flex-1 bg-green-300 hover:bg-green-400"
+                >
+                  <Save size={14} />
+                  Speichern
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* // Notizen in StudentDataBox */}
+        {editingNoteStudent && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-5 w-80 space-y-3">
+              <h2 className="text-center font-bold text-orange-500">
+                Grund eingeben
+              </h2>
+
+              <textarea
+                className="border rounded p-2 w-full h-24 resize-none"
+                placeholder="Warum bekommt der Schüler diesen Status?"
+                value={editingNoteStudent.notes ?? ""}
+                onChange={(e) =>
+                  setEditingNoteStudent({
+                    ...editingNoteStudent,
+                    notes: e.target.value,
+                  })
+                }
+              />
+
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => setEditingNoteStudent(null)}
+                  className="flex-1 text-gray-500 border border-gray-500 hover:bg-orange-200"
+                >
+                  <Ban className="text-red-500" />
+                  Abbrechen
+                </Button>
+
+                <Button
+                  onClick={handleSaveNote}
+                  className="flex-1 bg-green-300 hover:bg-green-400"
+                >
+                  <Save size={14} />
+                  Speichern
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Spalten (Columns), denen die StudentDataBox zugewiesen wird */}
         <div className="grid grid-cols-4 w-full overflow-y-scroll gap-2 rounded-2xl bg-orange-50 p-1 ">
+          {/* Spalte 1: Check */}
           <DropColumn
             id="check"
             className="border-r border-gray-300 flex flex-col gap-2 p-1 bg-gray-300 rounded-2xl"
           >
-            <Button
-              className="
-                h-16 rounded-xl border-2 border-dashed 
-                border-black text-black
-                flex items-center justify-center
-                hover:bg-gray-200
-                "
-            >
+            <Button className="h-16 rounded-xl border-2 border-dashed border-black text-black flex items-center justify-center hover:bg-gray-200">
               <Plus />
             </Button>
-
             {columns.check.map((student) => (
-              <StudentDataBox key={student.id} id={student.id} />
+              <StudentDataBox
+                key={student.id}
+                id={student.id}
+                studentName={student.student_name}
+                licenseClass={student.license_class}
+                instructorName={student.instructor_name}
+                examDate={student.exam_date}
+                studentAppointment={student.student_appointment}
+                examTime={student.exam_time}
+                status={student.status}
+                notes={student.notes}
+                onEdit={() => setEditingStudentDataBox(student)}
+                onNote={() => setEditingNoteStudent(student)}
+              />
             ))}
           </DropColumn>
 
+          {/* Spalte 2: Blocked */}
           <DropColumn
             id="blocked"
             className="border-r border-gray-300 flex flex-col gap-2 p-1 bg-red-400 rounded-2xl"
           >
-            <Button
-              className="
-                h-16 rounded-xl border-2 border-dashed 
-                border-black text-black
-                flex items-center justify-center
-                hover:bg-gray-200
-                "
-            >
+            <Button className="h-16 rounded-xl border-2 border-dashed border-black text-black flex items-center justify-center hover:bg-gray-200">
               <Plus />
             </Button>
-
             {columns.blocked.map((student) => (
-              <StudentDataBox key={student.id} id={student.id} />
+              <StudentDataBox
+                key={student.id}
+                id={student.id}
+                studentName={student.student_name}
+                licenseClass={student.license_class}
+                instructorName={student.instructor_name}
+                examDate={student.exam_date}
+                studentAppointment={student.student_appointment}
+                examTime={student.exam_time}
+                status={student.status}
+                notes={student.notes}
+                onEdit={() => setEditingStudentDataBox(student)}
+                onNote={() => setEditingNoteStudent(student)}
+              />
             ))}
           </DropColumn>
 
+          {/* Spalte 3: Missing */}
           <DropColumn
             id="missing"
             className="border-r border-gray-300 flex flex-col gap-2 p-1 bg-orange-400 rounded-2xl"
           >
-            <Button
-              className="
-                h-16 rounded-xl border-2 border-dashed 
-                border-black text-black
-                flex items-center justify-center
-                hover:bg-gray-200
-                "
-            >
+            <Button className="h-16 rounded-xl border-2 border-dashed border-black text-black flex items-center justify-center hover:bg-gray-200">
               <Plus />
             </Button>
-
             {columns.missing.map((student) => (
-              <StudentDataBox key={student.id} id={student.id} />
+              <StudentDataBox
+                key={student.id}
+                id={student.id}
+                studentName={student.student_name}
+                licenseClass={student.license_class}
+                instructorName={student.instructor_name}
+                examDate={student.exam_date}
+                studentAppointment={student.student_appointment}
+                examTime={student.exam_time}
+                status={student.status}
+                notes={student.notes}
+                onEdit={() => setEditingStudentDataBox(student)}
+                onNote={() => setEditingNoteStudent(student)}
+              />
             ))}
           </DropColumn>
 
+          {/* Spalte 4: Ready */}
           <DropColumn
             id="ready"
             className="border-r border-gray-300 flex flex-col gap-2 p-1 bg-green-400 rounded-2xl"
           >
-            <Button
-              className="
-                h-16 rounded-xl border-2 border-dashed 
-                border-black text-black
-                flex items-center justify-center
-                hover:bg-gray-200
-                "
-            >
+            <Button className="h-16 rounded-xl border-2 border-dashed border-black text-black flex items-center justify-center hover:bg-gray-200">
               <Plus />
             </Button>
-
             {columns.ready.map((student) => (
-              <StudentDataBox key={student.id} id={student.id} />
+              <StudentDataBox
+                key={student.id}
+                id={student.id}
+                studentName={student.student_name}
+                licenseClass={student.license_class}
+                instructorName={student.instructor_name}
+                examDate={student.exam_date}
+                studentAppointment={student.student_appointment}
+                examTime={student.exam_time}
+                status={student.status}
+                notes={student.notes}
+                onEdit={() => setEditingStudentDataBox(student)}
+                onNote={() => setEditingNoteStudent(student)}
+              />
             ))}
           </DropColumn>
         </div>

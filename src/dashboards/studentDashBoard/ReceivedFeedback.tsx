@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { Button } from "@/components/button";
-import { ChevronRight, Lightbulb, Star, User, X } from "lucide-react";
+import { ChevronRight, Lightbulb, User, X } from "lucide-react";
 import { useState } from "react";
 
 const feedbacks = [

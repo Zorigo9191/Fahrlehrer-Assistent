@@ -1,6 +1,5 @@
 import { Button } from "@/components/button";
 import Footer from "@/components/footer";
-
 import {
   LogOut,
   Briefcase,
@@ -14,8 +13,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstructoAccountItems from "./InstructorAccountItems";
 import DateCreateForm from "./DateCreateFrom";
-import ExamList from "../examLists/ExamList";
+
 import StudentCheck from "./StudentCheck";
+import ExamList from "../sharedExamLists/ExamList.tsx";
 
 const footerItems = [
   {
@@ -43,6 +43,12 @@ export default function OfficeDashBoard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [createDate, setCreateDate] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleSaved = () => {
+    setCreateDate(false);
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   const officeDashBoard = (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
@@ -81,6 +87,7 @@ export default function OfficeDashBoard() {
                 onClose={() => {
                   setCreateDate(false);
                 }}
+                onSaved={handleSaved}
               />
             </div>
           </div>
@@ -99,6 +106,7 @@ export default function OfficeDashBoard() {
         setActiveTab={setActiveTab}
         showActions={true}
         role={"office"}
+        refreshTrigger={refreshTrigger}
       />
     </div>
   );

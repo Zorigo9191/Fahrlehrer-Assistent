@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
 import { Button } from "@/components/button";
-import { Ban, Eye, EyeOff, Save, X } from "lucide-react";
+import { Ban, Eye, EyeOff, Save } from "lucide-react";
 import { useState } from "react";
 import { createInstructor } from "./instructorService/InstructorService";
 
@@ -30,7 +30,6 @@ export default function InstructorCreateForm({
   const [teachingClasses, setTeachingClasses] = useState<string[]>([]);
 
   const handleSave = async () => {
-    console.log("SAVE BUTTON GEDRÜCKT");
     const { error } = await createInstructor({
       first_name: firstName,
       last_name: lastName,

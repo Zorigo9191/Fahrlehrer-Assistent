@@ -1,7 +1,7 @@
 import { Button } from "@/components/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
-import { Bike, Car, Eye, EyeOff, Save } from "lucide-react";
+import { Bike, Car, Save } from "lucide-react";
 import { useState } from "react";
 
 type StudentRegisterFormProps = {
@@ -22,7 +22,7 @@ export default function StudentRegisterForm({
     { value: "A", type: "bike", color: "text-blue-700" },
   ];
 
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const [selectedClass, setSelectedClass] = useState("B197");
 
   const selectedLicense = licenseClasses.find(
@@ -42,6 +42,7 @@ export default function StudentRegisterForm({
           space-y-5
           sm:space-y-6"
       >
+        {/*  Name-Feld */}
         <Field>
           <FieldLabel htmlFor="name">Name eingeben</FieldLabel>
 
@@ -60,7 +61,18 @@ export default function StudentRegisterForm({
           />
         </Field>
 
+        {/*  E-Mail-Feld */}
         <Field>
+          <FieldLabel htmlFor="email">E-Mail-Adresse</FieldLabel>
+          <Input
+            id="email"
+            type="email"
+            placeholder="max@mustermann.de"
+            className="h-12 w-full rounded-xl px-4 text-base md:h-14"
+          />
+        </Field>
+
+        {/* <Field>
           <FieldLabel htmlFor="password">Passwort vergeben</FieldLabel>
 
           <div className="relative">
@@ -86,7 +98,7 @@ export default function StudentRegisterForm({
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-        </Field>
+        </Field> */}
         <div className="flex items-center gap-2">
           {selectedLicense?.type === "bike" ? (
             <Bike className="text-blue-700" size={18} />

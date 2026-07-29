@@ -15,9 +15,10 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ExamList from "../examLists/ExamList";
-import StudentList from "../studentLists/StudentList";
-import DrivingLessonAppointment from "../apointmentCards/DrivingLessonAppointment";
+import StudentList from "../sharedStudentComponents/StudentList.tsx";
+import DrivingLessonAppointment from "../appointmentCards/drivingLessonAppointment.tsx";
+
+import ExamList from "../sharedExamLists/ExamList.tsx";
 
 const footerItems = [
   {

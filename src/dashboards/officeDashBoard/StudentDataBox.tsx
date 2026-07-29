@@ -1,14 +1,38 @@
 import { Card } from "@/components/card";
 import { useDraggable } from "@dnd-kit/core";
 import { Label } from "@radix-ui/react-label";
-import { Check, Pencil, Trash } from "lucide-react";
+import { Pencil, MessageSquare } from "lucide-react";
 import { CSS } from "@dnd-kit/utilities";
 
 type StudentDataBoxProps = {
   id: string;
+  studentName: string | null;
+  licenseClass: string | null;
+  instructorName: string | null;
+  examDate: string;
+  studentAppointment: string | null;
+  examTime: string;
+  status: string;
+  notes: string | null;
+
+  onEdit?: () => void;
+  onNote?: () => void;
 };
 
-export default function StudentDataBox({ id }: StudentDataBoxProps) {
+export default function StudentDataBox(props: StudentDataBoxProps) {
+  const {
+    id,
+    studentName,
+    licenseClass,
+    instructorName,
+    examDate,
+    studentAppointment,
+    examTime,
+    status,
+    notes,
+    onEdit,
+    onNote,
+  } = props;
   // attributes => Dies sind HTML-Attribute (z. B. role="button" , tabindex="0" ,
   // aria-pressed="false" )
   // =====================================================================================
@@ -28,20 +52,25 @@ export default function StudentDataBox({ id }: StudentDataBoxProps) {
   // (z. B. wie viele Pixel es nach links/rechts oder oben/unten bewegt wurde:
   // { x: 10, y: 50 }).
   // =====================================================================================
-
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
 
-  const object = {
+  const styleObject = {
     transform: CSS.Translate.toString(transform),
   };
 
+  const formattedDate = examDate
+    ? new Date(examDate).toLocaleDateString("de-DE")
+    : "-";
+
+  const displayTime = studentAppointment || examTime || "00:00";
+
   return (
     <Card
-      className="flex w-full flex-col p-2 overflow-hidden  bg-gray-100 border border-gray-300"
+      className="flex w-full flex-col p-2 overflow-hidden bg-gray-100 border border-gray-300 cursor-grab active:cursor-grabbing select-none"
       ref={setNodeRef}
-      style={object}
+      style={styleObject}
       {...listeners}
       {...attributes}
     >
@@ -49,40 +78,70 @@ export default function StudentDataBox({ id }: StudentDataBoxProps) {
         <Label>
           <strong>Name:</strong>
         </Label>
-        <p className="text-orange-600">Mathias Stelzer</p>
+        <p className="text-orange-600 font-medium">
+          {studentName || "Kein Schüler zugewiesen"}
+        </p>
       </div>
       <div className="flex gap-1">
         <Label>
           <strong>Klasse:</strong>
         </Label>
-        <p className="text-orange-600">B197</p>
+        <p className="text-orange-600">{licenseClass || "-"}</p>
         <Label>
           <strong>FL:</strong>
         </Label>
-        <p className="text-orange-600">Ts</p>
+        <p className="text-orange-600">{instructorName || "-"}</p>
       </div>
 
       <div className="flex gap-1">
         <Label>
-          <strong>Prüfung am:</strong>
+          <strong>Prüfungstag:</strong>
         </Label>
-        <p className="text-orange-600">02.05.2026</p>
+        <p className="text-orange-600">{formattedDate}</p>
       </div>
-      <div className="flex gap-2 justify-end mt-2">
-        <Check
-          className="cursor-pointer  rounded-sm p-0.5 bg-green-500 text-white"
-          size={18}
-        />
 
+      <div className="flex gap-1">
+        <Label>
+          <strong>Uhrzeit:</strong>
+        </Label>
+        <p className="text-orange-600">{displayTime}</p>
+      </div>
+
+      {notes && (
+        <div className="flex gap-1 mt-1">
+          <Label>
+            <strong>Notiz:</strong>
+          </Label>
+
+          <p className="text-blue-600 break-words">{notes}</p>
+        </div>
+      )}
+
+      {/* Verhindert, dass Klicks auf die Buttons das Drag-System auslösen */}
+      <div
+        className="flex gap-2 justify-end mt-2"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Pencil
-          className="cursor-pointer  rounded-sm p-0.5 bg-orange-500 text-white"
+          className="cursor-pointer rounded-sm p-0.5 bg-orange-500 text-white hover:bg-orange-600 transition"
           size={18}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit?.();
+          }}
         />
 
-        <Trash
-          className="cursor-pointer text-white bg-red-500 p-0.5 rounded-sm"
-          size={18}
-        />
+        {status !== "green" && (
+          <MessageSquare
+            className="cursor-pointer rounded-sm p-0.5 bg-blue-500 text-white hover:bg-blue-600 transition"
+            size={18}
+            onClick={(e) => {
+              e.stopPropagation();
+              onNote?.();
+            }}
+          />
+        )}
       </div>
     </Card>
   );

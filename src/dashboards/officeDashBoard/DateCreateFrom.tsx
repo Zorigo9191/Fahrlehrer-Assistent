@@ -9,34 +9,82 @@ import {
 import { Input } from "@/components/input";
 import { Label } from "@/components/label";
 import { Button } from "@/components/button";
-import { Ban, Save } from "lucide-react";
-import { supabase } from "../../lib/supabase.ts";
+import { AlertTriangle, Ban, Save } from "lucide-react";
 import { useState } from "react";
+import { createExamDay, getExamDays } from "./officeService/OfficeService.ts";
+import { toast } from "sonner";
 
 type DateCreateFormProps = {
   onClose: () => void;
+  onSaved: () => void;
 };
 
-export default function DateCreateForm({ onClose }: DateCreateFormProps) {
+export default function DateCreateForm({
+  onClose,
+  onSaved,
+}: DateCreateFormProps) {
   const [examDay, setExamDate] = useState("");
-  const [examTime, setExamTime] = useState("");
   const [license, setLicense] = useState("");
+  const [slot, setSlots] = useState<number | "">(0);
 
   async function saveExamDate() {
-    const { error } = await supabase.from("exam_list").insert({
-      exam_date: examDay,
-      exam_time: examTime,
-      license_class: license,
-    });
+    const { data: existingExam } = await getExamDays();
+    const dateAlreadyExists = existingExam?.some(
+      (exam) => exam.exam_date === examDay,
+    );
 
-    if (error) {
-      console.log(error);
-
+    if (dateAlreadyExists) {
+      toast.error("Achtung: Dieses Datum existiert bereits!", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-gray-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+          title: "text-red-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
       return;
     }
+
+    // 1. Zuerst den Prüfungstag in exam_days erstellen
+    const { data: newDayData, error: dayError } = await createExamDay({
+      exam_date: examDay,
+      license_class: license,
+      slots: Number(slot) || 0,
+    });
+
+    if (dayError || !newDayData) {
+      console.error("Fehler beim Erstellen des Prüfungstages:", dayError);
+
+      toast.error("Fehler beim Speichern des Prüfungstages!", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-red-600" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+          title: "text-red-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+      return;
+    }
+
+    toast.success("Prüfungstag und Slots erfolgreich erstellt!", {
+      unstyled: true,
+      icon: <Save className="h-5 w-5 text-green-600" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+        title: "text-green-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
     setExamDate("");
-    setExamTime("");
     setLicense("");
+    setSlots("");
+
+    onSaved();
     onClose();
   }
 
@@ -48,34 +96,23 @@ export default function DateCreateForm({ onClose }: DateCreateFormProps) {
             Prüfungstermin erstellen
           </CardTitle>
           <CardDescription>
-            Trage die vollständigen Daten für die Prüfung ein.
+            Trage die Daten für den Prüfungstag ein. Die Plätze werden direkt
+            als Slots generiert.
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          *
           <div className="space-y-2">
-            <Label htmlFor="id">Prüfungsdatum</Label>
+            <Label htmlFor="date">Prüfungsdatum</Label>
             <Input
               id="date"
               type="date"
               value={examDay}
               onChange={(e) => setExamDate(e.target.value)}
-              placeholder="tt.mm.jjjj"
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="klasse">Prüfungszeit</Label>
-            <Input
-              id="time"
-              type="time"
-              value={examTime}
-              onChange={(e) => setExamTime(e.target.value)}
-              placeholder="z. B. 08:55"
-              required
-            />
-          </div>
+
           <div className="space-y-2">
             <Label htmlFor="klasse">Klassen</Label>
             <Input
@@ -87,15 +124,29 @@ export default function DateCreateForm({ onClose }: DateCreateFormProps) {
               required
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="slots">Anzahl der Plätze</Label>
+            <Input
+              id="slots"
+              type="text"
+              value={slot}
+              onChange={(e) =>
+                setSlots(e.target.value === "" ? "" : Number(e.target.value))
+              }
+              placeholder="8"
+              required
+            />
+          </div>
         </CardContent>
 
         <CardFooter>
-          <div className="flex w-full gap-2 ">
+          <div className="flex w-full gap-2">
             <Button
               variant="ghost"
-              type="submit"
+              type="button"
               onClick={saveExamDate}
-              className=" h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+              className="h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
             >
               <Save className="mr-2 h-4 w-4" />
               Speichern

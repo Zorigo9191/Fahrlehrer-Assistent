@@ -14,47 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
-      exam_list: {
+      available_lessons: {
+        Row: {
+          created_at: string | null
+          duration_minutes: number | null
+          id: number
+          instructor_id: string
+          lesson_date: string
+          lesson_time: string
+          status: string | null
+          student_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: never
+          instructor_id: string
+          lesson_date: string
+          lesson_time: string
+          status?: string | null
+          student_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: never
+          instructor_id?: string
+          lesson_date?: string
+          lesson_time?: string
+          status?: string | null
+          student_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_available_lesson_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_available_lesson_student"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      driving_students: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string
+          id: number
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: never
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: never
+        }
+        Relationships: []
+      }
+      exam_days: {
         Row: {
           created_at: string
           exam_date: string
-          exam_time: string
           id: string
-          instructor_name: string | null
           license_class: string
-          notes: string | null
-          status: string | null
-          student_name: string | null
-          updated_at: string
-          user_id: string | null
+          slots: number
         }
         Insert: {
           created_at?: string
           exam_date: string
-          exam_time: string
           id?: string
-          instructor_name?: string | null
           license_class: string
-          notes?: string | null
-          status?: string | null
-          student_name?: string | null
-          updated_at?: string
-          user_id?: string | null
+          slots: number
         }
         Update: {
           created_at?: string
           exam_date?: string
+          id?: string
+          license_class?: string
+          slots?: number
+        }
+        Relationships: []
+      }
+      exam_slots: {
+        Row: {
+          created_at: string
+          exam_day_id: string
+          exam_time: string
+          id: string
+          instructor_name: string | null
+          license_class: string | null
+          notes: string | null
+          status: string | null
+          student_appointment: string | null
+          student_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          exam_day_id: string
+          exam_time: string
+          id?: string
+          instructor_name?: string | null
+          license_class?: string | null
+          notes?: string | null
+          status?: string | null
+          student_appointment?: string | null
+          student_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          exam_day_id?: string
           exam_time?: string
           id?: string
           instructor_name?: string | null
-          license_class?: string
+          license_class?: string | null
           notes?: string | null
           status?: string | null
+          student_appointment?: string | null
           student_name?: string | null
-          updated_at?: string
-          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "exam_slots_exam_day_id_fkey"
+            columns: ["exam_day_id"]
+            isOneToOne: false
+            referencedRelation: "exam_days"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       instructors: {
         Row: {
@@ -85,6 +183,74 @@ export type Database = {
           teaching_classes?: string[]
         }
         Relationships: []
+      }
+      student_feedback: {
+        Row: {
+          created_at: string | null
+          feedback: string
+          id: number
+          instructor_id: string
+          license_class: string
+          student_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          feedback: string
+          id?: never
+          instructor_id: string
+          license_class: string
+          student_id: number
+        }
+        Update: {
+          created_at?: string | null
+          feedback?: string
+          id?: never
+          instructor_id?: string
+          license_class?: string
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_feedback_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_feedback_student"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_license_classes: {
+        Row: {
+          id: number
+          license_class: string
+          student_id: number
+        }
+        Insert: {
+          id?: never
+          license_class: string
+          student_id: number
+        }
+        Update: {
+          id?: never
+          license_class?: string
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_student_license"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

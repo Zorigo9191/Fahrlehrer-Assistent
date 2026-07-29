@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { User, X } from "lucide-react";
-import AcceptedDrivingLesson from "../apointmentCards/AcceptedDrivingLesson";
+import AcceptedDrivingLesson from "../appointmentCards/AcceptedDrivingLesson.tsx";
 
 type HiddenLessonsProps = {
   setActiveTab: (tab: string) => void;
