@@ -20,8 +20,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 
 import ReceivedFeedback from "./ReceivedFeedback";
 import HiddenLessons from "./HiddenLessons";
-import AcceptedDrivingLesson from "../appointmentCards/AcceptedDrivingLesson.tsx";
-import DrivingLessonAppointment from "../appointmentCards/drivingLessonAppointment.tsx";
+import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
+import AcceptedDrivingLesson from "../sharedAppointmentCards/AcceptedDrivingLesson.tsx";
 
 const footerItems = [
   {

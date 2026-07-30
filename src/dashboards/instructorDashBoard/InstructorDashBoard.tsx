@@ -16,9 +16,9 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentList from "../sharedStudentComponents/StudentList.tsx";
-import DrivingLessonAppointment from "../appointmentCards/drivingLessonAppointment.tsx";
 
 import ExamList from "../sharedExamLists/ExamList.tsx";
+import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
 
 const footerItems = [
   {
