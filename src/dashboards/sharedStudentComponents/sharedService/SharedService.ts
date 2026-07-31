@@ -113,3 +113,18 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
   }
   return { data, error: null };
 }
+
+//******* Feedback speichern*******
+
+// export async function createStudentFeedbacks(payload: StudentFeedInsert) {
+//   const { data, error } = await supabase
+//     .from("student_feedback")
+//     .insert(payload)
+//     .select();
+
+//   if (error) {
+//     console.error("Fehler beim Anlegen des Feedbacks:", error);
+//     return { data: null, error };
+//   }
+//   return { data, error: null };
+// }
