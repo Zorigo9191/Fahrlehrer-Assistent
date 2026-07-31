@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { Bike, Car, Pencil, Save } from "lucide-react";
 import { useState } from "react";
 
-export default function FeedbackCard() {
+export default function FeedbackCards() {
   const licenseClasses = [
     { value: "B197", type: "car", color: "text-blue-700" },
     { value: "B78", type: "car", color: "text-blue-700" },

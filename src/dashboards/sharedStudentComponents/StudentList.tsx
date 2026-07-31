@@ -8,11 +8,12 @@ import {
   Plus,
   MessageSquareQuote,
   ExternalLink,
+  Bike,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import StudentRegisterForm from "./StudentRegisterForm";
 import FeedbackForm from "./FeedbackForm";
-import FeedbackOverview from "./FeedbackOverview";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { supabase } from "../../lib/supabase.ts";
 import type { Database } from "../../types/database.types.ts";
@@ -121,7 +122,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
         <p className="text-center text-gray-500">Keine Schüler gefunden.</p>
       )}
 
-      {/* Schüler Karten */}
+      {/* Schüler Karten anzeigen*/}
 
       {!loading &&
         students.map((student) => {
@@ -149,12 +150,16 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                   </Avatar>
 
                   <div>
-                    <h3 className="text-lg font-bold text-blue-700">
-                      {student.full_name}
-                    </h3>
-                    {student.email && (
-                      <p className="text-xs text-gray-500">{student.email}</p>
-                    )}
+                    <div className="flex items-center gap-2 text-blue-700 font-bold">
+                      <label>Name:</label>
+                      <h3 className=" text-black ">{student.full_name}</h3>
+                    </div>
+                    <div className="flex items-center gap-2 font-bold text-blue-700">
+                      <label>E-mail:</label>
+                      {student.email && (
+                        <p className="text-sm text-black">{student.email}</p>
+                      )}
+                    </div>
                     <span className="text-sm">
                       wurde am <strong>{formattedDate}</strong> hinzugefügt.
                     </span>
@@ -171,17 +176,33 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                   </span>
 
                   {feedbackView && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4">
-                      <div className="relative max-w-md max-h-[90vh] overflow-y-auto scrollbar-none rounded-xl bg-white p-6 shadow-2xl">
+                    <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4">
+                      <div className="relative w-md min-h-15 max-h-[90vh] overflow-y-auto scrollbar-none rounded-xl bg-white p-6 shadow-2xl">
                         <Button
                           variant="ghost"
                           onClick={() => setFeedbackView(false)}
-                          className="border absolute right-4 top-3 text-gray-500 hover:text-black"
+                          className="border-2 absolute right-4 top-3 text-gray-500 hover:text-black"
                         >
                           <X />
                         </Button>
 
-                        <FeedbackOverview />
+                        {/* {feedbacks && feedbacks.length > 0 ? (
+                          <div className="mt-8 space-y-4">
+                            {feedbacks.map((feedback) => (
+                              <div
+                                key={feedback.id}
+                                className="rounded-lg border p-3"
+                              >
+                                <p>{feedback.message}</p>
+                                <span className="text-sm text-gray-500">
+                                  {feedback.author}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="mt-8 text-gray-500">keine Feedbacks!</p>
+                        )} */}
                       </div>
                     </div>
                   )}
@@ -191,7 +212,8 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
               <div className="flex items-center justify-between text-sm text-slate-700">
                 <div className="flex gap-2 items-center">
                   <Car size={16} className="text-blue-700" />
-                  <span>
+                  <Bike size={16} className="text-blue-700" />
+                  <span className="text-black">
                     Klassen:
                     <strong> {licenseClassesText}</strong>
                   </span>
@@ -229,6 +251,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                       </Button>
 
                       <FeedbackForm
+                        studentId={student.id}
                         onClose={() => {
                           setFeedbackGive(false);
                         }}

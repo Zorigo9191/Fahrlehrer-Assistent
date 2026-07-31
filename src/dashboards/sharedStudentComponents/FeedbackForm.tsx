@@ -2,14 +2,20 @@ import { Button } from "@/components/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
 import Textarea from "@/components/textArea";
-import { Ban, Bike, Car, Save } from "lucide-react";
+import { AlertTriangle, Ban, Bike, Car, Save } from "lucide-react";
 import { useState } from "react";
+import { createStudentFeedbacks } from "./sharedService/SharedService.ts";
+import { toast } from "sonner";
 
 type FeedbackFormProps = {
   onClose: () => void;
+  studentId: number;
 };
 
-export default function FeedbackForm({ onClose }: FeedbackFormProps) {
+export default function FeedbackForm({
+  onClose,
+  studentId,
+}: FeedbackFormProps) {
   const licenseClasses = [
     { value: "B197", type: "car", color: "text-blue-700" },
     { value: "B78", type: "car", color: "text-blue-700" },
@@ -22,13 +28,73 @@ export default function FeedbackForm({ onClose }: FeedbackFormProps) {
   ];
 
   const [selectedClass, setSelectedClass] = useState("B197");
+  const [feedbackData, setFeedbackData] = useState({
+    verkehrsbeobachtung: "",
+    geschwindigkeit: "",
+    fahrzeugpositionierung: "",
+    kommunikation: "",
+    fahrzeugbedienung: "",
+    allgemeines: "",
+  });
+
+  const handleChangeFeedbacks = (field: string, value: string) => {
+    setFeedbackData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const [instructorId] = useState("21f740a5-0b84-4e4a-9222-1342e05e0026");
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
   );
 
+  async function handleSaveFeedback(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    try {
+      const { data, error } = await createStudentFeedbacks({
+        feedback: JSON.stringify(feedbackData),
+        instructor_id: instructorId,
+        license_class: selectedClass,
+        student_id: studentId,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Feedbacks gespeichert:", data);
+
+      toast.success("Feedback wurde gespeichert", {
+        unstyled: true,
+        icon: <Save className="h-5 w-5 text-green-400" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+          title: "text-green-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+      onClose();
+    } catch (error) {
+      console.error(error);
+
+      toast.warning("Fehler beim Speichern des Feedbacks", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+    }
+  }
+
   return (
-    <form className="w-full mt-2 max-w-md mx-auto ">
+    <form
+      className="w-full mt-2 max-w-md mx-auto "
+      onSubmit={handleSaveFeedback}
+    >
       <FieldGroup className="space-y-4">
         <Field>
           <FieldLabel htmlFor="date">
@@ -71,37 +137,79 @@ export default function FeedbackForm({ onClose }: FeedbackFormProps) {
         <Field>
           <FieldLabel>Verkehrsbeobachtung</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.verkehrsbeobachtung}
+            onChange={(e) =>
+              handleChangeFeedbacks("verkehrsbeobachtung", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <Field>
           <FieldLabel>Geschwindigkeit</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.geschwindigkeit}
+            onChange={(e) =>
+              handleChangeFeedbacks("geschwindigkeit", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <Field>
           <FieldLabel>Fahrzeugpositionierung</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.fahrzeugpositionierung}
+            onChange={(e) =>
+              handleChangeFeedbacks("fahrzeugpositionierung", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <Field>
           <FieldLabel>Kommunikation</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.kommunikation}
+            onChange={(e) =>
+              handleChangeFeedbacks("kommunikation", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <Field>
           <FieldLabel>Fahrzeugbedienung</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.fahrzeugbedienung}
+            onChange={(e) =>
+              handleChangeFeedbacks("fahrzeugbedienung", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <Field>
           <FieldLabel>Allgemeines Feedback</FieldLabel>
 
-          <Textarea placeholder="..." className="h-24 resize-none" />
+          <Textarea
+            value={feedbackData.allgemeines}
+            onChange={(e) =>
+              handleChangeFeedbacks("allgemeines", e.target.value)
+            }
+            placeholder="..."
+            className="h-24 resize-none"
+          />
         </Field>
 
         <div className="flex gap-2 pt-2">

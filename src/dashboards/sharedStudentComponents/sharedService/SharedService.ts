@@ -13,7 +13,10 @@ type DrivingStudentInsert =
 type LicenseClassInsert =
   Database["public"]["Tables"]["student_license_classes"]["Insert"];
 
-//******* neue Schüler hinzufügen *******
+type StudentFeedInsert =
+  Database["public"]["Tables"]["student_feedback"]["Insert"];
+
+// ******* neue Schüler hinzufügen *******
 // export async function createDrivingStudents(payload: DrivingStudentInsert) {
 //   const { data, error } = await supabase
 //     .from("driving_students")
@@ -37,7 +40,7 @@ type LicenseClassInsert =
 //   return { data, error: null };
 // }
 
-// //******* FührerscheinKlasse holen *******
+//******* FührerscheinKlasse holen *******
 // export async function createStudentLicenseClass(payload: LicenseClassInsert[]) {
 //   const { data, error } = await supabase
 //     .from("student_license_classes")
@@ -94,4 +97,19 @@ export async function createStudentWithLicenseClasses(
       error: null,
     };
   }
+}
+
+//******* Feedback speichern*******
+
+export async function createStudentFeedbacks(payload: StudentFeedInsert) {
+  const { data, error } = await supabase
+    .from("student_feedback")
+    .insert(payload)
+    .select();
+
+  if (error) {
+    console.error("Fehler beim Anlegen des Feedbacks:", error);
+    return { data: null, error };
+  }
+  return { data, error: null };
 }

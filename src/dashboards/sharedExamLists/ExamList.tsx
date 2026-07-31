@@ -135,12 +135,6 @@ export default function ExamList({
     const oldSlotCount = currentDay?.exam_slots?.length ?? 0;
     const newSlotCount = Number(slotCount);
 
-    // const payload = {
-    //   exam_date: newDate,
-    //   license_class: newLicense,
-    //   slots: slotCount,
-    // };
-
     // Prüfungstag aktualisieren
     const { error } = await updateExamDate(editDayId, {
       exam_date: newDate,
