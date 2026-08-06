@@ -417,8 +417,7 @@ export default function ExamList({
           ))
         ) : (
           <p className="text-gray-500 text-sm italic text-center py-4">
-            Keine Slots für diesen Tag vorhanden. Klicke oben auf das
-            Plus-Symbol (+), um einen Slot hinzuzufügen.
+            Keine Slots für diesen Tag vorhanden.
           </p>
         )}
       </div>

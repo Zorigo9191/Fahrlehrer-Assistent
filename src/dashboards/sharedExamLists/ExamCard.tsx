@@ -10,7 +10,6 @@ import {
   Save,
   AlertTriangle,
   Ban,
-  Trash,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,8 +23,6 @@ import { toast } from "sonner";
 import type { Database } from "@/types/database.types.ts";
 
 type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"];
-
-export type Status = "gray" | "red" | "orange" | "green";
 
 const styles = {
   instructor: {
@@ -173,7 +170,7 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
     }
     toast.success("Prüfungsplatz gelöscht", {
       unstyled: true,
-      icon: <Trash className="h-5 w-5 text-red-600" />,
+      icon: <Trash2 className="h-5 w-5 text-red-600" />,
       classNames: {
         toast:
           "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
@@ -205,7 +202,7 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
         <h2 className={`text-lg font-bold ${styles[color].text}`}>
           Prüfungsplatz
         </h2>
-        <Statuslight status={exam.status} />
+        <Statuslight status={exam.status as Status} />
       </div>
 
       <div className="flex items-center gap-10 flex-wrap">
@@ -312,15 +309,16 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             Bearbeiten
           </Button>
         )}
-
-        <Button
-          variant="ghost"
-          onClick={handleDelete}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-600 hover:bg-red-200"
-        >
-          <Trash2 size={14} />
-          Löschen
-        </Button>
+        {color === "office" && (
+          <Button
+            variant="ghost"
+            onClick={handleDelete}
+            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-600 hover:bg-red-200"
+          >
+            <Trash2 size={14} />
+            Löschen
+          </Button>
+        )}
       </div>
     </div>
   );

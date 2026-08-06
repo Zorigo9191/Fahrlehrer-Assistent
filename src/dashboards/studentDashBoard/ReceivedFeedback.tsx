@@ -3,230 +3,230 @@ import { Button } from "@/components/button";
 import { ChevronRight, Lightbulb, User, X } from "lucide-react";
 import { useState } from "react";
 
-const feedbacks = [
-  {
-    id: 1,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 2,
-    date: "20.05.2026",
-    verkehrsbeobachtung: "Sehr gute Beobachtung",
-    geschwindigkeit: "Geschwindigkeit passend",
-    fahrzeugpositionierung: "Gut",
-    kommunikation: "Gut",
-    fahrzeugbedienung: "Sicher",
-    allgemein: "Fortschritt erkennbar.",
-  },
+// const feedbacks = [
+//   {
+//     id: 1,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 2,
+//     date: "20.05.2026",
+//     verkehrsbeobachtung: "Sehr gute Beobachtung",
+//     geschwindigkeit: "Geschwindigkeit passend",
+//     fahrzeugpositionierung: "Gut",
+//     kommunikation: "Gut",
+//     fahrzeugbedienung: "Sicher",
+//     allgemein: "Fortschritt erkennbar.",
+//   },
 
-  {
-    id: 3,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
+//   {
+//     id: 3,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
 
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
 
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-  {
-    id: 4,
-    date: "12.05.2026",
-    verkehrsbeobachtung:
-      "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
-    geschwindigkeit: "Unzureichende Geschwindigkeit",
-    fahrzeugpositionierung: "Falsche Positionierung",
-    kommunikation: "Kommunikation verbessern",
-    fahrzeugbedienung: "Bedienung unsicher",
-    allgemein: "Insgesamt ordentlich gefahren.",
-  },
-];
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+//   {
+//     id: 4,
+//     date: "12.05.2026",
+//     verkehrsbeobachtung:
+//       "Unzureichende VK Beobachtung sadsajdjasdjasjdasjdasjdjasjdajsdjasjdajsdjasjdajsjjsdja",
+//     geschwindigkeit: "Unzureichende Geschwindigkeit",
+//     fahrzeugpositionierung: "Falsche Positionierung",
+//     kommunikation: "Kommunikation verbessern",
+//     fahrzeugbedienung: "Bedienung unsicher",
+//     allgemein: "Insgesamt ordentlich gefahren.",
+//   },
+// ];
 
 type Feedback = {
   id: number;

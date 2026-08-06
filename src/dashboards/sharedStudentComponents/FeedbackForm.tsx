@@ -28,6 +28,7 @@ export default function FeedbackForm({
   ];
 
   const [selectedClass, setSelectedClass] = useState("B197");
+  const [examDay, setExamDay] = useState<string>("");
   const [feedbackData, setFeedbackData] = useState({
     verkehrsbeobachtung: "",
     geschwindigkeit: "",
@@ -55,6 +56,7 @@ export default function FeedbackForm({
         instructor_id: instructorId,
         license_class: selectedClass,
         student_id: studentId,
+        created_at: examDay,
       });
 
       if (error) {
@@ -77,7 +79,7 @@ export default function FeedbackForm({
     } catch (error) {
       console.error(error);
 
-      toast.warning("Fehler beim Speichern des Feedbacks", {
+      toast.warning("Bitte Datum auswählen", {
         unstyled: true,
         icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
         classNames: {
@@ -103,8 +105,10 @@ export default function FeedbackForm({
 
           <Input
             id="date"
+            value={examDay || ""}
             type="date"
             className="h-10 rounded-xl text-blue-700 border-2"
+            onChange={(e) => setExamDay(e.target.value)}
           />
         </Field>
 

@@ -22,6 +22,7 @@ export type Database = {
           instructor_id: string
           lesson_date: string
           lesson_time: string
+          license_class: string
           status: string | null
           student_id: number | null
         }
@@ -32,6 +33,7 @@ export type Database = {
           instructor_id: string
           lesson_date: string
           lesson_time: string
+          license_class: string
           status?: string | null
           student_id?: number | null
         }
@@ -42,6 +44,7 @@ export type Database = {
           instructor_id?: string
           lesson_date?: string
           lesson_time?: string
+          license_class?: string
           status?: string | null
           student_id?: number | null
         }
@@ -219,6 +222,42 @@ export type Database = {
           },
           {
             foreignKeyName: "fk_feedback_student"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_instructors: {
+        Row: {
+          id: number
+          instructor_id: string
+          license_class: string
+          student_id: number
+        }
+        Insert: {
+          id?: never
+          instructor_id: string
+          license_class: string
+          student_id: number
+        }
+        Update: {
+          id?: never
+          instructor_id?: string
+          license_class?: string
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_student_instructor_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_student_instructor_student"
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "driving_students"

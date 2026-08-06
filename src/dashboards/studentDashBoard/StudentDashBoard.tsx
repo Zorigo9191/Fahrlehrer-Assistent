@@ -20,8 +20,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 
 import ReceivedFeedback from "./ReceivedFeedback";
 import HiddenLessons from "./HiddenLessons";
-import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
+
 import AcceptedDrivingLesson from "../sharedAppointmentCards/AcceptedDrivingLesson.tsx";
+import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
 
 const footerItems = [
   {
@@ -122,7 +123,10 @@ export default function InstructorDashBoard() {
 
       {/* Fahrstunde vergeben */}
 
-      <DrivingLessonAppointment role="student" />
+      <DrivingLessonAppointment
+        role="student"
+        instructorId={"21f740a5-0b84-4e4a-9222-1342e05e0026"}
+      />
 
       {/* Angenommene Fahrstunde */}
       <AcceptedDrivingLesson role="student" />
