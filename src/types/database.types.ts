@@ -29,7 +29,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           duration_minutes?: number | null
-          id?: never
+          id?: number
           instructor_id: string
           lesson_date: string
           lesson_time: string
@@ -40,7 +40,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           duration_minutes?: number | null
-          id?: never
+          id?: number
           instructor_id?: string
           lesson_date?: string
           lesson_time?: string

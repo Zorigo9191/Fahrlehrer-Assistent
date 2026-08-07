@@ -72,11 +72,11 @@ export async function createAvailableLesson(payload: AvailableLessonInsert) {
 
 // DeleteLesson
 
-export async function deleteLesson(id: number) {
+export async function deleteLesson(lessonId: number) {
   const { error } = await supabase
     .from("available_lessons")
     .delete()
-    .eq("id", id);
+    .eq("id", lessonId);
 
   if (error) {
     console.error("Fehler beim Löschen der Terminanfrage:", error);

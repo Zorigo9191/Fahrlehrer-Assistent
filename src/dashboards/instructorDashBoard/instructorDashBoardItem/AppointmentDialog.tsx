@@ -48,6 +48,7 @@ export default function AppointmentDialog({
         license_class: category,
         duration_minutes: Number(duration),
         instructor_id: instructorId,
+        status: "offen",
       };
 
       const { error } = await createAvailableLesson(newAvailableLesson);

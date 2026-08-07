@@ -17,11 +17,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-
+import ExamAppointment from "./ExamAppointment.tsx";
 import ReceivedFeedback from "./ReceivedFeedback";
 import HiddenLessons from "./HiddenLessons";
 
-import AcceptedDrivingLesson from "../sharedAppointmentCards/AcceptedDrivingLesson.tsx";
 import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
 
 const footerItems = [
@@ -39,7 +38,7 @@ const footerItems = [
     color: "",
   },
   {
-    id: "archived",
+    id: "exams",
     label: "Ausgeblendet",
     icon: FileX,
     color: "",
@@ -126,10 +125,11 @@ export default function InstructorDashBoard() {
       <DrivingLessonAppointment
         role="student"
         instructorId={"21f740a5-0b84-4e4a-9222-1342e05e0026"}
+        refreshKey={0}
       />
 
       {/* Angenommene Fahrstunde */}
-      <AcceptedDrivingLesson role="student" />
+      <HiddenLessons />
     </div>
   );
 
@@ -156,8 +156,8 @@ export default function InstructorDashBoard() {
             {activeTab === "feedbacks" && (
               <ReceivedFeedback setActiveTab={setActiveTab} />
             )}
-            {activeTab === "archived" && (
-              <HiddenLessons setActiveTab={setActiveTab} />
+            {activeTab === "exams" && (
+              <ExamAppointment setActiveTab={setActiveTab} />
             )}
           </div>
 

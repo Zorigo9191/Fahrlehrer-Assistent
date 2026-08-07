@@ -82,8 +82,6 @@ export default function DrivingLessonAppointment({
   const [lessons, setLessons] = useState<AvailableLessonRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
-  // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  // const [showAcceptDialog, setShowAcceptDialog] = useState(false);
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
   const [activeAcceptId, setActiveAcceptId] = useState<number | null>(null);
   const [editingFormData, setEditingFormData] =
@@ -290,7 +288,14 @@ export default function DrivingLessonAppointment({
           const duration = lesson.duration_minutes
             ? lesson.duration_minutes
             : null;
-          const lessonStatus = lesson.status ? lesson.status : "Verfügbar";
+          let lessonStatus = "Verfügbar";
+          if (lesson.status === "vergeben") {
+            if (role === "student" && lesson.student_id === studentId) {
+              lessonStatus = "Bereits gebucht";
+            } else {
+              lessonStatus = "Vergeben";
+            }
+          }
           const formattedTime = lessonTime
             ? `${lessonTime} Uhr`
             : "Uhrzeit n.v.";
@@ -417,10 +422,14 @@ export default function DrivingLessonAppointment({
                   <>
                     <Button
                       variant="ghost"
+                      disabled={lesson.status === "vergeben"}
                       className="h-8 w-52 px-3 text-sm border border-green-700 text-green-700 hover:bg-green-100"
                       onClick={() => setActiveAcceptId(lesson.id)}
                     >
-                      <Check size={14} className="mr-2" /> Annehmen
+                      <Check size={14} className="mr-2" />
+                      {lesson.status === "vergeben"
+                        ? "Bereits gebucht!"
+                        : "Annehmen"}
                     </Button>
                   </>
                 )}
