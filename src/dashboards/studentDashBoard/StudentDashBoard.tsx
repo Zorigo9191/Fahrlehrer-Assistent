@@ -154,7 +154,7 @@ export default function InstructorDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && studentDashBoard}
             {activeTab === "feedbacks" && (
-              <ReceivedFeedback setActiveTab={setActiveTab} />
+              <ReceivedFeedback setActiveTab={setActiveTab} studentId={111} />
             )}
             {activeTab === "exams" && (
               <ExamAppointment setActiveTab={setActiveTab} />

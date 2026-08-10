@@ -284,7 +284,9 @@ export default function DrivingLessonAppointment({
               })
             : "Datum n.v.";
 
-          const lessonTime = lesson.lesson_time ? lesson.lesson_time : null;
+          const lessonTime = lesson.lesson_time
+            ? lesson.lesson_time.slice(0, 5)
+            : null;
           const duration = lesson.duration_minutes
             ? lesson.duration_minutes
             : null;
@@ -525,7 +527,7 @@ export default function DrivingLessonAppointment({
                           <div className="flex gap-3 mt-5">
                             <Button
                               variant="ghost"
-                              onClick={() => setActiveAcceptId(null)}
+                              onClick={() => setActiveDeleteId(null)}
                               className="flex-1 border border-blue-700 hover:bg-blue-200"
                             >
                               Abbrechen

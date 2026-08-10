@@ -1,7 +1,6 @@
 import { Button } from "@/components/button";
 import {
   AlertTriangle,
-  Archive,
   Bike,
   CalendarDays,
   Car,
@@ -103,57 +102,6 @@ export default function AcceptedDrivingLesson({
               key={lesson.id}
               className="mb-4 last:mb-0 border-b pb-4 last:border-none"
             >
-              {role === "student" && variant === "default" && (
-                <>
-                  <div className="flex items-center gap-2 mb-4">
-                    <CalendarDays className="text-slate-700" size={20} />
-
-                    <h2 className={`text-lg font-bold ${titleColor}`}>
-                      Angenommene Fahrstunde
-                    </h2>
-                  </div>
-
-                  <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
-                    <CalendarDays size={16} />
-
-                    <span>
-                      Tag der Fahrstunde:
-                      <strong>{lesson.lesson_date}</strong>
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
-                    <User size={16} />
-
-                    <span>
-                      Status:
-                      <strong> {lesson.status}</strong>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
-                    <IdCard size={20} className="text-green-700 " />
-
-                    <span className="flex gap-2">
-                      <strong> Klasse: {lesson.license_class} </strong>
-
-                      {["AM", "A1", "A2", "A"].includes(
-                        lesson.license_class,
-                      ) ? (
-                        <Bike className="text-green-700" size={18} />
-                      ) : (
-                        <Car className="text-green-700" size={18} />
-                      )}
-                    </span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    className={`h-8 w-52 px-3 text-sm border border-green-700 text-green-700 hover:bg-green-100`}
-                  >
-                    <Archive size={14} className="mr-2" />
-                    Ausblenden
-                  </Button>
-                </>
-              )}
               {role === "student" && variant === "hidden" && (
                 <>
                   <div className="flex items-center gap-2 mb-4 justify-between">
@@ -163,7 +111,8 @@ export default function AcceptedDrivingLesson({
                       <CalendarDays className="text-slate-700" size={20} />
                       Datum:{" "}
                       <span>
-                        {lesson.lesson_date}, {lesson.lesson_time} Uhr
+                        {lesson.lesson_date}, {lesson.lesson_time?.slice(0, 5)}
+                        Uhr
                       </span>
                     </h4>
                     <Button
@@ -179,15 +128,15 @@ export default function AcceptedDrivingLesson({
                     </Button>
                   </div>
                   {isOpen && (
-                    <div className="mt-2 rounded bg-gray-300 p-4">
+                    <div className="mt-2 rounded bg-gray-300 p-4 transition">
                       <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
                         <CalendarDays className="text-green-700" size={16} />
 
-                        <span>
+                        <span className="flex gap-1">
                           Fahrstunde am:
                           <strong>
-                            {" "}
-                            {lesson.lesson_date}, {lesson.lesson_time} Uhr
+                            {lesson.lesson_date},{" "}
+                            {lesson.lesson_time?.slice(0, 5)} Uhr
                           </strong>
                         </span>
                       </div>
@@ -195,9 +144,13 @@ export default function AcceptedDrivingLesson({
                       <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
                         <User className="text-green-700" size={16} />
 
-                        <span>
+                        <span className="flex gap-1">
                           Status:
-                          <strong> {lesson.status}</strong>
+                          <p className="font-bold">
+                            {lesson.status === "vergeben"
+                              ? " von dir gebucht"
+                              : lesson.status}
+                          </p>
                         </span>
                       </div>
 

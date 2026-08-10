@@ -28,15 +28,6 @@ export async function getExamDays() {
     return { data: null, error };
   }
 
-  // const sortedData = data?.map((day) => ({
-  //   ...day,
-
-  //   // LocalCompare vergleicht nur den Text
-  //   exam_slots: day.exam_slots.sort((a, b) =>
-  //     a.exam_time.localeCompare(b.exam_time),
-  //   ),
-  // }));
-
   return { data, error: null };
 }
 

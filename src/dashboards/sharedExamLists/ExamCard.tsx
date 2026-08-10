@@ -35,10 +35,15 @@ const styles = {
     border: "border-orange-500",
     hover: "hover:bg-orange-100",
   },
+  student: {
+    text: "text-orange-500",
+    border: "border-orange-500",
+    hover: "hover:bg-orange-100",
+  },
 };
 
 type ExamCardProps = {
-  color: "instructor" | "office";
+  color: "instructor" | "office" | "student";
   exam: ExamSlots;
   onChanged: () => void;
 };
@@ -64,9 +69,7 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
   const [instructorName, setInstructorName] = useState(
     exam.instructor_name ?? "",
   );
-  const [selectedClass, setSelectedClass] = useState(
-    exam.license_class ?? "B197",
-  );
+  const [selectedClass, setSelectedClass] = useState(exam.license_class ?? "");
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
@@ -108,12 +111,27 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
         },
       });
     } else {
+      if (!studentName || !instructorName) {
+        toast.warning("Bitte die Namen vollständig ausfüllen!", {
+          unstyled: true,
+          icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+          classNames: {
+            toast:
+              "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+            title: "text-yellow-500 text-sm font-medium",
+            icon: "flex items-center justify-center",
+          },
+        });
+
+        return;
+      }
+
       const { error } = await updateExamSlot(exam.id, {
         student_appointment: examAppointment,
         student_name: studentName,
         instructor_name: instructorName,
         license_class: selectedClass,
-        status: exam.status,
+        status: studentName.trim() === "" ? "gray" : exam.status,
       });
 
       if (error) {
@@ -182,7 +200,6 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
 
   function handleCancel() {
     if (exam.id.startsWith("dummy-")) {
-      // Parent entfernt den Dummy
       onChanged();
       return;
     }
@@ -205,57 +222,71 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
         <Statuslight status={exam.status as Status} />
       </div>
 
-      <div className="flex items-center gap-10 flex-wrap">
-        <div className="flex items-center gap-2 font-bold">
-          <Clock className={styles[color].text} size={18} />
-          {editing ? (
-            <Input
-              value={examAppointment}
-              onChange={(e) => setExamAppointment(e.target.value)}
-              placeholder="Uhrzeit wählen"
-              className="border rounded px-2 py-1 w-24"
-            />
-          ) : (
-            <span>{exam.student_appointment || exam.exam_time || "08:00"}</span>
-          )}
+      {/*  Auf Handy alles untereinander (flex-col), ab Desktop nebeneinander (md:flex-row) */}
+      <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-10 flex-wrap">
+        {/* Uhrzeit und Schüler-Block */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4 font-bold">
+          <div className="flex items-center gap-2">
+            <label className={styles[color].text}>Uhr: </label>
+            <Clock className={styles[color].text} size={18} />
+            {editing ? (
+              <Input
+                value={examAppointment}
+                onChange={(e) => setExamAppointment(e.target.value)}
+                placeholder="Uhrzeit wählen"
+                className="border rounded px-2 py-1 w-24 h-8"
+              />
+            ) : (
+              <span>
+                {exam.student_appointment || exam.exam_time || "08:00"}
+              </span>
+            )}
+          </div>
+
+          {/* ANPASSUNG: Schüler-Block direkt hinter die Uhrzeit verschoben */}
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <label className={styles[color].text}>Schüler: </label>
+            {editing ? (
+              <Input
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                placeholder="Schülername ..."
+                className="border rounded px-2 py-1 h-8 w-44"
+              />
+            ) : (
+              <span className="text-lg">{exam.student_name || "Frei"}</span>
+            )}
+          </div>
         </div>
 
-        <div className="flex gap-8 items-center text-sm font-semibold ">
-          {editing ? (
-            <Input
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-              placeholder="Schülername ..."
-              className="border rounded px-2 py-1"
-            />
-          ) : (
-            <span>
-              <label className={styles[color].text}>Schüler: </label>
-              {exam.student_name || "Frei"}
-            </span>
-          )}
-
-          {editing ? (
-            <Input
-              value={instructorName}
-              onChange={(e) => setInstructorName(e.target.value)}
-              placeholder="FL-Kürzel"
-              className="border rounded px-2 py-1 w-25 "
-            />
-          ) : (
-            <span className="flex gap-1">
-              <label className={styles[color].text}>Fahrlehrer: </label>
-              {exam.instructor_name || "-"}
-            </span>
-          )}
+        {/* Restliche Felder (Fahrlehrer und Klasse) */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4 text-sm font-semibold">
+          <div className="flex items-center gap-2">
+            <label className={styles[color].text}>Fahrlehrer: </label>
+            {editing ? (
+              <Input
+                value={instructorName}
+                onChange={(e) => setInstructorName(e.target.value)}
+                placeholder="FL-Kürzel"
+                className="border rounded px-2 py-1 h-8 w-44"
+              />
+            ) : (
+              <span className="flex gap-1 text-lg">
+                {exam.instructor_name || "-"}
+              </span>
+            )}
+          </div>
 
           <div className="flex items-center gap-2">
+            <label className={styles[color].text}>Klasse: </label>
             {editing ? (
               <select
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
                 className="rounded-md border border-slate-300 px-2 py-1 text-sm bg-white"
               >
+                <option value="">-</option>
+
                 {licenseClasses.map((category) => (
                   <option key={category.value} value={category.value}>
                     {category.value}
@@ -263,10 +294,7 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
                 ))}
               </select>
             ) : (
-              <span>
-                <label className={styles[color].text}>Klasse: </label>
-                {exam.license_class || "-"}
-              </span>
+              <span className="text-lg">{exam.license_class || "-"}</span>
             )}
             {selectedLicense?.type === "bike" ? (
               <Bike className={styles[color].text} size={18} />
@@ -293,7 +321,7 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             <Button
               variant="ghost"
               onClick={handleCancel}
-              className={`flex w-52 items-center gap-2 h-8 px-3 text-sm border ${styles[color].border} ${styles[color].text} ${styles[color].hover}`}
+              className="w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-100"
             >
               <Ban size={14} />
               Abbrechen

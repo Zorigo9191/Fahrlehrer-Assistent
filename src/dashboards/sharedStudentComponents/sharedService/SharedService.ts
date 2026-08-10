@@ -77,7 +77,7 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
 export async function getFeedbacks(studentId: number) {
   const { data, error } = await supabase
     .from("student_feedback")
-    .select("*")
+    .select("*, instructors(*)")
     .eq("student_id", studentId);
 
   if (error) {

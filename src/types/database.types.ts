@@ -76,13 +76,13 @@ export type Database = {
           created_at?: string | null
           email: string
           full_name: string
-          id?: never
+          id?: number
         }
         Update: {
           created_at?: string | null
           email?: string
           full_name?: string
-          id?: never
+          id?: number
         }
         Relationships: []
       }

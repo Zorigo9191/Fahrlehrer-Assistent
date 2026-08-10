@@ -120,7 +120,6 @@ export async function deleteInstructor(id: string) {
     },
   });
 
-  // CORS-/Invocation-Fehler
   if (error) {
     console.error("Edge Function Invoke Fehler:", error);
 
@@ -130,7 +129,6 @@ export async function deleteInstructor(id: string) {
     };
   }
 
-  // Logischer Fehler aus der Edge Function selbst
   if (data?.error) {
     console.error("Edge Function Logik-Fehler:", data.error);
 
@@ -144,4 +142,47 @@ export async function deleteInstructor(id: string) {
     data,
     error: null,
   };
+}
+
+// Angenommene Fahrstunde
+
+export async function getAcceptedLessonsByStudent(studentId: number) {
+  const { data, error } = await supabase
+    .from("available_lessons")
+    .select("*, driving_students(*)")
+    .eq("student_id", studentId);
+
+  if (error) {
+    console.error("Fehler beim Laden der Feedbacks:", error);
+    return { data: null, error };
+  }
+  return { data, error: null };
+}
+
+// angenommene Fahrstunde bearbeiten
+export async function updateAcceptedLesson(
+  lessonId: number,
+  lessonDate: string,
+  lessonTime: string,
+  durationMinutes: number,
+  licenseClass: string,
+) {
+  const { data, error } = await supabase
+    .from("available_lessons")
+    .update({
+      lesson_date: lessonDate,
+      lesson_time: lessonTime,
+      duration_minutes: durationMinutes,
+      license_class: licenseClass,
+    })
+    .eq("id", lessonId)
+    .select("*, driving_students(*)")
+    .single();
+
+  if (error) {
+    console.error("Fehler beim Bearbeiten der Fahrstunde:", error);
+    return { data: null, error };
+  }
+
+  return { data, error: null };
 }
