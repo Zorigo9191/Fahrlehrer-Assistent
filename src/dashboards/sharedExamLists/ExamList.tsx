@@ -410,7 +410,7 @@ export default function ExamList({
           activeSlots.map((slot: any) => (
             <ExamCard
               key={slot.id}
-              color={role === "instructor" ? "instructor" : "office"}
+              role={role === "instructor" ? "instructor" : "office"}
               exam={slot}
               onChanged={loadExamData}
             />

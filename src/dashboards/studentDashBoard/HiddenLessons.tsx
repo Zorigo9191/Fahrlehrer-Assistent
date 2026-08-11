@@ -14,12 +14,9 @@ export default function HiddenLessons() {
         <AcceptedDrivingLesson
           role="student"
           variant="hidden"
-          studentId={111}
+          studentId={113}
+          refreshCount={0}
         />
-        {/* <AcceptedDrivingLesson role="student" variant="hidden" />
-        <AcceptedDrivingLesson role="student" variant="hidden" />
-        <AcceptedDrivingLesson role="student" variant="hidden" />
-        <AcceptedDrivingLesson role="student" variant="hidden" /> */}
       </div>
     </div>
   );

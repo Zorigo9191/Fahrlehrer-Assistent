@@ -121,6 +121,7 @@ export type Database = {
           notes: string | null
           status: string | null
           student_appointment: string | null
+          student_id: number | null
           student_name: string | null
         }
         Insert: {
@@ -133,6 +134,7 @@ export type Database = {
           notes?: string | null
           status?: string | null
           student_appointment?: string | null
+          student_id?: number | null
           student_name?: string | null
         }
         Update: {
@@ -145,6 +147,7 @@ export type Database = {
           notes?: string | null
           status?: string | null
           student_appointment?: string | null
+          student_id?: number | null
           student_name?: string | null
         }
         Relationships: [
@@ -153,6 +156,13 @@ export type Database = {
             columns: ["exam_day_id"]
             isOneToOne: false
             referencedRelation: "exam_days"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_slots_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
             referencedColumns: ["id"]
           },
         ]

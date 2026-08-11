@@ -124,7 +124,7 @@ export default function InstructorDashBoard() {
 
       <DrivingLessonAppointment
         role="student"
-        instructorId={"21f740a5-0b84-4e4a-9222-1342e05e0026"}
+        instructorId={"6128533f-d2b2-4933-93c5-84bc619a11d5"}
         refreshKey={0}
       />
 
@@ -154,10 +154,10 @@ export default function InstructorDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && studentDashBoard}
             {activeTab === "feedbacks" && (
-              <ReceivedFeedback setActiveTab={setActiveTab} studentId={111} />
+              <ReceivedFeedback setActiveTab={setActiveTab} studentId={113} />
             )}
             {activeTab === "exams" && (
-              <ExamAppointment setActiveTab={setActiveTab} />
+              <ExamAppointment setActiveTab={setActiveTab} studentId={113} />
             )}
           </div>
 

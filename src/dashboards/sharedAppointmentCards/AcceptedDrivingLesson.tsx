@@ -27,12 +27,14 @@ type DrivingLessonAppointmentProps = {
   role: Role;
   variant?: Page;
   studentId: number;
+  refreshCount: number;
 };
 
 export default function AcceptedDrivingLesson({
   role,
   studentId,
   variant = "default",
+  refreshCount,
 }: DrivingLessonAppointmentProps) {
   const [openStates, setOpenStates] = useState<Record<number, boolean>>({});
 
@@ -82,7 +84,7 @@ export default function AcceptedDrivingLesson({
 
   useEffect(() => {
     getAcceptedLessons(studentId);
-  }, [studentId]);
+  }, [studentId, refreshCount]);
 
   const toggleOpen = (id: number) => {
     setOpenStates((prev) => ({

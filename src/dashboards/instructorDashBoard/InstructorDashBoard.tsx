@@ -63,9 +63,9 @@ export default function InstructorDashBoard() {
   const notificationCount = 12;
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointmentDialog, setAppointmentDialog] = useState(false);
-  const [instructorId] = useState("21f740a5-0b84-4e4a-9222-1342e05e0026");
+  const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
   const [refreshKey, setRefreshKey] = useState(0);
-  const [studentId] = useState(111);
+  const [studentId] = useState(113);
   const [acceptedLesson, setAcceptedLessons] = useState<AcceptedlessonRow[]>(
     [],
   );
@@ -293,7 +293,7 @@ export default function InstructorDashBoard() {
 
       <DrivingLessonAppointment
         role={"instructor"}
-        instructorId={"21f740a5-0b84-4e4a-9222-1342e05e0026"}
+        instructorId={"6128533f-d2b2-4933-93c5-84bc619a11d5"}
         refreshKey={refreshKey}
       />
 

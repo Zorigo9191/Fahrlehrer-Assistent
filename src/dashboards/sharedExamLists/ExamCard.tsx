@@ -10,8 +10,14 @@ import {
   Save,
   AlertTriangle,
   Ban,
+  GraduationCap,
+  UserRound,
+  IdCard,
+  MessageSquareText,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Input } from "../../components/input.tsx";
 import {
@@ -21,6 +27,22 @@ import {
 } from "../officeDashBoard/officeService/OfficeService.ts";
 import { toast } from "sonner";
 import type { Database } from "@/types/database.types.ts";
+import { getStudents } from "../studentDashBoard/studenDashboardService/StudentDashService.ts";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../../components/command.tsx";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../components/popover.tsx";
 
 type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"];
 
@@ -36,16 +58,21 @@ const styles = {
     hover: "hover:bg-orange-100",
   },
   student: {
-    text: "text-orange-500",
-    border: "border-orange-500",
-    hover: "hover:bg-orange-100",
+    text: "text-green-700",
+    border: "border-green-700",
+    hover: "hover:bg-green-100",
   },
 };
 
 type ExamCardProps = {
-  color: "instructor" | "office" | "student";
+  role: "instructor" | "office" | "student";
   exam: ExamSlots;
   onChanged: () => void;
+};
+
+type Student = {
+  id: number;
+  name: string;
 };
 
 const licenseClasses = [
@@ -59,36 +86,106 @@ const licenseClasses = [
   { value: "A", type: "bike" },
 ];
 
-export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
-  console.log(exam);
+export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
+  // --------------------------------------------------
+  // STUDENTS
+  // --------------------------------------------------
+
+  const [students, setStudents] = useState<Student[]>([]);
+
+  // Der aktuell ausgewählte Schüler
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(
+    exam.student_id && exam.student_name
+      ? {
+          id: exam.student_id,
+          name: exam.student_name,
+        }
+      : null,
+  );
+
+  // --------------------------------------------------
+  // OTHER STATES
+  // --------------------------------------------------
+
   const [editing, setEditing] = useState(false);
+
   const [examAppointment, setExamAppointment] = useState(
     exam.exam_time ?? "08:00",
   );
-  const [studentName, setStudentName] = useState(exam.student_name ?? "");
+
   const [instructorName, setInstructorName] = useState(
     exam.instructor_name ?? "",
   );
+
   const [selectedClass, setSelectedClass] = useState(exam.license_class ?? "");
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
   );
 
+  // --------------------------------------------------
+  // STUDENTS LADEN
+  // --------------------------------------------------
+
+  async function getStudentIdAndName() {
+    const { data, error } = await getStudents();
+
+    if (error) {
+      console.error("Fehler beim Laden von Id und Name des Schülers", error);
+
+      toast.warning("Fehler beim Laden von Id und Name des Schülers", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+
+      return;
+    }
+
+    if (data) {
+      setStudents(
+        data.map((student) => ({
+          id: student.student_id,
+          name: student.student_name ?? "",
+        })),
+      );
+    }
+  }
+
+  useEffect(() => {
+    getStudentIdAndName();
+  }, []);
+
+  // --------------------------------------------------
+  // SPEICHERN
+  // --------------------------------------------------
+
   async function saveExam() {
+    // ================================================
+    // NEUEN PRÜFUNGSPLATZ ERSTELLEN
+    // ================================================
+
     if (exam?.id?.startsWith("dummy-")) {
       const { error } = await createExamSlot({
         exam_day_id: exam.exam_day_id,
         exam_time: examAppointment || "08:00",
         student_appointment: examAppointment,
-        student_name: studentName,
+        student_id: selectedStudent?.id ?? null,
+        student_name: selectedStudent?.name ?? "",
         instructor_name: instructorName,
         license_class: selectedClass,
+
         status: "gray",
       });
 
       if (error) {
         console.log("Fehler beim Erstellen des neuen Platzes:", error);
+
         toast.error("Fehler beim Erstellen des Prüfungsplatzes", {
           unstyled: true,
           icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
@@ -99,8 +196,10 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             icon: "flex items-center justify-center",
           },
         });
+
         return;
       }
+
       toast.success("Prüfungsplatz erfolgreich erstellt", {
         unstyled: true,
         icon: <Save className="h-5 w-5 text-green-600" />,
@@ -110,8 +209,13 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
           title: "text-green-600 text-sm font-medium",
         },
       });
-    } else {
-      if (!studentName || !instructorName) {
+    }
+
+    // ================================================
+    // BESTEHENDEN PRÜFUNGSPLATZ UPDATE
+    // ================================================
+    else {
+      if (!selectedStudent || !instructorName) {
         toast.warning("Bitte die Namen vollständig ausfüllen!", {
           unstyled: true,
           icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
@@ -127,15 +231,17 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
       }
 
       const { error } = await updateExamSlot(exam.id, {
+        student_id: selectedStudent.id,
         student_appointment: examAppointment,
-        student_name: studentName,
+        student_name: selectedStudent.name,
         instructor_name: instructorName,
         license_class: selectedClass,
-        status: studentName.trim() === "" ? "gray" : exam.status,
+        status: "gray",
       });
 
       if (error) {
         console.error("Fehler beim Update:", error);
+
         toast.error("Fehler beim Speichern", {
           unstyled: true,
           icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
@@ -146,8 +252,10 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             icon: "flex items-center justify-center",
           },
         });
+
         return;
       }
+
       toast.success("Erfolgreich gespeichert", {
         unstyled: true,
         icon: <Save className="h-5 w-5 text-green-600" />,
@@ -162,6 +270,10 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
     setEditing(false);
     onChanged();
   }
+
+  // --------------------------------------------------
+  // LÖSCHEN
+  // --------------------------------------------------
 
   async function handleDelete() {
     if (exam?.id?.startsWith("dummy-")) {
@@ -184,8 +296,10 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
           icon: "flex items-center justify-center",
         },
       });
+
       return;
     }
+
     toast.success("Prüfungsplatz gelöscht", {
       unstyled: true,
       icon: <Trash2 className="h-5 w-5 text-red-600" />,
@@ -195,8 +309,13 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
         title: "text-red-600 text-sm font-medium",
       },
     });
+
     onChanged();
   }
+
+  // --------------------------------------------------
+  // ABBRECHEN
+  // --------------------------------------------------
 
   function handleCancel() {
     if (exam.id.startsWith("dummy-")) {
@@ -205,30 +324,59 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
     }
 
     setExamAppointment(exam.student_appointment ?? exam.exam_time ?? "08:00");
-    setStudentName(exam.student_name ?? "");
+
+    // Wichtig:
+    // selectedStudent erwartet ein Student-Objekt
+    // und keinen String.
+    setSelectedStudent(
+      exam.student_id && exam.student_name
+        ? {
+            id: exam.student_id,
+            name: exam.student_name,
+          }
+        : null,
+    );
+
     setInstructorName(exam.instructor_name ?? "");
+
     setSelectedClass(exam.license_class ?? "B197");
 
     setEditing(false);
   }
 
+  // --------------------------------------------------
+  // JSX
+  // --------------------------------------------------
+
   return (
     <div className="rounded-xl p-4 overflow-hidden bg-gray-100">
+      {/* HEADER */}
+
       <div className="flex items-center gap-4 mb-4">
         <Zap className="text-yellow-500" size={20} />
-        <h2 className={`text-lg font-bold ${styles[color].text}`}>
-          Prüfungsplatz
+
+        <h2 className={`text-lg font-bold ${styles[role].text}`}>
+          Prüfungstermin
         </h2>
+
         <Statuslight status={exam.status as Status} />
       </div>
 
-      {/*  Auf Handy alles untereinander (flex-col), ab Desktop nebeneinander (md:flex-row) */}
+      {/* CONTENT */}
+
       <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-10 flex-wrap">
-        {/* Uhrzeit und Schüler-Block */}
+        {/* UHRZEIT + SCHÜLER */}
+
         <div className="flex flex-col md:flex-row md:items-center gap-4 font-bold">
+          {/* UHRZEIT */}
+
           <div className="flex items-center gap-2">
-            <label className={styles[color].text}>Uhr: </label>
-            <Clock className={styles[color].text} size={18} />
+            <label className={`${styles[role].text} text-sm font-bold`}>
+              Uhr:
+            </label>
+
+            <Clock className={styles[role].text} size={18} />
+
             {editing ? (
               <Input
                 value={examAppointment}
@@ -243,26 +391,77 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             )}
           </div>
 
-          {/* ANPASSUNG: Schüler-Block direkt hinter die Uhrzeit verschoben */}
+          {/* SCHÜLER */}
+
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <label className={styles[color].text}>Schüler: </label>
+            <UserRound className={styles[role].text} size={18} />
+
+            <label className={styles[role].text}>Schüler:</label>
+
             {editing ? (
-              <Input
-                value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
-                placeholder="Schülername ..."
-                className="border rounded px-2 py-1 h-8 w-44"
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-52 justify-between h-8"
+                  >
+                    {selectedStudent?.name ?? "Schüler auswählen..."}
+
+                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-52 p-0">
+                  <Command>
+                    <CommandInput placeholder="Schüler suchen..." />
+
+                    <CommandList>
+                      <CommandEmpty>Kein Schüler gefunden.</CommandEmpty>
+
+                      <CommandGroup>
+                        {students.map((student) => (
+                          <CommandItem
+                            key={student.id}
+                            value={student.name}
+                            onSelect={() => {
+                              // HIER wird der Schüler
+                              // im State gespeichert
+                              setSelectedStudent(student);
+                            }}
+                          >
+                            <Check
+                              className={`mr-2 h-4 w-4 ${
+                                selectedStudent?.id === student.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              }`}
+                            />
+
+                            {student.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             ) : (
               <span className="text-lg">{exam.student_name || "Frei"}</span>
             )}
           </div>
         </div>
 
-        {/* Restliche Felder (Fahrlehrer und Klasse) */}
+        {/* FAHRLEHRER + KLASSE */}
+
         <div className="flex flex-col md:flex-row md:items-center gap-4 text-sm font-semibold">
+          {/* FAHRLEHRER */}
+
           <div className="flex items-center gap-2">
-            <label className={styles[color].text}>Fahrlehrer: </label>
+            <GraduationCap className={styles[role].text} size={18} />
+
+            <label className={styles[role].text}>Fahrlehrer:</label>
+
             {editing ? (
               <Input
                 value={instructorName}
@@ -277,8 +476,13 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             )}
           </div>
 
+          {/* KLASSE */}
+
           <div className="flex items-center gap-2">
-            <label className={styles[color].text}>Klasse: </label>
+            <IdCard className={styles[role].text} size={18} />
+
+            <label className={styles[role].text}>Klasse:</label>
+
             {editing ? (
               <select
                 value={selectedClass}
@@ -296,23 +500,37 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             ) : (
               <span className="text-lg">{exam.license_class || "-"}</span>
             )}
+
             {selectedLicense?.type === "bike" ? (
-              <Bike className={styles[color].text} size={18} />
+              <Bike className={styles[role].text} size={18} />
             ) : (
-              <Car className={styles[color].text} size={18} />
+              <Car className={styles[role].text} size={18} />
             )}
           </div>
         </div>
+
+        {/* BEMERKUNG */}
+
+        <div className="flex gap-1">
+          <MessageSquareText className={styles[role].text} size={18} />
+
+          <label className={`${styles[role].text} text-sm font-bold`}>
+            Bemerkung:
+          </label>
+
+          <span className="text-sm font-bold">{exam.notes || ""}</span>
+        </div>
       </div>
 
-      {/* Buttons */}
+      {/* BUTTONS */}
+
       <div className="flex gap-2 mt-5 flex-wrap">
         {editing ? (
           <>
             <Button
               variant="ghost"
               onClick={saveExam}
-              className={`h-8 w-52 px-3 text-sm border ${styles[color].border} ${styles[color].text} ${styles[color].hover}`}
+              className={`h-8 w-52 px-3 text-sm border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
             >
               <Save className="mr-2 h-4 w-4" />
               Speichern
@@ -328,16 +546,19 @@ export default function ExamCard({ color, exam, onChanged }: ExamCardProps) {
             </Button>
           </>
         ) : (
-          <Button
-            variant="ghost"
-            onClick={() => setEditing(true)}
-            className={`flex w-52 items-center gap-2 h-8 px-3 text-sm border ${styles[color].border} ${styles[color].text} ${styles[color].hover}`}
-          >
-            <Pencil size={14} />
-            Bearbeiten
-          </Button>
+          role !== "student" && (
+            <Button
+              variant="ghost"
+              onClick={() => setEditing(true)}
+              className={`flex w-52 items-center gap-2 h-8 px-3 text-sm border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
+            >
+              <Pencil size={14} />
+              Bearbeiten
+            </Button>
+          )
         )}
-        {color === "office" && (
+
+        {role === "office" && (
           <Button
             variant="ghost"
             onClick={handleDelete}

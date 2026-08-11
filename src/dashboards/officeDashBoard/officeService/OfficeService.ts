@@ -133,6 +133,7 @@ export async function createDefaultExamSlots(examDayId: string, slots: number) {
       instructor_name: null,
       license_class: "",
       status: "gray",
+      student_id: null,
     });
   }
 
