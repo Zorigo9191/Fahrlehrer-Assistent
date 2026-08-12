@@ -240,7 +240,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full">

@@ -1,13 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { Button } from "@/components/button";
-import { AlertTriangle, User, X } from "lucide-react";
+import { AlertTriangle, CalendarCheck, User, X } from "lucide-react";
 import { getExamSlots } from "./studenDashboardService/StudentDashService.ts";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import ExamCard from "../sharedExamLists/ExamCard.tsx";
 import type { Database } from "../../types/database.types.ts";
 
-type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"];
+type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"] & {
+  exam_days: { exam_date: string };
+};
 
 type ExamAppointmentsProps = {
   setActiveTab: (tab: string) => void;
@@ -47,7 +49,7 @@ export default function ExamAppointment({
   }, [studentId]);
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
@@ -78,10 +80,15 @@ export default function ExamAppointment({
         </Button>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 min-h-90">
         {examSlot.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
-            Keine Prüfungstermine vorhanden.
+          <div className="flex flex-col items-center justify-center py-10 text-center text-sm text-slate-500 p-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <CalendarCheck className="h-6 w-6 text-green-700" />
+            </div>
+            <p className="mt-3 text-sm font-medium text-slate-700">
+              Keine Prüfungstermine vorhanden.
+            </p>
           </div>
         ) : (
           examSlot.map((exam) => (
@@ -89,6 +96,7 @@ export default function ExamAppointment({
               key={exam.id}
               role="student"
               exam={exam}
+              date={exam.exam_days.exam_date}
               onChanged={getExamSlotsForThisStudent}
             />
           ))

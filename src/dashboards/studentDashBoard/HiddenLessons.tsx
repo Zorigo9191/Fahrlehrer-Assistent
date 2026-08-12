@@ -1,6 +1,6 @@
 import AcceptedDrivingLesson from "../sharedAppointmentCards/AcceptedDrivingLesson.tsx";
 
-export default function HiddenLessons() {
+export default function HiddenLessons({ studentId }: { studentId: number }) {
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
@@ -14,7 +14,7 @@ export default function HiddenLessons() {
         <AcceptedDrivingLesson
           role="student"
           variant="hidden"
-          studentId={113}
+          studentId={studentId}
           refreshCount={0}
         />
       </div>

@@ -68,6 +68,7 @@ type ExamCardProps = {
   role: "instructor" | "office" | "student";
   exam: ExamSlots;
   onChanged: () => void;
+  date?: string;
 };
 
 type Student = {
@@ -86,11 +87,12 @@ const licenseClasses = [
   { value: "A", type: "bike" },
 ];
 
-export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
-  // --------------------------------------------------
-  // STUDENTS
-  // --------------------------------------------------
-
+export default function ExamCard({
+  role,
+  exam,
+  onChanged,
+  date,
+}: ExamCardProps) {
   const [students, setStudents] = useState<Student[]>([]);
 
   // Der aktuell ausgewählte Schüler
@@ -102,10 +104,6 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
         }
       : null,
   );
-
-  // --------------------------------------------------
-  // OTHER STATES
-  // --------------------------------------------------
 
   const [editing, setEditing] = useState(false);
 
@@ -161,10 +159,6 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
     getStudentIdAndName();
   }, []);
 
-  // --------------------------------------------------
-  // SPEICHERN
-  // --------------------------------------------------
-
   async function saveExam() {
     // ================================================
     // NEUEN PRÜFUNGSPLATZ ERSTELLEN
@@ -209,12 +203,7 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
           title: "text-green-600 text-sm font-medium",
         },
       });
-    }
-
-    // ================================================
-    // BESTEHENDEN PRÜFUNGSPLATZ UPDATE
-    // ================================================
-    else {
+    } else {
       if (!selectedStudent || !instructorName) {
         toast.warning("Bitte die Namen vollständig ausfüllen!", {
           unstyled: true,
@@ -229,6 +218,10 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
 
         return;
       }
+
+      // ================================================
+      // BESTEHENDEN PRÜFUNGSPLATZ UPDATE
+      // ================================================
 
       const { error } = await updateExamSlot(exam.id, {
         student_id: selectedStudent.id,
@@ -325,9 +318,6 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
 
     setExamAppointment(exam.student_appointment ?? exam.exam_time ?? "08:00");
 
-    // Wichtig:
-    // selectedStudent erwartet ein Student-Objekt
-    // und keinen String.
     setSelectedStudent(
       exam.student_id && exam.student_name
         ? {
@@ -352,14 +342,22 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
     <div className="rounded-xl p-4 overflow-hidden bg-gray-100">
       {/* HEADER */}
 
-      <div className="flex items-center gap-4 mb-4">
-        <Zap className="text-yellow-500" size={20} />
-
-        <h2 className={`text-lg font-bold ${styles[role].text}`}>
-          Prüfungstermin
-        </h2>
-
-        <Statuslight status={exam.status as Status} />
+      <div className="flex justify-between gap-2 mb-4">
+        <div className="flex gap-2">
+          <Zap className="text-yellow-500" size={20} />
+          <h2 className={`text-lg font-bold ${styles[role].text}`}>Termin</h2>
+          {/* Date kommt von examAppointment (getExamSlots) */}
+          <span className="flex items-center text-lg font-bold">
+            {new Date(date).toLocaleDateString("de-DE", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+          </span>
+        </div>
+        <div>
+          <Statuslight status={exam.status as Status} />
+        </div>
       </div>
 
       {/* CONTENT */}
@@ -425,9 +423,7 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
                             key={student.id}
                             value={student.name}
                             onSelect={() => {
-                              // HIER wird der Schüler
-                              // im State gespeichert
-                              setSelectedStudent(student);
+                              setSelectedStudent(student); // hier speichere den Schüler im State
                             }}
                           >
                             <Check
@@ -508,18 +504,6 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
             )}
           </div>
         </div>
-
-        {/* BEMERKUNG */}
-
-        <div className="flex gap-1">
-          <MessageSquareText className={styles[role].text} size={18} />
-
-          <label className={`${styles[role].text} text-sm font-bold`}>
-            Bemerkung:
-          </label>
-
-          <span className="text-sm font-bold">{exam.notes || ""}</span>
-        </div>
       </div>
 
       {/* BUTTONS */}
@@ -568,6 +552,19 @@ export default function ExamCard({ role, exam, onChanged }: ExamCardProps) {
             Löschen
           </Button>
         )}
+      </div>
+      {/* BEMERKUNG */}
+
+      <div className="flex gap-1">
+        <MessageSquareText className={styles[role].text} size={18} />
+
+        <label className={`${styles[role].text} text-sm font-bold`}>
+          Bemerkung:
+        </label>
+
+        <span className="text-sm font-bold">
+          {exam.notes || "......................."}
+        </span>
       </div>
     </div>
   );

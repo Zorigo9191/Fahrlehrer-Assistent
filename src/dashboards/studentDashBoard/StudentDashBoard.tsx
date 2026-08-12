@@ -39,7 +39,7 @@ const footerItems = [
   },
   {
     id: "exams",
-    label: "Ausgeblendet",
+    label: "Prüfungstermine",
     icon: FileX,
     color: "",
   },
@@ -49,9 +49,9 @@ export default function InstructorDashBoard() {
   const navigate = useNavigate();
   const notificationCount = 12;
   const [activeTab, setActiveTab] = useState("dashboard");
-
+  const studentId = 114;
   const studentDashBoard = (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen  w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
@@ -129,7 +129,7 @@ export default function InstructorDashBoard() {
       />
 
       {/* Angenommene Fahrstunde */}
-      <HiddenLessons />
+      <HiddenLessons studentId={studentId} />
     </div>
   );
 
@@ -154,10 +154,10 @@ export default function InstructorDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && studentDashBoard}
             {activeTab === "feedbacks" && (
-              <ReceivedFeedback setActiveTab={setActiveTab} studentId={113} />
+              <ReceivedFeedback setActiveTab={setActiveTab} studentId={114} />
             )}
             {activeTab === "exams" && (
-              <ExamAppointment setActiveTab={setActiveTab} studentId={113} />
+              <ExamAppointment setActiveTab={setActiveTab} studentId={114} />
             )}
           </div>
 

@@ -20,7 +20,7 @@ export async function AcceptedLessons(studentId: number) {
 export async function getExamSlots(studentId: number) {
   const { data, error } = await supabase
     .from("exam_slots")
-    .select("*")
+    .select("*, exam_days(exam_date)")
     .eq("student_id", studentId);
 
   if (error) {

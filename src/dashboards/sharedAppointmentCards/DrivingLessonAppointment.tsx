@@ -10,6 +10,7 @@ import {
   Dot,
   IdCard,
   Pencil,
+  Route,
   Save,
   Timer,
   Trash2,
@@ -87,7 +88,7 @@ export default function DrivingLessonAppointment({
   const [editingFormData, setEditingFormData] =
     useState<AvailableLessonRow | null>(null);
 
-  const [studentId] = useState(113);
+  const [studentId] = useState(114);
 
   async function fetchLessons() {
     if (!instructorId || instructorId === "undefined") {
@@ -268,7 +269,18 @@ export default function DrivingLessonAppointment({
       {loading && <p className="text-center text-gray-500">Lade Anfragen...</p>}
 
       {lessons.length === 0 ? (
-        <p className="text-sm text-slate-500 p-3">Keine Fahrstundenanfrage.</p>
+        <div className="flex flex-col items-center justify-center py-10 text-center text-sm text-slate-500 p-3">
+          <div
+            className={`flex h-12 w-12 items-center justify-center rounded-full ${
+              role === "student" ? "bg-green-100" : "bg-blue-100"
+            }`}
+          >
+            <Route className={`h-6 w-6 ${textColor}`} />
+          </div>
+          <p className="mt-3 text-sm font-medium text-slate-700">
+            Keine Fahrstundenanfrage.
+          </p>
+        </div>
       ) : (
         lessons.map((lesson) => {
           const lessonDate = lesson.lesson_date
