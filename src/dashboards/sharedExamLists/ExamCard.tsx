@@ -73,7 +73,7 @@ type ExamCardProps = {
 
 type Student = {
   id: number;
-  name: string;
+  full_name: string;
 };
 
 const licenseClasses = [
@@ -100,7 +100,7 @@ export default function ExamCard({
     exam.student_id && exam.student_name
       ? {
           id: exam.student_id,
-          name: exam.student_name,
+          full_name: exam.student_name,
         }
       : null,
   );
@@ -146,12 +146,7 @@ export default function ExamCard({
     }
 
     if (data) {
-      setStudents(
-        data.map((student) => ({
-          id: student.student_id,
-          name: student.student_name ?? "",
-        })),
-      );
+      setStudents(data);
     }
   }
 
@@ -170,7 +165,7 @@ export default function ExamCard({
         exam_time: examAppointment || "08:00",
         student_appointment: examAppointment,
         student_id: selectedStudent?.id ?? null,
-        student_name: selectedStudent?.name ?? "",
+        student_name: selectedStudent?.full_name ?? "",
         instructor_name: instructorName,
         license_class: selectedClass,
 
@@ -226,7 +221,7 @@ export default function ExamCard({
       const { error } = await updateExamSlot(exam.id, {
         student_id: selectedStudent.id,
         student_appointment: examAppointment,
-        student_name: selectedStudent.name,
+        student_name: selectedStudent.full_name,
         instructor_name: instructorName,
         license_class: selectedClass,
         status: "gray",
@@ -322,7 +317,7 @@ export default function ExamCard({
       exam.student_id && exam.student_name
         ? {
             id: exam.student_id,
-            name: exam.student_name,
+            full_name: exam.student_name,
           }
         : null,
     );
@@ -348,11 +343,13 @@ export default function ExamCard({
           <h2 className={`text-lg font-bold ${styles[role].text}`}>Termin</h2>
           {/* Date kommt von examAppointment (getExamSlots) */}
           <span className="flex items-center text-lg font-bold">
-            {new Date(date).toLocaleDateString("de-DE", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
+            {date
+              ? new Date(date).toLocaleDateString("de-DE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              : ""}
           </span>
         </div>
         <div>
@@ -404,7 +401,7 @@ export default function ExamCard({
                     role="combobox"
                     className="w-52 justify-between h-8"
                   >
-                    {selectedStudent?.name ?? "Schüler auswählen..."}
+                    {selectedStudent?.full_name ?? "Schüler auswählen..."}
 
                     <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                   </Button>
@@ -421,7 +418,7 @@ export default function ExamCard({
                         {students.map((student) => (
                           <CommandItem
                             key={student.id}
-                            value={student.name}
+                            value={student.full_name}
                             onSelect={() => {
                               setSelectedStudent(student); // hier speichere den Schüler im State
                             }}
@@ -434,7 +431,7 @@ export default function ExamCard({
                               }`}
                             />
 
-                            {student.name}
+                            {student.full_name}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -552,19 +549,18 @@ export default function ExamCard({
             Löschen
           </Button>
         )}
-      </div>
-      {/* BEMERKUNG */}
 
-      <div className="flex gap-1">
-        <MessageSquareText className={styles[role].text} size={18} />
+        <div className="flex ml-2 gap-1 p-2">
+          <MessageSquareText className={styles[role].text} size={18} />
 
-        <label className={`${styles[role].text} text-sm font-bold`}>
-          Bemerkung:
-        </label>
+          <label className={`${styles[role].text} text-sm font-bold`}>
+            Bemerkung:
+          </label>
 
-        <span className="text-sm font-bold">
-          {exam.notes || "......................."}
-        </span>
+          <span className="text-sm font-bold ">
+            {exam.notes || "......................."}
+          </span>
+        </div>
       </div>
     </div>
   );

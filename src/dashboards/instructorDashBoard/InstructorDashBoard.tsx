@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   Save,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentList from "../sharedStudentComponents/StudentList.tsx";
 
@@ -60,15 +60,17 @@ type AcceptedlessonRow =
 
 export default function InstructorDashBoard() {
   const navigate = useNavigate();
-  const notificationCount = 12;
+  // const notificationCount = 12;
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointmentDialog, setAppointmentDialog] = useState(false);
-  const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
-  const [refreshKey, setRefreshKey] = useState(0);
+
   const [studentId] = useState(114);
+  const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
   const [acceptedLesson, setAcceptedLessons] = useState<AcceptedlessonRow[]>(
     [],
   );
+  const [refreshKey, setRefreshKey] = useState(0);
   const [editingLessonId, setEditingLessonId] = useState<number | null>(null);
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
 
@@ -78,6 +80,14 @@ export default function InstructorDashBoard() {
     duration_minutes: "",
     license_class: "",
   });
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  // Nur neue acceptedLesson zählen
+  const notificationCount = acceptedLesson.filter(
+    (lesson) => lesson.read_at === null,
+  ).length;
 
   async function acceptedLessonsByStudent() {
     const { data, error } = await getAcceptedLessonsByStudent(studentId);
@@ -230,6 +240,23 @@ export default function InstructorDashBoard() {
     }
   };
 
+  // Außerhalb Click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const instructorDashBoard = (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
@@ -247,14 +274,66 @@ export default function InstructorDashBoard() {
       <div className="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
         {/* Prüfungsliste & Benachrichtigungen */}
         <div className="flex gap-2 items-center">
-          <ClipboardList size={22} /> Anfragenliste
-          <div className="relative">
-            <Bell className="text-yellow-500" size={20} />
+          <ClipboardList size={22} /> Angenommene Fahrstunden
+          <div className="relative" ref={notificationRef}>
+            <button
+              type="button"
+              onClick={() => setShowNotifications((prev) => !prev)}
+              className="relative flex cursor-pointer items-center justify-center p-1"
+            >
+              <Bell className="text-yellow-500" size={20} />
 
-            {notificationCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                {notificationCount > 99 ? "99+" : notificationCount}
-              </span>
+              {notificationCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  {notificationCount > 99 ? "99+" : notificationCount}
+                </span>
+              )}
+            </button>
+
+            {/* Dropdown */}
+            {showNotifications && (
+              <div className="absolute -left-30 top-9 z-50 w-80 rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
+                <h3 className="mb-3 text-sm font-bold text-gray-800">
+                  Angenommen von
+                </h3>
+
+                <div className="flex max-h-80 flex-col gap-2 overflow-y-auto">
+                  {acceptedLesson.map((lesson) => {
+                    const isNew = lesson.read_at === null;
+
+                    return (
+                      <div
+                        key={lesson.id}
+                        className={`rounded-lg border p-2 ${
+                          isNew
+                            ? "border-gray-300 bg-white text-black"
+                            : "border-gray-200 bg-gray-100 text-gray-400"
+                        }`}
+                      >
+                        <div className="text-xs font-semibold">
+                          {new Date(lesson.lesson_date).toLocaleDateString(
+                            "de-DE",
+                            {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            },
+                          )}
+                        </div>
+
+                        <div className="text-xs">
+                          Schüler:{" "}
+                          {lesson.driving_students?.full_name ?? "Unbekannt"}
+                        </div>
+
+                        <div className="text-xs">
+                          Klasse: {lesson.license_class ?? "Unbekannt"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>

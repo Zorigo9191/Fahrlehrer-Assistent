@@ -23,6 +23,7 @@ export type Database = {
           lesson_date: string
           lesson_time: string
           license_class: string
+          read_at: boolean | null
           status: string | null
           student_id: number | null
         }
@@ -34,6 +35,7 @@ export type Database = {
           lesson_date: string
           lesson_time: string
           license_class: string
+          read_at?: boolean | null
           status?: string | null
           student_id?: number | null
         }
@@ -45,6 +47,7 @@ export type Database = {
           lesson_date?: string
           lesson_time?: string
           license_class?: string
+          read_at?: boolean | null
           status?: string | null
           student_id?: number | null
         }
@@ -67,18 +70,21 @@ export type Database = {
       }
       driving_students: {
         Row: {
+          auth_user_id: string | null
           created_at: string | null
           email: string
           full_name: string
           id: number
         }
         Insert: {
+          auth_user_id?: string | null
           created_at?: string | null
           email: string
           full_name: string
           id?: number
         }
         Update: {
+          auth_user_id?: string | null
           created_at?: string | null
           email?: string
           full_name?: string
@@ -204,6 +210,7 @@ export type Database = {
           id: number
           instructor_id: string
           license_class: string
+          read_at: boolean | null
           student_id: number
         }
         Insert: {
@@ -212,6 +219,7 @@ export type Database = {
           id?: never
           instructor_id: string
           license_class: string
+          read_at?: boolean | null
           student_id: number
         }
         Update: {
@@ -220,6 +228,7 @@ export type Database = {
           id?: never
           instructor_id?: string
           license_class?: string
+          read_at?: boolean | null
           student_id?: number
         }
         Relationships: [

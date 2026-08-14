@@ -31,14 +31,20 @@ export async function getExamSlots(studentId: number) {
 }
 
 // nur studenten holen
-export async function getStudents() {
+export async function getStudents(): Promise<{
+  data: {
+    id: number;
+    full_name: string;
+  }[];
+  error: any;
+}> {
   const { data, error } = await supabase
-    .from("exam_slots")
-    .select("student_id, student_name");
+    .from("driving_students")
+    .select("id, full_name");
 
   if (error) {
     console.error("Fehler beim Laden der Schüler:", error);
-    return { data: null, error };
+    return { data: [], error };
   }
 
   return { data, error: null };

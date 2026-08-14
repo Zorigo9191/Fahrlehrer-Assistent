@@ -28,11 +28,16 @@ import {
 } from "./sharedService/SharedService.ts";
 import { toast } from "sonner";
 
-type DrivingStudentRow =
-  Database["public"]["Tables"]["driving_students"]["Row"];
+// type DrivingStudentRow =
+//   Database["public"]["Tables"]["driving_students"]["Row"];
 
-type StudentWithLicenses = DrivingStudentRow & {
+type StudentWithLicenses = {
+  id: number;
+  full_name: string;
+  email: string;
+  created_at: string;
   student_license_classes: { license_class: string }[];
+  feedback_count: number;
 };
 
 type StudentListProps = {
@@ -85,7 +90,8 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
           created_at,
           student_license_classes (
           license_class
-          )
+          ), 
+          student_feedback(count)
         `);
 
       if (error) {
@@ -101,7 +107,11 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
           },
         });
       } else if (data) {
-        setStudents(data as StudentWithLicenses[]);
+        const studentsWithCount = data.map((student) => ({
+          ...student,
+          feedback_count: student.student_feedback?.[0]?.count ?? 0,
+        }));
+        setStudents(studentsWithCount);
       }
     } finally {
       setLoading(false);
@@ -387,7 +397,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                     <ExternalLink size={16} />
                   </Button>
                   <span className="text-xs text-gray-600">
-                    Feedbacks: <strong>0</strong>
+                    Feedbacks: <strong>{student.feedback_count}</strong>
                   </span>
                 </div>
               </div>

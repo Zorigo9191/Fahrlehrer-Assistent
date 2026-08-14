@@ -42,12 +42,12 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
   // Schüler der gerade bearbeitet wird
   const [editingStudentDataBox, setEditingStudentDataBox] =
     useState<ExamSlot | null>(null);
+
   // Notiz Bearbeitung
   const [editingNoteStudent, setEditingNoteStudent] = useState<ExamSlot | null>(
     null,
   );
 
-  // 1. Daten laden und nach Status verteilen
   async function loadAndDistributeData() {
     const { data, error } = await getExamDays();
 
@@ -56,6 +56,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
       return;
     }
 
+    // nach Status verteilen
     if (data) {
       const newColumns = {
         check: [] as ExamSlot[],
@@ -98,13 +99,11 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
       setColumns(newColumns);
     }
   }
-
-  // Wird direkt beim Laden der Komponente ausgeführt
   useEffect(() => {
     loadAndDistributeData();
   }, []);
 
-  // 2. Drag & Drop Logik inklusive Speicherung in Supabase
+  //  Drag & Drop Logik inklusive Speicherung in Supabase
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -124,7 +123,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
     if (oldColumnId === newColumnId) {
       return;
     }
-
+    // Record ist nur eine TypeScript-Typbeschreibung
     const statusMap: Record<ColumnId, string> = {
       check: "gray",
       blocked: "red",
@@ -184,7 +183,16 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
       return updatedColumns;
     });
 
-    toast.success("Status aktualisiert!");
+    toast.success("Status erfolgreich aktualisiert", {
+      unstyled: true,
+      icon: <Save className="h-5 w-5 text-green-400" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+        title: "text-green-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
   };
 
   const handleSaveStudent = async () => {
@@ -232,7 +240,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm ">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm ">
       {/* Header */}
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">

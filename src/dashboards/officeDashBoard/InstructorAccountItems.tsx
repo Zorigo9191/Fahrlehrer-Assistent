@@ -41,7 +41,7 @@ export default function InstructoAccountItems({
   }, []);
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm">
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
           <h1 className="text-xl text-white font-bold flex items-center gap-2">

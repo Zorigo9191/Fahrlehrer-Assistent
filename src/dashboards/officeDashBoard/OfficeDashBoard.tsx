@@ -51,7 +51,7 @@ export default function OfficeDashBoard() {
   };
 
   const officeDashBoard = (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
@@ -64,10 +64,10 @@ export default function OfficeDashBoard() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 font-bold text-black">
+      <div className="flex flex-col sm:flex-row  items-stretch sm:items-center justify-between gap-2 font-bold text-black">
         <Button
           onClick={() => setCreateDate(true)}
-          className="border text-md text-orange-500 font-bold hover:bg-orange-500 hover:text-white"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500  hover:bg-orange-500 hover:text-white font-bold border border-orange-500 transition "
         >
           <Plus />
           Prüfungsdatum hinzufügen

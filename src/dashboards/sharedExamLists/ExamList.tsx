@@ -234,6 +234,11 @@ export default function ExamList({
         {examDays.map((day) => {
           const formattedDate = new Date(day.exam_date).toLocaleDateString(
             "de-DE",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            },
           );
           const slotsLength = day.exam_slots ? day.exam_slots.length : 0;
 

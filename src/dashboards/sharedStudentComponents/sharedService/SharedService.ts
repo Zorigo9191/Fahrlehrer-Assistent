@@ -28,6 +28,21 @@ export async function createStudentWithLicenseClasses(
     return { data: null, error: studentError };
   }
 
+  // schüler und instructor in die student_instructors Tabelle hinzufügen
+  const { error: insertError } = await supabase
+    .from("student_instructors")
+    .insert({
+      instructor_id: "6128533f-d2b2-4933-93c5-84bc619a11d5",
+      student_id: newStudent.id,
+      license_class: licenseClasses.join(","),
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    return { data: null, error: insertError };
+  }
+
   // Die ausgewählten Führerscheinklassen bekommen die ID des neu erstellten Schülers
   const categoriesPayload: LicenseClassInsert[] = licenseClasses.map(
     (license) => ({
@@ -75,16 +90,27 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
 //******* Feedback laden*******
 
 export async function getFeedbacks(studentId: number) {
-  const { data, error } = await supabase
+  const { data, count, error } = await supabase
     .from("student_feedback")
-    .select("*, instructors(*)")
+    .select("*, instructors(*)", {
+      count: "exact",
+    })
     .eq("student_id", studentId);
 
   if (error) {
     console.error("Fehler beim Laden der Feedbacks:", error);
-    return { data: null, error };
+    return {
+      data: null,
+      count: 0,
+      error,
+    };
   }
-  return { data, error: null };
+
+  return {
+    data,
+    count: count ?? 0,
+    error: null,
+  };
 }
 
 //******* Feedback update*******

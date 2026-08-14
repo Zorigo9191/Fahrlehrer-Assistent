@@ -173,3 +173,28 @@ export async function updateExamSlotStatus(slotId: string, newStatus: string) {
 
   return { data, error };
 }
+
+// 10. Schüleranzahl holen
+
+export async function getStudentCount(instructorId: string) {
+  const { data, error } = await supabase
+    .from("student_instructors")
+    .select("student_id")
+    .eq("instructor_id", instructorId);
+
+  if (error) {
+    console.error("Fehler beim Laden der Schüler:", error);
+
+    return {
+      count: 0,
+      error,
+    };
+  }
+
+  const uniqueStudentIds = new Set(data.map((student) => student.student_id));
+
+  return {
+    count: uniqueStudentIds.size,
+    error: null,
+  };
+}

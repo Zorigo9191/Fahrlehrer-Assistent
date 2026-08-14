@@ -1,13 +1,14 @@
 import { Button } from "@/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
-import { Save, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Save, Pencil, Trash2, AlertTriangle, Ban } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   deleteInstructor,
   updateInstructor,
 } from "./instructorService/InstructorService";
 import { Input } from "@/components/input";
 import { toast } from "sonner";
+import { getStudentCount } from "./officeService/OfficeService.ts";
 
 interface Instructor {
   id: string;
@@ -16,7 +17,6 @@ interface Instructor {
   phone_number: string | null;
   teaching_classes: string[];
   created_at: string;
-  student_count: number;
 }
 
 interface InstructorProps {
@@ -37,6 +37,7 @@ export default function InstructorAccountCard({
   const [classes, setClasses] = useState(
     instructor.teaching_classes.join(", "),
   );
+  const [studentCount, setStudentCount] = useState(0);
 
   const handleSave = async () => {
     const { error: instructorError } = await updateInstructor(instructor.id, {
@@ -76,16 +77,51 @@ export default function InstructorAccountCard({
     });
   };
 
+  // SchülerAnZahl holen aus der Supabase-Db
+
+  async function fetchStundentCount() {
+    const { count, error } = await getStudentCount(instructor.id);
+
+    if (error) {
+      console.error("Fehler beim Laden der Schüleranzahl!", error);
+      toast.error("Fehler beim Laden der Schüleranzahl!", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+          title: "text-red-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+      return;
+    }
+
+    setStudentCount(count);
+  }
+
+  useEffect(() => {
+    fetchStundentCount();
+  }, [instructor.id]);
+
   return (
-    <Card className="w-full max-w-xs min-h-45 transition-all duration-300 ease-in-out border border-orange-500">
+    <Card className="w-full  max-w-xs min-h-45 transition-all duration-300 ease-in-out border border-orange-500">
       <CardHeader>
         {isEditing ? (
           <div className="space-y-2">
+            <label className="space-y-2 text-orange-400 font-bold">
+              Vorname:
+            </label>
             <Input
+              className="h-8"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
+            <label className="space-y-2 text-orange-400 font-bold">
+              Nachname:
+            </label>
             <Input
+              className="h-8"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
@@ -105,6 +141,7 @@ export default function InstructorAccountCard({
           <strong>Ausbildungsklasse: </strong>
           {isEditing ? (
             <Input
+              className="h-8"
               value={classes}
               onChange={(e) => setClasses(e.target.value)}
             />
@@ -116,7 +153,11 @@ export default function InstructorAccountCard({
         <p>
           <strong>Telefon: </strong>
           {isEditing ? (
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <Input
+              className="h-8"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           ) : (
             instructor.phone_number
           )}
@@ -132,7 +173,7 @@ export default function InstructorAccountCard({
           })}
         </p>
         <p>
-          <strong>Schülerzahl:</strong> {instructor.student_count}
+          <strong>Schülerzahl:</strong> {studentCount}
         </p>
       </CardContent>
       <div className="flex gap-2 mt-5 flex-wrap justify-center p-2">
@@ -145,7 +186,7 @@ export default function InstructorAccountCard({
               setIsEditing(true);
             }
           }}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+          className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
         >
           {isEditing ? (
             <>
@@ -159,15 +200,36 @@ export default function InstructorAccountCard({
             </>
           )}
         </Button>
-        <Button
-          variant="ghost"
-          onClick={() => setShowDeleteDialog(true)}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-black bg-red-300 hover:bg-red-400"
-        >
-          <Trash2 size={14} />
-          Löschen
-        </Button>
+
+        {/* Abbrechen beim Bearbeiten */}
+        {isEditing ? (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setFirstName(instructor.first_name);
+              setLastName(instructor.last_name);
+              setPhone(instructor.phone_number ?? "");
+              setClasses(instructor.teaching_classes.join(", "));
+
+              setIsEditing(false);
+            }}
+            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-red-500 text-black bg-red-300 hover:bg-red-400"
+          >
+            <Ban size={14} />
+            Abbrechen
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            onClick={() => setShowDeleteDialog(true)}
+            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-red-500 text-black bg-red-300 hover:bg-red-400"
+          >
+            <Trash2 size={14} />
+            Löschen
+          </Button>
+        )}
       </div>
+
       {showDeleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-lg p-6 w-80">
