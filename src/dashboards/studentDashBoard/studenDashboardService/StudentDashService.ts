@@ -1,7 +1,7 @@
 import { supabase } from "../../../lib/supabase.ts";
 
 // Angenommene Fahstuden holen
-export async function AcceptedLessons(studentId: number) {
+export async function AcceptedLessons(studentId: string) {
   const { data, error } = await supabase
     .from("available_lessons")
     .select("*, instructors(*)")
@@ -33,7 +33,7 @@ export async function getExamSlots(studentId: number) {
 // nur studenten holen
 export async function getStudents(): Promise<{
   data: {
-    id: number;
+    id: string;
     full_name: string;
   }[];
   error: any;

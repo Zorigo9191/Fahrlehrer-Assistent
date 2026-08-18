@@ -1,8 +1,8 @@
 import { supabase } from "../../../lib/supabase.ts";
 import type { Database } from "../../../types/database.types.ts";
 
-type DrivingStudentInsert =
-  Database["public"]["Tables"]["driving_students"]["Insert"];
+// type DrivingStudentInsert =
+//   Database["public"]["Tables"]["driving_students"]["Insert"];
 
 type LicenseClassInsert =
   Database["public"]["Tables"]["student_license_classes"]["Insert"];
@@ -13,14 +13,135 @@ type StudentFeedInsert =
 type DrivingStudentUpdate =
   Database["public"]["Tables"]["driving_students"]["Update"];
 
+// export async function createStudentWithLicenseClasses(student: {
+//   studentData: DrivingStudentInsert;
+//   licenseClasses: string[];
+//   full_name: string;
+//   email: string;
+// }) {
+// const { data: authStudent, error: authStudentError } = await supabase.auth.signUp({
+//   email: student.email,
+//   password: "ein-sicheres-passwort",
+//   options: {
+//     data: {
+//       full_name: student.full_name,
+//     }
+//   }
+// });
+//   console.log(authStudent);
+//   if (authStudentError) {
+//     return {
+//       data: null,
+//       error: authStudentError,
+//     };
+//   }
+
+//   const userId = authStudent.user?.id;
+
+//   if (!userId) {
+//     return {
+//       data: null,
+//       error: new Error("User ID wurde nicht erstellt"),
+//     };
+//   }
+
+//   const { data: newStudent, error: studentError } = await supabase
+//     .from("driving_students")
+//     .insert({ id: userId, full_name: student.full_name, email: student.email })
+//     .select()
+//     .single();
+
+//   if (studentError) {
+//     return { data: null, error: studentError };
+//   }
+
+//   // schüler und instructor in die student_instructors Tabelle hinzufügen
+//   const { error: insertError } = await supabase
+//     .from("student_instructors")
+//     .insert({
+//       instructor_id: "6128533f-d2b2-4933-93c5-84bc619a11d5",
+//       student_id: newStudent.id,
+//       license_class: student.licenseClasses.join(","),
+//     })
+//     .select()
+//     .single();
+
+//   if (insertError) {
+//     return { data: null, error: insertError };
+//   }
+
+//   // Die ausgewählten Führerscheinklassen bekommen die ID des neu erstellten Schülers
+//   const categoriesPayload: LicenseClassInsert[] = student.licenseClasses.map(
+//     (license) => ({
+//       student_id: newStudent.id,
+//       license_class: license,
+//     }),
+//   );
+
+//   if (student.licenseClasses.length > 0) {
+//     const { data: licenseData, error: licenseError } = await supabase
+//       .from("student_license_classes")
+//       .insert(categoriesPayload) // <-- vorbereitete Klassen mit Schüler-ID speichern
+//       .select();
+
+//     if (licenseError) {
+//       return { data: null, error: licenseError };
+//     }
+
+//     return {
+//       data: {
+//         student: newStudent,
+//         licenses: licenseData,
+//       },
+//       error: null,
+//     };
+//   }
+// }
+
 export async function createStudentWithLicenseClasses(
-  studentData: DrivingStudentInsert,
+  student: {
+    full_name: string;
+    email: string;
+    password: string; // <-- Passwort hinzugefügt
+  },
   licenseClasses: string[],
 ) {
-  //1.Schüler erstellen
+  // 1. Auth-User erstellen mit E-Mail und Passwort
+  const { data: authStudent, error: authStudentError } =
+    await supabase.auth.signUp({
+      email: student.email,
+      password: student.password,
+      options: {
+        data: {
+          full_name: student.full_name,
+        },
+      },
+    });
+
+  if (authStudentError) {
+    return {
+      data: null,
+      error: authStudentError,
+    };
+  }
+
+  const userId = authStudent.user?.id;
+
+  if (!userId) {
+    return {
+      data: null,
+      error: new Error("User ID wurde nicht erstellt"),
+    };
+  }
+
+  // 2. In driving_students Tabelle einfügen
   const { data: newStudent, error: studentError } = await supabase
     .from("driving_students")
-    .insert(studentData)
+    .insert({
+      id: userId,
+      full_name: student.full_name,
+      email: student.email,
+    })
     .select()
     .single();
 
@@ -28,22 +149,20 @@ export async function createStudentWithLicenseClasses(
     return { data: null, error: studentError };
   }
 
-  // schüler und instructor in die student_instructors Tabelle hinzufügen
+  // 3. Schüler und Instructor in student_instructors hinzufügen
   const { error: insertError } = await supabase
     .from("student_instructors")
     .insert({
       instructor_id: "6128533f-d2b2-4933-93c5-84bc619a11d5",
       student_id: newStudent.id,
       license_class: licenseClasses.join(","),
-    })
-    .select()
-    .single();
+    });
 
   if (insertError) {
     return { data: null, error: insertError };
   }
 
-  // Die ausgewählten Führerscheinklassen bekommen die ID des neu erstellten Schülers
+  // 4. Führerscheinklassen speichern
   const categoriesPayload: LicenseClassInsert[] = licenseClasses.map(
     (license) => ({
       student_id: newStudent.id,
@@ -54,7 +173,7 @@ export async function createStudentWithLicenseClasses(
   if (licenseClasses.length > 0) {
     const { data: licenseData, error: licenseError } = await supabase
       .from("student_license_classes")
-      .insert(categoriesPayload) // <-- vorbereitete Klassen mit Schüler-ID speichern
+      .insert(categoriesPayload)
       .select();
 
     if (licenseError) {
@@ -69,6 +188,14 @@ export async function createStudentWithLicenseClasses(
       error: null,
     };
   }
+
+  return {
+    data: {
+      student: newStudent,
+      licenses: [],
+    },
+    error: null,
+  };
 }
 
 //******* Feedback speichern*******
@@ -89,7 +216,7 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
 
 //******* Feedback laden*******
 
-export async function getFeedbacks(studentId: number) {
+export async function getFeedbacks(studentId: string) {
   const { data, count, error } = await supabase
     .from("student_feedback")
     .select("*, instructors(*)", {
@@ -135,7 +262,7 @@ export async function updateStudentFeedback(
 // students Update
 
 export async function updateStudentsData(
-  studentId: number,
+  studentId: string,
   payload: DrivingStudentUpdate,
 ) {
   const { data, error } = await supabase
@@ -153,7 +280,7 @@ export async function updateStudentsData(
 
 // Delete Student für Fahrlehrer
 
-export async function DeleteStudent(studentId: number) {
+export async function DeleteStudent(studentId: string) {
   const { data, error } = await supabase
     .from("driving_students")
     .delete()

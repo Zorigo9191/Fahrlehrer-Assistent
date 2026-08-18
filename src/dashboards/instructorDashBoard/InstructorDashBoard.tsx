@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   Save,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentList from "../sharedStudentComponents/StudentList.tsx";
 
@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import type { Database } from "../../types/database.types.ts";
 import { supabase } from "../../lib/supabase.ts";
 import { deleteLesson } from "./instructorDashBoardItem/AppointmentService.ts";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 const footerItems = [
   {
@@ -65,14 +66,18 @@ export default function InstructorDashBoard() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointmentDialog, setAppointmentDialog] = useState(false);
 
-  const [studentId] = useState(114);
-  const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
+  // const [studentId] = useState(114);
+  // const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
   const [acceptedLesson, setAcceptedLessons] = useState<AcceptedlessonRow[]>(
     [],
   );
   const [refreshKey, setRefreshKey] = useState(0);
   const [editingLessonId, setEditingLessonId] = useState<number | null>(null);
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
+
+  const { session } = useContext(AuthContext);
+  const studentId = session?.user?.id;
+  const instructorId = session?.user?.id;
 
   const [editForm, setEditForm] = useState({
     lesson_date: "",

@@ -62,7 +62,7 @@ export default function AcceptedDrivingLesson({
       borderColor = "border-black";
   }
 
-  async function getAcceptedLessons(studentId: number) {
+  async function getAcceptedLessons(studentId: string) {
     if (!studentId || studentId === undefined) {
       return;
     }
