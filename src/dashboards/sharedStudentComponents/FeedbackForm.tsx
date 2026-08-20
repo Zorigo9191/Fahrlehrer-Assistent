@@ -3,13 +3,14 @@ import { Field, FieldGroup, FieldLabel } from "@/components/field";
 import { Input } from "@/components/input";
 import Textarea from "@/components/textArea";
 import { AlertTriangle, Ban, Bike, Car, Save } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createStudentFeedbacks } from "./sharedService/SharedService.ts";
 import { toast } from "sonner";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 type FeedbackFormProps = {
   onClose: () => void;
-  studentId: number;
+  studentId: string;
 };
 
 export default function FeedbackForm({
@@ -28,7 +29,7 @@ export default function FeedbackForm({
   ];
 
   const [selectedClass, setSelectedClass] = useState("B197");
-  const [examDay, setExamDay] = useState<string>("");
+  const [lessonDay, setLessonDay] = useState<string>("");
   const [feedbackData, setFeedbackData] = useState({
     verkehrsbeobachtung: "",
     geschwindigkeit: "",
@@ -42,7 +43,8 @@ export default function FeedbackForm({
     setFeedbackData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
+  const { session } = useContext(AuthContext);
+  const instructorId = session?.user?.id;
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
@@ -56,7 +58,7 @@ export default function FeedbackForm({
         instructor_id: instructorId,
         license_class: selectedClass,
         student_id: studentId,
-        created_at: examDay,
+        created_at: lessonDay,
       });
 
       if (error) {
@@ -105,10 +107,10 @@ export default function FeedbackForm({
 
           <Input
             id="date"
-            value={examDay || ""}
+            value={lessonDay || ""}
             type="date"
             className="h-10 rounded-xl text-blue-700 border-2"
-            onChange={(e) => setExamDay(e.target.value)}
+            onChange={(e) => setLessonDay(e.target.value)}
           />
         </Field>
 

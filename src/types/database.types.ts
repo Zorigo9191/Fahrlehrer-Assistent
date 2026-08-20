@@ -4,359 +4,365 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5";
-  };
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       available_lessons: {
         Row: {
-          created_at: string | null;
-          duration_minutes: number | null;
-          id: number;
-          instructor_id: string;
-          lesson_date: string;
-          lesson_time: string;
-          license_class: string;
-          read_at: boolean | null;
-          status: string | null;
-          student_id: string | null;
-        };
+          created_at: string | null
+          duration_minutes: number | null
+          id: number
+          instructor_id: string
+          lesson_date: string
+          lesson_time: string
+          license_class: string
+          read_at: boolean | null
+          status: string | null
+          student_id: string | null
+        }
         Insert: {
-          created_at?: string | null;
-          duration_minutes?: number | null;
-          id?: number;
-          instructor_id: string;
-          lesson_date: string;
-          lesson_time: string;
-          license_class: string;
-          read_at?: boolean | null;
-          status?: string | null;
-          student_id?: string | null;
-        };
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: number
+          instructor_id: string
+          lesson_date: string
+          lesson_time: string
+          license_class: string
+          read_at?: boolean | null
+          status?: string | null
+          student_id?: string | null
+        }
         Update: {
-          created_at?: string | null;
-          duration_minutes?: number | null;
-          id?: number;
-          instructor_id?: string;
-          lesson_date?: string;
-          lesson_time?: string;
-          license_class?: string;
-          read_at?: boolean | null;
-          status?: string | null;
-          student_id?: string | null;
-        };
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: number
+          instructor_id?: string
+          lesson_date?: string
+          lesson_time?: string
+          license_class?: string
+          read_at?: boolean | null
+          status?: string | null
+          student_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "available_lessons_student_id_fkey";
-            columns: ["student_id"];
-            isOneToOne: false;
-            referencedRelation: "driving_students";
-            referencedColumns: ["id"];
+            foreignKeyName: "available_lessons_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_available_lesson_instructor";
-            columns: ["instructor_id"];
-            isOneToOne: false;
-            referencedRelation: "instructors";
-            referencedColumns: ["id"];
+            foreignKeyName: "fk_available_lesson_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       driving_students: {
         Row: {
-          created_at: string | null;
-          email: string;
-          full_name: string;
-          id: string;
-        };
+          avatar_url: string | null
+          created_at: string | null
+          driving_classes: string | null
+          email: string
+          full_name: string
+          id: string
+        }
         Insert: {
-          created_at?: string | null;
-          email: string;
-          full_name: string;
-          id?: string;
-        };
+          avatar_url?: string | null
+          created_at?: string | null
+          driving_classes?: string | null
+          email: string
+          full_name: string
+          id?: string
+        }
         Update: {
-          created_at?: string | null;
-          email?: string;
-          full_name?: string;
-          id?: string;
-        };
-        Relationships: [];
-      };
+          avatar_url?: string | null
+          created_at?: string | null
+          driving_classes?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
       exam_days: {
         Row: {
-          created_at: string;
-          exam_date: string;
-          id: string;
-          license_class: string;
-          slots: number;
-        };
+          created_at: string
+          exam_date: string
+          id: string
+          license_class: string
+          slots: number
+        }
         Insert: {
-          created_at?: string;
-          exam_date: string;
-          id?: string;
-          license_class: string;
-          slots: number;
-        };
+          created_at?: string
+          exam_date: string
+          id?: string
+          license_class: string
+          slots: number
+        }
         Update: {
-          created_at?: string;
-          exam_date?: string;
-          id?: string;
-          license_class?: string;
-          slots?: number;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          exam_date?: string
+          id?: string
+          license_class?: string
+          slots?: number
+        }
+        Relationships: []
+      }
       exam_slots: {
         Row: {
-          created_at: string;
-          exam_day_id: string;
-          exam_time: string;
-          id: string;
-          instructor_name: string | null;
-          license_class: string | null;
-          notes: string | null;
-          status: string | null;
-          student_appointment: string | null;
-          student_id: number | null;
-          student_name: string | null;
-        };
+          created_at: string
+          exam_day_id: string
+          exam_time: string
+          id: string
+          instructor_name: string | null
+          license_class: string | null
+          notes: string | null
+          status: string | null
+          student_appointment: string | null
+          student_id: string | null
+          student_name: string | null
+        }
         Insert: {
-          created_at?: string;
-          exam_day_id: string;
-          exam_time: string;
-          id?: string;
-          instructor_name?: string | null;
-          license_class?: string | null;
-          notes?: string | null;
-          status?: string | null;
-          student_appointment?: string | null;
-          student_id?: number | null;
-          student_name?: string | null;
-        };
+          created_at?: string
+          exam_day_id: string
+          exam_time: string
+          id?: string
+          instructor_name?: string | null
+          license_class?: string | null
+          notes?: string | null
+          status?: string | null
+          student_appointment?: string | null
+          student_id?: string | null
+          student_name?: string | null
+        }
         Update: {
-          created_at?: string;
-          exam_day_id?: string;
-          exam_time?: string;
-          id?: string;
-          instructor_name?: string | null;
-          license_class?: string | null;
-          notes?: string | null;
-          status?: string | null;
-          student_appointment?: string | null;
-          student_id?: number | null;
-          student_name?: string | null;
-        };
+          created_at?: string
+          exam_day_id?: string
+          exam_time?: string
+          id?: string
+          instructor_name?: string | null
+          license_class?: string | null
+          notes?: string | null
+          status?: string | null
+          student_appointment?: string | null
+          student_id?: string | null
+          student_name?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "exam_slots_exam_day_id_fkey";
-            columns: ["exam_day_id"];
-            isOneToOne: false;
-            referencedRelation: "exam_days";
-            referencedColumns: ["id"];
+            foreignKeyName: "exam_slots_exam_day_id_fkey"
+            columns: ["exam_day_id"]
+            isOneToOne: false
+            referencedRelation: "exam_days"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       instructors: {
         Row: {
-          created_at: string;
-          first_name: string;
-          id: string;
-          last_name: string;
-          phone_number: string | null;
-          student_count: number;
-          teaching_classes: string[];
-        };
+          created_at: string
+          first_name: string
+          id: string
+          last_name: string
+          phone_number: string | null
+          role: string | null
+          student_count: number
+          teaching_classes: string[]
+        }
         Insert: {
-          created_at?: string;
-          first_name: string;
-          id?: string;
-          last_name: string;
-          phone_number?: string | null;
-          student_count?: number;
-          teaching_classes: string[];
-        };
+          created_at?: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone_number?: string | null
+          role?: string | null
+          student_count?: number
+          teaching_classes: string[]
+        }
         Update: {
-          created_at?: string;
-          first_name?: string;
-          id?: string;
-          last_name?: string;
-          phone_number?: string | null;
-          student_count?: number;
-          teaching_classes?: string[];
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone_number?: string | null
+          role?: string | null
+          student_count?: number
+          teaching_classes?: string[]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
-          email: string | null;
-          id: string;
-          role: string | null;
-        };
+          email: string | null
+          id: string
+          role: string | null
+        }
         Insert: {
-          email?: string | null;
-          id: string;
-          role?: string | null;
-        };
+          email?: string | null
+          id: string
+          role?: string | null
+        }
         Update: {
-          email?: string | null;
-          id?: string;
-          role?: string | null;
-        };
-        Relationships: [];
-      };
+          email?: string | null
+          id?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
       student_feedback: {
         Row: {
-          created_at: string | null;
-          feedback: string;
-          id: number;
-          instructor_id: string;
-          license_class: string;
-          read_at: boolean | null;
-          student_id: string | null;
-        };
+          created_at: string | null
+          feedback: string
+          id: number
+          instructor_id: string
+          license_class: string
+          read_at: boolean | null
+          student_id: string | null
+        }
         Insert: {
-          created_at?: string | null;
-          feedback: string;
-          id?: number;
-          instructor_id: string;
-          license_class: string;
-          read_at?: boolean | null;
-          student_id?: string | null;
-        };
+          created_at?: string | null
+          feedback: string
+          id?: number
+          instructor_id: string
+          license_class: string
+          read_at?: boolean | null
+          student_id?: string | null
+        }
         Update: {
-          created_at?: string | null;
-          feedback?: string;
-          id?: number;
-          instructor_id?: string;
-          license_class?: string;
-          read_at?: boolean | null;
-          student_id?: string | null;
-        };
+          created_at?: string | null
+          feedback?: string
+          id?: number
+          instructor_id?: string
+          license_class?: string
+          read_at?: boolean | null
+          student_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "fk_feedback_instructor";
-            columns: ["instructor_id"];
-            isOneToOne: false;
-            referencedRelation: "instructors";
-            referencedColumns: ["id"];
+            foreignKeyName: "fk_feedback_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "student_feedback_student_id_fkey";
-            columns: ["student_id"];
-            isOneToOne: false;
-            referencedRelation: "driving_students";
-            referencedColumns: ["id"];
+            foreignKeyName: "student_feedback_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       student_instructors: {
         Row: {
-          id: number;
-          instructor_id: string;
-          license_class: string;
-          student_id: string | null;
-        };
+          id: number
+          instructor_id: string
+          license_class: string
+          student_id: string | null
+        }
         Insert: {
-          id?: never;
-          instructor_id: string;
-          license_class: string;
-          student_id?: string | null;
-        };
+          id?: never
+          instructor_id: string
+          license_class: string
+          student_id?: string | null
+        }
         Update: {
-          id?: never;
-          instructor_id?: string;
-          license_class?: string;
-          student_id?: string | null;
-        };
+          id?: never
+          instructor_id?: string
+          license_class?: string
+          student_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "fk_student_instructor_instructor";
-            columns: ["instructor_id"];
-            isOneToOne: false;
-            referencedRelation: "instructors";
-            referencedColumns: ["id"];
+            foreignKeyName: "fk_student_instructor_instructor"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "student_instructors_stundent_id_fkey";
-            columns: ["stundent_id"];
-            isOneToOne: false;
-            referencedRelation: "driving_students";
-            referencedColumns: ["id"];
+            foreignKeyName: "student_instructors_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       student_license_classes: {
         Row: {
-          id: number;
-          license_class: string;
-          student_id: string | null;
-        };
+          id: number
+          license_class: string
+          student_id: string | null
+        }
         Insert: {
-          id?: never;
-          license_class: string;
-          student_id?: string | null;
-        };
+          id?: never
+          license_class: string
+          student_id?: string | null
+        }
         Update: {
-          id?: never;
-          license_class?: string;
-          student_id?: string | null;
-        };
+          id?: never
+          license_class?: string
+          student_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "student_license_classes_student_id_fkey";
-            columns: ["student_id"];
-            isOneToOne: false;
-            referencedRelation: "driving_students";
-            referencedColumns: ["id"];
+            foreignKeyName: "student_license_classes_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "driving_students"
+            referencedColumns: ["id"]
           },
-        ];
-      };
-    };
+        ]
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<
-  keyof Database,
-  "public"
->];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
@@ -364,98 +370,98 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
+    : never
 
 export const Constants = {
   public: {
     Enums: {},
   },
-} as const;
+} as const

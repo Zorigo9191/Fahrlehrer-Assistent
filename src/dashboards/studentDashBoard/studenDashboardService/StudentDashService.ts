@@ -17,7 +17,7 @@ export async function AcceptedLessons(studentId: string) {
 
 // ExamSlots holen
 
-export async function getExamSlots(studentId: number) {
+export async function getExamSlots(studentId: string) {
   const { data, error } = await supabase
     .from("exam_slots")
     .select("*, exam_days(exam_date)")

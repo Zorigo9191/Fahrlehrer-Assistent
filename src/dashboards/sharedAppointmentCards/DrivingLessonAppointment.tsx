@@ -16,7 +16,7 @@ import {
   Trash2,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import {
@@ -25,6 +25,7 @@ import {
   updateAvailableLesson,
 } from "../instructorDashBoard/instructorDashBoardItem/AppointmentService.ts";
 import type { Database } from "../../types/database.types.ts";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 type Role = "student" | "instructor";
 
@@ -88,7 +89,9 @@ export default function DrivingLessonAppointment({
   const [editingFormData, setEditingFormData] =
     useState<AvailableLessonRow | null>(null);
 
-  const [studentId] = useState(114);
+  // const [studentId] = useState(114);
+  const { session } = useContext(AuthContext);
+  const studentId = session?.user?.id;
 
   async function fetchLessons() {
     if (!instructorId || instructorId === "undefined") {
@@ -256,7 +259,7 @@ export default function DrivingLessonAppointment({
         },
       });
     }
-    // setShowDeleteDialog(false);
+
     setActiveDeleteId(null);
   };
 

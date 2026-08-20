@@ -1,4 +1,4 @@
-import { supabase } from "../../../lib/supabase.ts";
+import { supabase, tempAuthsupabase } from "../../../lib/supabase.ts";
 import type { Database } from "../../../types/database.types.ts";
 
 // type DrivingStudentInsert =
@@ -102,13 +102,15 @@ export async function createStudentWithLicenseClasses(
   student: {
     full_name: string;
     email: string;
-    password: string; // <-- Passwort hinzugefügt
+    password: string;
+    instructorId: string;
   },
   licenseClasses: string[],
 ) {
+  const { instructorId } = student;
   // 1. Auth-User erstellen mit E-Mail und Passwort
   const { data: authStudent, error: authStudentError } =
-    await supabase.auth.signUp({
+    await tempAuthsupabase.auth.signUp({
       email: student.email,
       password: student.password,
       options: {
@@ -119,6 +121,12 @@ export async function createStudentWithLicenseClasses(
     });
 
   if (authStudentError) {
+    console.error("Supabase signUp Fehler:", {
+      message: authStudentError.message,
+      status: authStudentError.status,
+      name: authStudentError.name,
+    });
+
     return {
       data: null,
       error: authStudentError,
@@ -142,9 +150,8 @@ export async function createStudentWithLicenseClasses(
       full_name: student.full_name,
       email: student.email,
     })
-    .select()
-    .single();
-
+    .select();
+  console.log(newStudent, studentError);
   if (studentError) {
     return { data: null, error: studentError };
   }
@@ -153,11 +160,11 @@ export async function createStudentWithLicenseClasses(
   const { error: insertError } = await supabase
     .from("student_instructors")
     .insert({
-      instructor_id: "6128533f-d2b2-4933-93c5-84bc619a11d5",
-      student_id: newStudent.id,
+      instructor_id: instructorId,
+      student_id: newStudent?.[0]?.id,
       license_class: licenseClasses.join(","),
     });
-
+  console.log(insertError);
   if (insertError) {
     return { data: null, error: insertError };
   }
@@ -165,7 +172,7 @@ export async function createStudentWithLicenseClasses(
   // 4. Führerscheinklassen speichern
   const categoriesPayload: LicenseClassInsert[] = licenseClasses.map(
     (license) => ({
-      student_id: newStudent.id,
+      student_id: newStudent?.[0]?.id,
       license_class: license,
     }),
   );
@@ -175,7 +182,7 @@ export async function createStudentWithLicenseClasses(
       .from("student_license_classes")
       .insert(categoriesPayload)
       .select();
-
+    console.log(licenseError);
     if (licenseError) {
       return { data: null, error: licenseError };
     }
@@ -217,6 +224,9 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
 //******* Feedback laden*******
 
 export async function getFeedbacks(studentId: string) {
+  if (!studentId) {
+    return;
+  }
   const { data, count, error } = await supabase
     .from("student_feedback")
     .select("*, instructors(*)", {

@@ -13,6 +13,7 @@ import {
   Plus,
   AlertTriangle,
   StickyNotes,
+  Save,
 } from "lucide-react";
 
 import { useContext, useEffect, useRef, useState } from "react";
@@ -29,10 +30,12 @@ import { getFeedbacks } from "../sharedStudentComponents/sharedService/SharedSer
 import type { Database } from "../../types/database.types.ts";
 import { toast } from "sonner";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import { supabase } from "../../lib/supabase.ts";
 
 type SavedFeedbacksRow =
   Database["public"]["Tables"]["student_feedback"]["Row"] & {
     instructors: {
+      id: string;
       first_name: string;
     } | null;
   };
@@ -73,11 +76,200 @@ export default function InstructorDashBoard() {
 
   const { session } = useContext(AuthContext);
   const studentId = session?.user?.id;
+  const [studentName, setStudentName] = useState<string>("Laden...");
+  const [instructorId, setInstructorId] = useState<string>("");
+
+  // States für das Profilbild
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  async function fetchInstructorId() {
+    const { data, error } = await supabase
+      .from("student_instructors")
+      .select("*")
+      .eq("student_id", studentId);
+
+    if (error) {
+      console.error(
+        "Fehler beim Laden der SchülerId und der FahrlehrerId:",
+        error,
+      );
+
+      return;
+    }
+
+    if (data) {
+      const student = data.find((student) => student.student_id === studentId);
+      setInstructorId(student.instructor_id);
+    }
+  }
+
+  useEffect(() => {
+    if (studentId) {
+      fetchInstructorId();
+    }
+  }, [studentId]);
 
   // Nur neue Feedbacks zählen
   const notificationCount = savedFeedbacks.filter(
     (feedback) => feedback.read_at === null,
   ).length;
+
+  async function fetchStudentName() {
+    if (!studentId) return;
+    const { data, error } = await supabase
+      .from("driving_students")
+      .select("full_name, avatar_url")
+      .eq("id", studentId)
+      .single();
+
+    if (error) {
+      console.error("Fehler beim Laden des Fahrlehrernamens:", error);
+      setStudentName("Schüler");
+      return;
+    }
+
+    if (data) {
+      setStudentName(data.full_name ?? "Schüler");
+      if (data.avatar_url) {
+        setAvatarUrl(data.avatar_url);
+      }
+    }
+  }
+  useEffect(() => {
+    if (studentId) {
+      fetchStudentName();
+    }
+  }, [studentId]);
+
+  // ProfileBild update
+  async function handleAvatarChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const file = event.target.files?.[0];
+
+    if (!file || !studentId) {
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const fileExt = file.name.split(".").pop()?.toLowerCase();
+
+      if (!fileExt) {
+        toast.error("Ungültiges Bildformat!", {
+          unstyled: true,
+          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+          classNames: {
+            toast:
+              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+            title: "text-red-500 text-sm font-medium",
+            icon: "flex items-center justify-center",
+          },
+        });
+
+        return;
+      }
+
+      // Eindeutiger Dateiname
+      const fileName = `${studentId}-${Date.now()}.${fileExt}`;
+
+      console.log("Upload startet:", fileName);
+
+      // Bild in Supabase Storage hochladen
+      const { error: uploadError } = await supabase.storage
+        .from("images")
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error("Storage Upload Error:", uploadError);
+
+        toast.error("Storage Upload Error!", {
+          unstyled: true,
+          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+          classNames: {
+            toast:
+              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+            title: "text-red-500 text-sm font-medium",
+            icon: "flex items-center justify-center",
+          },
+        });
+
+        throw uploadError;
+      }
+
+      console.log("Upload erfolgreich:", fileName);
+
+      // Öffentliche URL des Bildes holen
+      const { data: publicUrlData } = supabase.storage
+        .from("images")
+        .getPublicUrl(fileName);
+
+      const newUrl = publicUrlData.publicUrl;
+
+      console.log("Neue Bild-URL:", newUrl);
+
+      // URL in driving_students speichern
+      const { error: updateError } = await supabase
+        .from("driving_students")
+        .update({
+          avatar_url: newUrl,
+        })
+        .eq("id", studentId);
+
+      if (updateError) {
+        console.error("Database Update Error:", updateError);
+
+        toast.error("Database Update Error!", {
+          unstyled: true,
+          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+          classNames: {
+            toast:
+              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+            title: "text-red-500 text-sm font-medium",
+            icon: "flex items-center justify-center",
+          },
+        });
+
+        throw updateError;
+      }
+
+      // das neue Bild SOFORT gerendert.
+      setAvatarUrl(newUrl);
+
+      toast.success("Profilbild erfolgreich aktualisiert!", {
+        unstyled: true,
+        icon: <Save className="h-5 w-5 text-green-400" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+          title: "text-green-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+    } catch (error) {
+      console.error("Fehler beim Hochladen:", error);
+
+      toast.error("Fehler beim Hochladen des Bildes!", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+          title: "text-red-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+    } finally {
+      setUploading(false);
+
+      // Datei-Input zurücksetzen
+      event.target.value = "";
+    }
+  }
 
   async function loadSavedFeedbacks() {
     const { data, error } = await getFeedbacks(studentId);
@@ -136,8 +328,15 @@ export default function InstructorDashBoard() {
           {/* Profilbild */}
           <div className="flex items-center gap-3">
             <div className="relative">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleAvatarChange}
+                accept="image/*"
+                className="hidden"
+              />
               <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200">
-                <AvatarImage src="/profil1.png" />
+                <AvatarImage src={avatarUrl || ""} />
 
                 <AvatarFallback>
                   <Plus className="text-white" />
@@ -148,6 +347,8 @@ export default function InstructorDashBoard() {
                 <Button
                   size="icon"
                   variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
                   className="h-6 w-6 cursor-pointer rounded-full bg-white text-blue-500 hover:text-blue-600"
                 >
                   <Pencil size={14} />
@@ -156,14 +357,93 @@ export default function InstructorDashBoard() {
                 <Button
                   size="icon"
                   variant="outline"
+                  onClick={() => setShowDeleteConfirm(true)}
                   className="h-6 w-6 cursor-pointer rounded-full bg-white text-red-500 hover:text-red-600"
                 >
                   <Trash2 size={14} />
                 </Button>
+
+                {showDeleteConfirm && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div className="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl">
+                      <div className="mb-4 flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+                          <Trash2 className="h-5 w-5 text-red-500" />
+                        </div>
+
+                        <h2 className="text-lg font-bold text-gray-800">
+                          Profilbild löschen?
+                        </h2>
+                      </div>
+
+                      <p className="mb-5 text-sm text-gray-600">
+                        Möchtest du dein aktuelles Profilbild wirklich löschen?
+                      </p>
+
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="bg-green-300 border-green-300 text-black  hover:bg-green-500 "
+                        >
+                          Abbrechen
+                        </Button>
+
+                        <Button
+                          onClick={async () => {
+                            const { error } = await supabase
+                              .from("driving_students")
+                              .update({ avatar_url: null })
+                              .eq("id", studentId);
+
+                            if (error) {
+                              console.error("Fehler beim Löschen:", error);
+
+                              toast.error(
+                                "Profilbild konnte nicht gelöscht werden!",
+                                {
+                                  unstyled: true,
+                                  icon: (
+                                    <AlertTriangle className="h-5 w-5 text-red-500" />
+                                  ),
+                                  classNames: {
+                                    toast:
+                                      "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+                                    title: "text-red-500 text-sm font-medium",
+                                    icon: "flex items-center justify-center",
+                                  },
+                                },
+                              );
+
+                              return;
+                            }
+
+                            setAvatarUrl(null);
+                            setShowDeleteConfirm(false);
+
+                            toast.success("Profilbild gelöscht!", {
+                              unstyled: true,
+                              icon: <Trash2 className="h-5 w-5 text-red-500" />,
+                              classNames: {
+                                toast:
+                                  "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+                                title: "text-red-500 text-sm font-medium",
+                                icon: "flex items-center justify-center",
+                              },
+                            });
+                          }}
+                          className="bg-red-400 text-white hover:bg-red-600"
+                        >
+                          Löschen
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            <p className="text-sm font-semibold">Max Mustermann</p>
+            <p className="text-sm font-semibold">{studentName}</p>
           </div>
         </div>
       </div>
@@ -252,7 +532,7 @@ export default function InstructorDashBoard() {
       {/* Fahrstunde vergeben */}
       <DrivingLessonAppointment
         role="student"
-        instructorId="6128533f-d2b2-4933-93c5-84bc619a11d5"
+        instructorId={instructorId}
         refreshKey={0}
       />
 
@@ -284,11 +564,21 @@ export default function InstructorDashBoard() {
             {activeTab === "dashboard" && studentDashBoard}
 
             {activeTab === "feedbacks" && (
-              <ReceivedFeedback setActiveTab={setActiveTab} studentId={114} />
+              <ReceivedFeedback
+                studentName={studentName}
+                setActiveTab={setActiveTab}
+                studentId={studentId}
+                avatarUrl={avatarUrl}
+              />
             )}
 
             {activeTab === "exams" && (
-              <ExamAppointment setActiveTab={setActiveTab} studentId={114} />
+              <ExamAppointment
+                studentName={studentName}
+                setActiveTab={setActiveTab}
+                studentId={studentId}
+                avatarUrl={avatarUrl}
+              />
             )}
           </div>
 

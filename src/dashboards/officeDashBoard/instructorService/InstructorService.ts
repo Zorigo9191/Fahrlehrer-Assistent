@@ -25,6 +25,7 @@ export async function createInstructor(instructor: {
   password: string;
   phone_number: string;
   teaching_classes: string[];
+  role: string;
 }) {
   // 1. Auth User erstellen
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -35,6 +36,7 @@ export async function createInstructor(instructor: {
         first_name: instructor.first_name,
         last_name: instructor.last_name,
         phone_number: instructor.phone_number,
+        role: instructor.role,
       },
     },
   });
@@ -65,6 +67,7 @@ export async function createInstructor(instructor: {
       phone_number: instructor.phone_number,
       teaching_classes: instructor.teaching_classes,
       student_count: 0,
+      role: instructor.role,
     })
     .select()
     .single();
@@ -146,12 +149,13 @@ export async function deleteInstructor(id: string) {
 
 // Angenommene Fahrstunde
 
-export async function getAcceptedLessonsByStudent(studentId: number) {
+export async function getAcceptedLessonsByStudent(instructorId: string) {
   const { data, error } = await supabase
     .from("available_lessons")
-    .select("*, driving_students(*)")
-    .eq("student_id", studentId);
-
+    .select("*, driving_students(full_name)")
+    .eq("instructor_id", instructorId)
+    .eq("status", "vergeben");
+  console.log(data);
   if (error) {
     console.error("Fehler beim Laden der Feedbacks:", error);
     return { data: null, error };

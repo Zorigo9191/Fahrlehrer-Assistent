@@ -13,12 +13,16 @@ type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"] & {
 
 type ExamAppointmentsProps = {
   setActiveTab: (tab: string) => void;
-  studentId: number;
+  studentId: string;
+  avatarUrl: string | null;
+  studentName: string;
 };
 
 export default function ExamAppointment({
   setActiveTab,
   studentId,
+  avatarUrl,
+  studentName,
 }: ExamAppointmentsProps) {
   const [examSlot, setExamSlot] = useState<ExamSlots[]>([]);
 
@@ -61,12 +65,12 @@ export default function ExamAppointment({
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200">
-              <AvatarImage src="/profil1.png" />
+              <AvatarImage src={avatarUrl || ""} />
               <AvatarFallback></AvatarFallback>
             </Avatar>
           </div>
 
-          <p className="text-sm font-semibold">Max Mustermann</p>
+          <p className="text-sm font-semibold">{studentName}</p>
         </div>
       </div>
       <div className="flex justify-end gap-2 ">

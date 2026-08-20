@@ -21,7 +21,7 @@ export default function InstructorCreateForm({
   onClose,
 }: instructorCreateFormProps) {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [role] = useState("instructor");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +37,7 @@ export default function InstructorCreateForm({
       password,
       phone_number: phoneNumber,
       teaching_classes: teachingClasses,
+      role: role,
     });
 
     if (error) {
@@ -61,10 +62,10 @@ export default function InstructorCreateForm({
 
         <CardContent className="space-y-4">
           *
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="id">Fahrlehrer-ID</Label>
             <Input id="id" type="text" placeholder="Fl-4" required />
-          </div>
+          </div> */}
           {/* Namen */}
           <div className="space-y-2">
             <Label htmlFor="name"> Vorname</Label>

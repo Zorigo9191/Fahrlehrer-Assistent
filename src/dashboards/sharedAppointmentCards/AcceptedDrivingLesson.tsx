@@ -27,7 +27,7 @@ type Page = "default" | "hidden";
 type DrivingLessonAppointmentProps = {
   role: Role;
   variant?: Page;
-  studentId: number;
+  studentId: string;
   refreshCount: number;
 };
 

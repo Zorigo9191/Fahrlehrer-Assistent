@@ -8,7 +8,7 @@ import {
 import type { Database } from "../../types/database.types.ts";
 
 type FeedbackCardProps = {
-  studentId: number;
+  studentId: string;
 };
 
 type FeedbackContent = {

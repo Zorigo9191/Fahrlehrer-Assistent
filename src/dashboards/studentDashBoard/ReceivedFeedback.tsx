@@ -15,7 +15,9 @@ import type { Database } from "../../types/database.types.ts";
 
 type ReceivedFeedbackProps = {
   setActiveTab: (tab: string) => void;
-  studentId: number;
+  studentId: string;
+  studentName: string;
+  avatarUrl: string | null;
 };
 
 type FeedbackContent = {
@@ -36,8 +38,10 @@ type FeedbackWithInstructor =
   };
 
 export default function ReceivedFeedback({
+  studentName,
   setActiveTab,
   studentId,
+  avatarUrl,
 }: ReceivedFeedbackProps) {
   const [ratedFeedback, setRatedFeedback] = useState<FeedbackWithInstructor[]>(
     [],
@@ -90,12 +94,14 @@ export default function ReceivedFeedback({
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200">
-              <AvatarImage src="/profil1.png" />
+              <AvatarImage src={avatarUrl || ""} />
               <AvatarFallback></AvatarFallback>
             </Avatar>
           </div>
 
-          <p className="text-sm font-semibold">Max Mustermann</p>
+          <p className="text-sm font-semibold whitespace-nowrap">
+            {studentName}
+          </p>
         </div>
       </div>
       <div className="flex justify-end gap-2 ">

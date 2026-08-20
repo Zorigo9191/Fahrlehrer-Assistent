@@ -61,13 +61,8 @@ type AcceptedlessonRow =
 
 export default function InstructorDashBoard() {
   const navigate = useNavigate();
-  // const notificationCount = 12;
-
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointmentDialog, setAppointmentDialog] = useState(false);
-
-  // const [studentId] = useState(114);
-  // const [instructorId] = useState("6128533f-d2b2-4933-93c5-84bc619a11d5");
   const [acceptedLesson, setAcceptedLessons] = useState<AcceptedlessonRow[]>(
     [],
   );
@@ -76,7 +71,6 @@ export default function InstructorDashBoard() {
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
 
   const { session } = useContext(AuthContext);
-  const studentId = session?.user?.id;
   const instructorId = session?.user?.id;
 
   const [editForm, setEditForm] = useState({
@@ -88,14 +82,41 @@ export default function InstructorDashBoard() {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const [instructorName, setInstructorName] = useState<string>("Laden...");
 
   // Nur neue acceptedLesson zählen
   const notificationCount = acceptedLesson.filter(
     (lesson) => lesson.read_at === null,
   ).length;
 
+  // instructor Name holen
+  async function fetchInstructorName() {
+    if (!instructorId) return;
+    const { data, error } = await supabase
+      .from("instructors")
+      .select("first_name")
+      .eq("id", instructorId)
+      .single();
+
+    if (error) {
+      console.error("Fehler beim Laden des Fahrlehrernamens:", error);
+      setInstructorName("Fahrlehrer");
+      return;
+    }
+
+    if (data) {
+      setInstructorName(data.first_name ?? "Fahrlehrer");
+    }
+  }
+
+  useEffect(() => {
+    if (instructorId) {
+      fetchInstructorName();
+    }
+  }, [instructorId]);
+
   async function acceptedLessonsByStudent() {
-    const { data, error } = await getAcceptedLessonsByStudent(studentId);
+    const { data, error } = await getAcceptedLessonsByStudent(instructorId);
 
     if (error) {
       console.error("Fehler beim Laden von angennomenen Fahrstuden!", error);
@@ -139,7 +160,7 @@ export default function InstructorDashBoard() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [studentId]);
+  }, [instructorId]);
 
   const handleUpdate = async (lesson: AcceptedlessonRow) => {
     const { data, error } = await updateAcceptedLesson(
@@ -272,7 +293,7 @@ export default function InstructorDashBoard() {
             Fahrlehrer Dashboard
           </h1>
 
-          <p className="text-sm font-semibold">Max MusterMann</p>
+          <p className="text-sm font-semibold">{instructorName}</p>
         </div>
       </div>
 
@@ -377,7 +398,7 @@ export default function InstructorDashBoard() {
 
       <DrivingLessonAppointment
         role={"instructor"}
-        instructorId={"6128533f-d2b2-4933-93c5-84bc619a11d5"}
+        instructorId={instructorId}
         refreshKey={refreshKey}
       />
 

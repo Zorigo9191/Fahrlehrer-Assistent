@@ -14,7 +14,7 @@ import {
   AlertTriangle,
   CircleCheck,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import StudentRegisterForm from "./StudentRegisterForm";
 import FeedbackForm from "./FeedbackForm";
 
@@ -27,17 +27,36 @@ import {
   DeleteStudent,
 } from "./sharedService/SharedService.ts";
 import { toast } from "sonner";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 // type DrivingStudentRow =
 //   Database["public"]["Tables"]["driving_students"]["Row"];
 
 type StudentWithLicenses = {
-  id: number;
-  full_name: string;
-  email: string;
-  created_at: string;
-  student_license_classes: { license_class: string }[];
   feedback_count: number;
+  id: number;
+  driving_students: {
+    created_at: string | null;
+    driving_classes: string | null;
+    email: string;
+    full_name: string;
+    id: string;
+    avatar_url: string | null;
+    student_feedback: {
+      created_at: string | null;
+      feedback: string;
+      id: number;
+      instructor_id: string;
+      license_class: string;
+      read_at: boolean | null;
+      student_id: string | null;
+    }[];
+    student_license_classes: {
+      id: number;
+      license_class: string;
+      student_id: string | null;
+    }[];
+  };
 };
 
 type StudentListProps = {
@@ -69,30 +88,33 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
   const [feedbackGive, setFeedbackGive] = useState(false);
   const [feedbackView, setFeedbackView] = useState(false);
   const [students, setStudents] = useState<StudentWithLicenses[]>([]);
-  const [studentId, setStudentId] = useState<number>(0);
+  const [studentId, setStudentId] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
-  const [editingStudentId, setEditingStudentId] = useState<number | null>(null);
+  const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
 
   const [studentFormData, setStudentFormData] = useState<DrivingStudentUpdate>(
     {},
   );
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { session } = useContext(AuthContext);
+  const instructorId = session?.user?.id;
 
   async function fetchStudents() {
     try {
       setLoading(true);
-      const { data, error } = await supabase.from("driving_students").select(`
-          id,
-          full_name,
-          email,
-          created_at,
-          student_license_classes (
-          license_class
-          ), 
-          student_feedback(count)
-        `);
+      const { data, error } = await supabase
+        .from("student_instructors")
+        .select(
+          `
+    id,
+    driving_students(*, student_feedback(*), student_license_classes(*))
+  `,
+        )
+        .eq("instructor_id", instructorId);
+
+      console.log(data);
 
       if (error) {
         console.error("Fehler beim Laden:", error);
@@ -109,7 +131,8 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
       } else if (data) {
         const studentsWithCount = data.map((student) => ({
           ...student,
-          feedback_count: student.student_feedback?.[0]?.count ?? 0,
+          feedback_count:
+            student.driving_students.student_feedback?.length ?? 0,
         }));
         setStudents(studentsWithCount);
       }
@@ -123,25 +146,25 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
   }, []);
 
   const handleStartEditStudent = (student: StudentWithLicenses) => {
-    setEditingStudentId(student.id);
+    setEditingStudentId(student.driving_students.id);
 
     const bikeValues = bikeCategories.map((c) => c.value);
     const carValues = carCategories.map((c) => c.value);
 
     // Filtert die vorhandenen Klassen des Schülers heraus
     const currentBike =
-      student.student_license_classes?.find((l) =>
+      student.driving_students.student_license_classes?.find((l) =>
         bikeValues.includes(l.license_class),
       )?.license_class || "";
 
     const currentCar =
-      student.student_license_classes?.find((l) =>
+      student.driving_students.student_license_classes?.find((l) =>
         carValues.includes(l.license_class),
       )?.license_class || "";
 
     setStudentFormData({
-      full_name: student.full_name,
-      email: student.email,
+      full_name: student.driving_students.full_name,
+      email: student.driving_students.email,
       bike_license: currentBike,
       car_license: currentCar,
     });
@@ -157,7 +180,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
     }));
   };
 
-  const handleSaveStudent = async (id: number) => {
+  const handleSaveStudent = async (id: string) => {
     setLoading(true);
 
     // Trennt die temporären Klassen-Felder von den echten Tabellenspalten ab
@@ -214,7 +237,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
   };
 
   const handleDeleteStudent = async (student: StudentWithLicenses) => {
-    const { error } = await DeleteStudent(student.id);
+    const { error } = await DeleteStudent(student.driving_students.id);
 
     if (error) {
       console.error("Fehler beim Löschen des Schülers:", error);
@@ -233,7 +256,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
       return;
     }
 
-    setStudents((prev) => prev.filter((s) => s.id! == student.id));
+    setStudents((prev) => prev.filter((s) => s.id !== student.id));
 
     toast.success("Schüler wurde erfolgreich gelöscht", {
       unstyled: true,
@@ -312,15 +335,15 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
       {/* Schüler Karten durchgehen und anzeigen */}
       {!loading &&
         students.map((student) => {
-          const formattedDate = new Date(student.created_at).toLocaleDateString(
-            "de-DE",
-          );
+          const formattedDate = new Date(
+            student.driving_students.created_at,
+          ).toLocaleDateString("de-DE");
 
           // Prüft, ob genau DIESER Schüler gerade bearbeitet wird
-          const isEditing = editingStudentId === student.id;
+          const isEditing = editingStudentId === student.driving_students.id;
 
           const licenseClassesText =
-            student.student_license_classes
+            student.driving_students.student_license_classes
               ?.map((l) => l.license_class)
               .join(", ") || "Keine Klasse";
 
@@ -333,7 +356,9 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
               <div className="flex items-start gap-4 mb-4 justify-between">
                 <div className="flex gap-3 items-start w-full">
                   <Avatar className="h-20 w-20 border-2 border-gray-800 bg-gray-200 shrink-0">
-                    <AvatarImage src="/profil1.png" />
+                    <AvatarImage
+                      src={student.driving_students.avatar_url || ""}
+                    />
                     <AvatarFallback>
                       <Plus className="text-white" />
                     </AvatarFallback>
@@ -354,7 +379,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                         />
                       ) : (
                         <h3 className="text-black text-base">
-                          {student.full_name}
+                          {student.driving_students.full_name}
                         </h3>
                       )}
                     </div>
@@ -373,7 +398,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                         />
                       ) : (
                         <p className="text-sm text-black font-normal">
-                          {student.email}
+                          {student.driving_students.email}
                         </p>
                       )}
                     </div>
@@ -390,7 +415,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                     variant="ghost"
                     onClick={() => {
                       setFeedbackView(true);
-                      setStudentId(student.id);
+                      setStudentId(student.driving_students.id);
                     }}
                     className="border border-blue-700 text-blue-700 hover:bg-blue-100 h-8 w-8 p-0"
                   >
@@ -469,7 +494,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                   <Button
                     variant="ghost"
                     onClick={() => {
-                      handleSaveStudent(student.id);
+                      handleSaveStudent(student.driving_students.id);
                     }}
                     className="flex items-center justify-center gap-2 h-8 px-4 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100 w-32"
                   >
@@ -492,7 +517,7 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
                     variant="ghost"
                     onClick={() => {
                       setFeedbackGive(true);
-                      setStudentId(student.id);
+                      setStudentId(student.driving_students.id);
                     }}
                     className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
                   >

@@ -46,7 +46,8 @@ export async function getAvailableLesson({
   const { data, error } = await supabase
     .from("available_lessons")
     .select("*")
-    .eq("instructor_id", instructorId);
+    .eq("instructor_id", instructorId)
+    .eq("status", "offen");
 
   if (error) {
     throw error;

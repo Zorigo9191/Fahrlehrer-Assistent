@@ -72,7 +72,7 @@ type ExamCardProps = {
 };
 
 type Student = {
-  id: number;
+  id: string;
   full_name: string;
 };
 

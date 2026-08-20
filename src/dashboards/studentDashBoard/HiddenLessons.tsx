@@ -1,6 +1,6 @@
 import AcceptedDrivingLesson from "../sharedAppointmentCards/AcceptedDrivingLesson.tsx";
 
-export default function HiddenLessons({ studentId }: { studentId: number }) {
+export default function HiddenLessons({ studentId }: { studentId: string }) {
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
