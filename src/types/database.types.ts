@@ -273,20 +273,20 @@ export type Database = {
           student_id: string | null
         }
         Insert: {
-          id?: never
+          id?: number
           instructor_id: string
           license_class: string
           student_id?: string | null
         }
         Update: {
-          id?: never
+          id?: number
           instructor_id?: string
           license_class?: string
           student_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_student_instructor_instructor"
+            foreignKeyName: "student_instructors_instructor_id_fkey"
             columns: ["instructor_id"]
             isOneToOne: false
             referencedRelation: "instructors"

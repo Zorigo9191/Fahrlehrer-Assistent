@@ -29,11 +29,13 @@ type ExamListProps = {
   role: Role;
   showActions?: boolean;
   refreshTrigger?: number;
+  instructorName: string;
 };
 
 export default function ExamList({
   role,
   showActions = false,
+  instructorName,
   setActiveTab,
   refreshTrigger = 0,
 }: ExamListProps) {
@@ -228,7 +230,11 @@ export default function ExamList({
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
-      <ExamListHeader role={role} setActiveTab={setActiveTab} />
+      <ExamListHeader
+        role={role}
+        setActiveTab={setActiveTab}
+        instructorName={instructorName}
+      />
 
       <div className="flex gap-2 flex-wrap">
         {examDays.map((day) => {

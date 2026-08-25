@@ -63,7 +63,7 @@ const footerItems = [
   },
 ];
 
-export default function InstructorDashBoard() {
+export default function studentDashBoard() {
   const navigate = useNavigate();
 
   const [savedFeedbacks, setSavedFeedbacks] = useState<SavedFeedbacksRow[]>([]);
@@ -77,15 +77,20 @@ export default function InstructorDashBoard() {
   const { session } = useContext(AuthContext);
   const studentId = session?.user?.id;
   const [studentName, setStudentName] = useState<string>("Laden...");
-  const [instructorId, setInstructorId] = useState<string>("");
+  const [studentLicenseClass, setStudentLicenseClass] = useState<string[]>([]);
+
+  const [instructorIds, setInstructorIds] = useState<string[]>([]);
 
   // States für das Profilbild
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
-  async function fetchInstructorId() {
+  async function fetchInstructorIds() {
+    if (!studentId) return;
+
     const { data, error } = await supabase
       .from("student_instructors")
       .select("*")
@@ -100,15 +105,12 @@ export default function InstructorDashBoard() {
       return;
     }
 
-    if (data) {
-      const student = data.find((student) => student.student_id === studentId);
-      setInstructorId(student.instructor_id);
-    }
+    setInstructorIds(data?.map((row) => row.instructor_id) ?? []);
   }
 
   useEffect(() => {
     if (studentId) {
-      fetchInstructorId();
+      fetchInstructorIds();
     }
   }, [studentId]);
 
@@ -121,9 +123,10 @@ export default function InstructorDashBoard() {
     if (!studentId) return;
     const { data, error } = await supabase
       .from("driving_students")
-      .select("full_name, avatar_url")
+      .select("full_name, avatar_url, student_license_classes(license_class)")
       .eq("id", studentId)
       .single();
+    console.log(data);
 
     if (error) {
       console.error("Fehler beim Laden des Fahrlehrernamens:", error);
@@ -135,6 +138,11 @@ export default function InstructorDashBoard() {
       setStudentName(data.full_name ?? "Schüler");
       if (data.avatar_url) {
         setAvatarUrl(data.avatar_url);
+      }
+      if (data.student_license_classes.length > 0) {
+        setStudentLicenseClass(
+          data.student_license_classes.map((entry) => entry.license_class),
+        );
       }
     }
   }
@@ -532,12 +540,15 @@ export default function InstructorDashBoard() {
       {/* Fahrstunde vergeben */}
       <DrivingLessonAppointment
         role="student"
-        instructorId={instructorId}
-        refreshKey={0}
+        instructorIds={instructorIds}
+        refreshKey={refreshKey}
+        setRefreshKey={setRefreshKey}
+        studentId={studentId}
+        studentLicenseClass={studentLicenseClass}
       />
 
       {/* Angenommene Fahrstunde */}
-      <HiddenLessons studentId={studentId} />
+      <HiddenLessons studentId={studentId} refreshKey={refreshKey} />
     </div>
   );
 

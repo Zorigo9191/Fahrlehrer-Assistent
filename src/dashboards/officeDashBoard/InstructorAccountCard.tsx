@@ -52,6 +52,7 @@ export default function InstructorAccountCard({
     }
 
     setIsEditing(false);
+    refresh();
   };
 
   const handleDelete = async () => {

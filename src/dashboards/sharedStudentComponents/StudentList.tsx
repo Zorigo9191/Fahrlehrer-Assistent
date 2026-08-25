@@ -29,9 +29,6 @@ import {
 import { toast } from "sonner";
 import { AuthContext } from "../../context/AuthContext.tsx";
 
-// type DrivingStudentRow =
-//   Database["public"]["Tables"]["driving_students"]["Row"];
-
 type StudentWithLicenses = {
   feedback_count: number;
   id: number;
@@ -61,6 +58,7 @@ type StudentWithLicenses = {
 
 type StudentListProps = {
   setActiveTab: (tab: string) => void;
+  instructorName: string;
 };
 
 type DrivingStudentUpdate =
@@ -83,7 +81,10 @@ const carCategories = [
   { value: "BE", type: "car" },
 ];
 
-export default function StudentList({ setActiveTab }: StudentListProps) {
+export default function StudentList({
+  setActiveTab,
+  instructorName,
+}: StudentListProps) {
   const [showRegister, setShowRegister] = useState(false);
   const [feedbackGive, setFeedbackGive] = useState(false);
   const [feedbackView, setFeedbackView] = useState(false);
@@ -276,11 +277,12 @@ export default function StudentList({ setActiveTab }: StudentListProps) {
     <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white">
-        <div className="flex items-center w-full">
+        <div className="flex items-center w-full justify-between gap-2">
           <h2 className="text-xl text-white font-bold flex items-center gap-2">
             <Users size={28} />
             Schülerliste
           </h2>
+          <p className="text-sm font-semibold">{instructorName}</p>
         </div>
       </div>
 

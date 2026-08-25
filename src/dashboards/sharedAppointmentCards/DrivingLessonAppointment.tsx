@@ -16,7 +16,7 @@ import {
   Trash2,
   Zap,
 } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import {
@@ -25,15 +25,16 @@ import {
   updateAvailableLesson,
 } from "../instructorDashBoard/instructorDashBoardItem/AppointmentService.ts";
 import type { Database } from "../../types/database.types.ts";
-import { AuthContext } from "../../context/AuthContext.tsx";
 
 type Role = "student" | "instructor";
 
 type DrivingLessonAppointmentProps = {
   role: Role;
-  instructorId: string;
+  instructorIds: string[];
   refreshKey: number;
-  studentId?: string;
+  studentId: string;
+  studentLicenseClass: string[];
+  setRefreshKey: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type AvailableLessonRow =
@@ -44,8 +45,11 @@ type AvailableLessonUpdate =
 
 export default function DrivingLessonAppointment({
   role,
-  instructorId,
+  instructorIds,
   refreshKey,
+  studentId,
+  studentLicenseClass,
+  setRefreshKey,
 }: DrivingLessonAppointmentProps) {
   let titleColor = "";
   let textColor = "";
@@ -89,20 +93,22 @@ export default function DrivingLessonAppointment({
   const [editingFormData, setEditingFormData] =
     useState<AvailableLessonRow | null>(null);
 
-  // const [studentId] = useState(114);
-  const { session } = useContext(AuthContext);
-  const studentId = session?.user?.id;
+  // const { session } = useContext(AuthContext);
+  const student = studentId;
 
   async function fetchLessons() {
-    if (!instructorId || instructorId === "undefined") {
+    if (!instructorIds || instructorIds.length === 0) {
       setLoading(false);
       return;
     }
 
     try {
       setLoading(true);
-      const data = await getAvailableLesson({ instructorId });
-      console.log("Geladene Daten von Supabase:", data);
+      const data = await getAvailableLesson({
+        instructorIds,
+        studentLicenseClass:
+          role === "student" ? studentLicenseClass : undefined,
+      });
 
       if (data) {
         setLessons(data);
@@ -125,7 +131,7 @@ export default function DrivingLessonAppointment({
   }
   useEffect(() => {
     fetchLessons();
-  }, [instructorId, refreshKey]);
+  }, [instructorIds, refreshKey, studentLicenseClass]);
 
   const handleStartEditLesson = (editLessonId: number) => {
     const lessonToEdit = lessons.find((lesson) => lesson.id === editLessonId);
@@ -173,7 +179,7 @@ export default function DrivingLessonAppointment({
 
       setEditingItemId(null);
       setEditingFormData(null);
-
+      setRefreshKey((prev) => prev + 1);
       fetchLessons();
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
@@ -199,7 +205,7 @@ export default function DrivingLessonAppointment({
         lessonId: lessonId,
         payload: {
           status: "vergeben",
-          student_id: studentId,
+          student_id: student,
         },
       });
 
@@ -215,6 +221,7 @@ export default function DrivingLessonAppointment({
       });
 
       setActiveAcceptId(null);
+      setRefreshKey((prev) => prev + 1);
       fetchLessons();
     } catch (error) {
       console.error("Fehler beim Annehmen:", error);
@@ -235,7 +242,7 @@ export default function DrivingLessonAppointment({
     try {
       await deleteLesson(lessonId);
       setLessons((prev) => prev.filter((lesson) => lesson.id !== lessonId));
-
+      setRefreshKey((prev) => prev + 1);
       toast.success("Termin Anfrage wurde gelöscht", {
         unstyled: true,
         icon: <Trash2 className="h-5 w-5 text-red-500" />,
@@ -266,7 +273,7 @@ export default function DrivingLessonAppointment({
   if (loading) {
     return <div className="p-4 text-slate-500">Lade Termineanfrage...</div>;
   }
-
+  console.log("STUDENT LICENSE CLASS:", studentLicenseClass);
   return (
     <div className={`rounded-xl border p-4 ${borderColor}`}>
       {loading && <p className="text-center text-gray-500">Lade Anfragen...</p>}

@@ -11,7 +11,8 @@ type AvailableLessonUpdate =
   Database["public"]["Tables"]["available_lessons"]["Update"];
 
 type GetLessonParams = {
-  instructorId: AvailableLessonRow["instructor_id"];
+  instructorIds: string[];
+  studentLicenseClass?: string[];
 };
 
 type UpdateLessonParams = {
@@ -41,19 +42,31 @@ export async function updateAvailableLesson({
 // Nur ausgewählte Daten auslesen
 
 export async function getAvailableLesson({
-  instructorId,
+  instructorIds,
+  studentLicenseClass,
 }: GetLessonParams): Promise<AvailableLessonRow[]> {
-  const { data, error } = await supabase
+  if (!instructorIds || instructorIds.length === 0) {
+    return [];
+  }
+
+  let query = supabase
     .from("available_lessons")
     .select("*")
-    .eq("instructor_id", instructorId)
+    .in("instructor_id", instructorIds)
     .eq("status", "offen");
 
+  if (studentLicenseClass) {
+    query = query.in("license_class", studentLicenseClass);
+  }
+
+  const { data, error } = await query;
+
   if (error) {
+    console.error("getAvailableLesson:", error);
     throw error;
   }
 
-  return data;
+  return data ?? [];
 }
 
 // Termin Anfrage in der DB Speichern

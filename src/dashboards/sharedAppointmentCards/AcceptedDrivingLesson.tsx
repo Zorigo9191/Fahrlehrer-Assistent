@@ -24,7 +24,7 @@ type AvailableLessonsRow =
 type Role = "student" | "instructor";
 type Page = "default" | "hidden";
 
-type DrivingLessonAppointmentProps = {
+type AcceptedLessonAppointmentProps = {
   role: Role;
   variant?: Page;
   studentId: string;
@@ -36,7 +36,7 @@ export default function AcceptedDrivingLesson({
   studentId,
   variant = "default",
   refreshCount,
-}: DrivingLessonAppointmentProps) {
+}: AcceptedLessonAppointmentProps) {
   const [openStates, setOpenStates] = useState<Record<number, boolean>>({});
 
   const [acceptedLessons, setAcceptedLessons] = useState<AvailableLessonsRow[]>(

@@ -6,14 +6,17 @@ type Role = "instructor" | "office";
 type ExamListHeaderProps = {
   role: Role;
   className?: string;
+  instructorName: string;
   setActiveTab: (tab: string) => void;
 };
 
 export default function ExamListHeader({
   role,
   className,
+  instructorName,
   setActiveTab,
 }: ExamListHeaderProps) {
+  console.log("ExamListHeader instructorName:", JSON.stringify(instructorName));
   if (role === "instructor") {
     return (
       <div>
@@ -25,6 +28,7 @@ export default function ExamListHeader({
               <List size={32} />
               Prüfungsliste
             </h2>
+            <p className="text-sm font-semibold">{instructorName}</p>
           </div>
         </div>
         <div className="flex justify-end">

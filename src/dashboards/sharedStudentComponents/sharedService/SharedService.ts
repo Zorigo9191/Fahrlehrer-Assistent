@@ -1,9 +1,6 @@
 import { supabase, tempAuthsupabase } from "../../../lib/supabase.ts";
 import type { Database } from "../../../types/database.types.ts";
 
-// type DrivingStudentInsert =
-//   Database["public"]["Tables"]["driving_students"]["Insert"];
-
 type LicenseClassInsert =
   Database["public"]["Tables"]["student_license_classes"]["Insert"];
 
@@ -12,91 +9,6 @@ type StudentFeedInsert =
 
 type DrivingStudentUpdate =
   Database["public"]["Tables"]["driving_students"]["Update"];
-
-// export async function createStudentWithLicenseClasses(student: {
-//   studentData: DrivingStudentInsert;
-//   licenseClasses: string[];
-//   full_name: string;
-//   email: string;
-// }) {
-// const { data: authStudent, error: authStudentError } = await supabase.auth.signUp({
-//   email: student.email,
-//   password: "ein-sicheres-passwort",
-//   options: {
-//     data: {
-//       full_name: student.full_name,
-//     }
-//   }
-// });
-//   console.log(authStudent);
-//   if (authStudentError) {
-//     return {
-//       data: null,
-//       error: authStudentError,
-//     };
-//   }
-
-//   const userId = authStudent.user?.id;
-
-//   if (!userId) {
-//     return {
-//       data: null,
-//       error: new Error("User ID wurde nicht erstellt"),
-//     };
-//   }
-
-//   const { data: newStudent, error: studentError } = await supabase
-//     .from("driving_students")
-//     .insert({ id: userId, full_name: student.full_name, email: student.email })
-//     .select()
-//     .single();
-
-//   if (studentError) {
-//     return { data: null, error: studentError };
-//   }
-
-//   // schüler und instructor in die student_instructors Tabelle hinzufügen
-//   const { error: insertError } = await supabase
-//     .from("student_instructors")
-//     .insert({
-//       instructor_id: "6128533f-d2b2-4933-93c5-84bc619a11d5",
-//       student_id: newStudent.id,
-//       license_class: student.licenseClasses.join(","),
-//     })
-//     .select()
-//     .single();
-
-//   if (insertError) {
-//     return { data: null, error: insertError };
-//   }
-
-//   // Die ausgewählten Führerscheinklassen bekommen die ID des neu erstellten Schülers
-//   const categoriesPayload: LicenseClassInsert[] = student.licenseClasses.map(
-//     (license) => ({
-//       student_id: newStudent.id,
-//       license_class: license,
-//     }),
-//   );
-
-//   if (student.licenseClasses.length > 0) {
-//     const { data: licenseData, error: licenseError } = await supabase
-//       .from("student_license_classes")
-//       .insert(categoriesPayload) // <-- vorbereitete Klassen mit Schüler-ID speichern
-//       .select();
-
-//     if (licenseError) {
-//       return { data: null, error: licenseError };
-//     }
-
-//     return {
-//       data: {
-//         student: newStudent,
-//         licenses: licenseData,
-//       },
-//       error: null,
-//     };
-//   }
-// }
 
 export async function createStudentWithLicenseClasses(
   student: {
@@ -127,11 +39,75 @@ export async function createStudentWithLicenseClasses(
       name: authStudentError.name,
     });
 
+    if (authStudentError.message === "User already registered") {
+      const { data: existingStudent, error: studentError } = await supabase
+        .from("driving_students")
+        .select("id, email")
+        .eq("email", student.email)
+        .maybeSingle();
+
+      if (studentError) {
+        console.error(
+          "Fehler beim Suchen des bestehenden Schülers:",
+          studentError,
+        );
+        return {
+          data: null,
+          error: studentError,
+        };
+      }
+
+      if (!existingStudent) {
+        console.error(
+          "Auth-User existiert, aber kein driving_student gefunden.",
+        );
+
+        return {
+          data: null,
+          error: new Error(
+            "User existiert bereits, aber kein Schüler-Datensatz wurde gefunden.",
+          ),
+        };
+      }
+
+      const studentId = existingStudent.id;
+
+      const { error: instructorError } = await supabase
+        .from("student_instructors")
+        .insert({
+          instructor_id: instructorId,
+          student_id: studentId,
+          license_class: licenseClasses.join(","),
+        });
+
+      if (instructorError) {
+        console.error(
+          "Fehler beim Eintragen des Schülers in student_instructors:",
+          instructorError,
+        );
+
+        return {
+          data: null,
+          error: instructorError,
+        };
+      }
+
+      return {
+        data: {
+          student: existingStudent,
+        },
+        error: null,
+      };
+    }
+
     return {
       data: null,
       error: authStudentError,
     };
   }
+  // Suche anhand von email in driving student den Studen und die ID
+
+  // Füge zu student_instructors einen neue Zeile hinzu mit instructor ID und gesuchter student id
 
   const userId = authStudent.user?.id;
 

@@ -15,6 +15,8 @@ import {
   CalendarPlus,
   AlertTriangle,
   Save,
+  Timer,
+  CalendarClock,
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,6 +58,7 @@ type AcceptedlessonRow =
   Database["public"]["Tables"]["available_lessons"]["Row"] & {
     driving_students: {
       full_name: string;
+      student_id: string;
     } | null;
   };
 
@@ -83,7 +86,7 @@ export default function InstructorDashBoard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [instructorName, setInstructorName] = useState<string>("Laden...");
-
+  const studentId = acceptedLesson[0]?.student_id ?? null;
   // Nur neue acceptedLesson zählen
   const notificationCount = acceptedLesson.filter(
     (lesson) => lesson.read_at === null,
@@ -398,8 +401,11 @@ export default function InstructorDashBoard() {
 
       <DrivingLessonAppointment
         role={"instructor"}
-        instructorId={instructorId}
+        instructorIds={instructorId ? [instructorId] : []}
         refreshKey={refreshKey}
+        setRefreshKey={setRefreshKey}
+        studentId={studentId}
+        studentLicenseClass={[]}
       />
 
       {/* Angenommene Fahrstunde */}
@@ -442,7 +448,7 @@ export default function InstructorDashBoard() {
                           className="border border-blue-700 rounded px-2 py-1 w-full"
                         />
                       </div>
-
+                      <CalendarClock size={16} />
                       <input
                         type="time"
                         value={editForm.lesson_time}
@@ -471,7 +477,7 @@ export default function InstructorDashBoard() {
                           className="border border-blue-700 rounded px-2 py-1 w-full"
                         />
                       </div>
-
+                      <Timer size={16} />
                       <input
                         type="number"
                         value={editForm.duration_minutes}
@@ -516,6 +522,10 @@ export default function InstructorDashBoard() {
                           {lesson.driving_students?.full_name} -{" "}
                           {lesson.license_class}
                         </strong>
+                      </span>
+                      <span className="gap-1 flex">
+                        Dauer:
+                        <strong>{lesson.duration_minutes}</strong>
                       </span>
                     </div>
                   </>
@@ -625,10 +635,23 @@ export default function InstructorDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && instructorDashBoard}
             {activeTab === "pruefungsliste" && (
-              <ExamList role="instructor" setActiveTab={setActiveTab} />
+              <>
+                {console.log(
+                  "InstructorDashBoard instructorName vor ExamList:",
+                  JSON.stringify(instructorName),
+                )}
+                <ExamList
+                  role="instructor"
+                  setActiveTab={setActiveTab}
+                  instructorName={instructorName}
+                />
+              </>
             )}
             {activeTab === "schuelerliste" && (
-              <StudentList setActiveTab={setActiveTab} />
+              <StudentList
+                setActiveTab={setActiveTab}
+                instructorName={instructorName}
+              />
             )}
           </div>
 

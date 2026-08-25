@@ -150,9 +150,14 @@ export async function deleteInstructor(id: string) {
 // Angenommene Fahrstunde
 
 export async function getAcceptedLessonsByStudent(instructorId: string) {
+  if (!instructorId) {
+    return { data: [], error: null };
+  }
   const { data, error } = await supabase
     .from("available_lessons")
-    .select("*, driving_students(full_name)")
+    .select(
+      "*, driving_students!available_lessons_student_id_fkey(full_name, id)",
+    )
     .eq("instructor_id", instructorId)
     .eq("status", "vergeben");
   console.log(data);
