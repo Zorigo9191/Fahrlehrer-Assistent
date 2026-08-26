@@ -17,6 +17,7 @@ import {
   Save,
   Timer,
   CalendarClock,
+  Ban,
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -100,7 +101,7 @@ export default function InstructorDashBoard() {
       .select("first_name")
       .eq("id", instructorId)
       .single();
-
+    console.log(data.first_name);
     if (error) {
       console.error("Fehler beim Laden des Fahrlehrernamens:", error);
       setInstructorName("Fahrlehrer");
@@ -287,12 +288,12 @@ export default function InstructorDashBoard() {
   }, []);
 
   const instructorDashBoard = (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6  bg-app-surface overflow-x-hidden">
       {/* Header */}
-      <div className="flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-white">
+      <div className="flex gap-1 w-full bg-blue-700 py-2 px-3 rounded-xl text-slate-200">
         <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
-            <GraduationCap size={28} />
+          <h1 className="text-slate-200 text-sm font-bold flex items-center gap-2 p-3">
+            <GraduationCap size={22} />
             Fahrlehrer Dashboard
           </h1>
 
@@ -302,8 +303,9 @@ export default function InstructorDashBoard() {
 
       <div className="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
         {/* Prüfungsliste & Benachrichtigungen */}
-        <div className="flex gap-2 items-center">
-          <ClipboardList size={22} /> Angenommene Fahrstunden
+        <div className="flex gap-2 items-center text-sm text-slate-200">
+          <ClipboardList size={18} className="text-blue-700 " /> Angenommene
+          Fahrstunden
           <div className="relative" ref={notificationRef}>
             <button
               type="button"
@@ -321,8 +323,8 @@ export default function InstructorDashBoard() {
 
             {/* Dropdown */}
             {showNotifications && (
-              <div className="absolute -left-30 top-9 z-50 w-80 rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
-                <h3 className="mb-3 text-sm font-bold text-gray-800">
+              <div className="absolute -left-50 top-9 z-50 w-80 rounded-lg border-2 bg-blue-700 p-3 shadow-xl  border-app-border">
+                <h3 className="mb-3 text-xs font-bold text-slate-200">
                   Angenommen von
                 </h3>
 
@@ -335,7 +337,7 @@ export default function InstructorDashBoard() {
                         key={lesson.id}
                         className={`rounded-lg border p-2 ${
                           isNew
-                            ? "border-gray-300 bg-white text-black"
+                            ? "border-gray-300 bg-app-surface text-slate-200"
                             : "border-gray-200 bg-gray-100 text-gray-400"
                         }`}
                       >
@@ -373,7 +375,7 @@ export default function InstructorDashBoard() {
             <Button
               variant="ghost"
               onClick={() => setAppointmentDialog(true)}
-              className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
+              className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
             >
               <CalendarPlus size={16} />
               Anfrage erstellen
@@ -391,7 +393,7 @@ export default function InstructorDashBoard() {
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-sm text-blue-700 hover:bg-blue-100 font-bold border border-blue-700 transition"
+            className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
           >
             <LogOut size={16} />
             Abmelden
@@ -409,7 +411,7 @@ export default function InstructorDashBoard() {
       />
 
       {/* Angenommene Fahrstunde */}
-      <h2 className="flex gap-1 w-full justify-center bg-blue-700 py-2 px-3 rounded-xl text-white">
+      <h2 className="flex gap-1 w-full text-sm justify-center bg-blue-700 py-2 px-3 rounded-xl text-white">
         Angenommene Fahrstunde
       </h2>
       <div className="rounded-xl min-h-90 border border-blue-700 p-4">
@@ -421,7 +423,7 @@ export default function InstructorDashBoard() {
             >
               <CalendarDays className="h-6 w-6 text-blue-700" />
             </div>
-            <p className="mt-3 text-sm font-medium text-slate-700">
+            <p className="mt-3 text-xs font-medium text-slate-700">
               Keine Fahrstundenanfrage.
             </p>
           </div>
@@ -430,12 +432,12 @@ export default function InstructorDashBoard() {
             const isEditing = editingLessonId === lesson.id;
 
             return (
-              <div key={lesson.id} className="p-3 border-b border-b-blue-700">
+              <div key={lesson.id} className="p-3  border-b border-b-blue-700">
                 {isEditing ? (
                   <>
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 mb-3 text-slate-700 text-sm">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 mb-3 text-slate-200 text-xs ">
                       <div className="flex items-center gap-2">
-                        <CalendarDays size={16} />
+                        <CalendarDays size={16} className="text-blue-700" />
                         <input
                           type="date"
                           value={editForm.lesson_date}
@@ -448,7 +450,7 @@ export default function InstructorDashBoard() {
                           className="border border-blue-700 rounded px-2 py-1 w-full"
                         />
                       </div>
-                      <CalendarClock size={16} />
+                      <CalendarClock size={16} className="text-blue-700" />
                       <input
                         type="time"
                         value={editForm.lesson_time}
@@ -462,9 +464,9 @@ export default function InstructorDashBoard() {
                       />
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 mb-5 text-slate-700 text-sm">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 mb-5 text-slate-700 text-xs ">
                       <div className="flex items-center gap-2">
-                        <User size={16} />
+                        <User size={16} className="text-blue-700 " />
                         <input
                           type="text"
                           value={editForm.license_class}
@@ -474,10 +476,10 @@ export default function InstructorDashBoard() {
                               license_class: e.target.value,
                             })
                           }
-                          className="border border-blue-700 rounded px-2 py-1 w-full"
+                          className="border  border-blue-700  text-slate-200 rounded px-2 py-1 w-full"
                         />
                       </div>
-                      <Timer size={16} />
+                      <Timer size={16} className="text-blue-700 " />
                       <input
                         type="number"
                         value={editForm.duration_minutes}
@@ -487,16 +489,16 @@ export default function InstructorDashBoard() {
                             duration_minutes: e.target.value,
                           })
                         }
-                        className="border border-blue-700 rounded px-2 py-1 w-full md:w-auto"
+                        className="border border-blue-700  text-slate-200 rounded px-2 py-1 w-full md:w-auto"
                       />
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
-                      <CalendarDays size={16} />
+                    <div className="flex items-center gap-2 mb-3 text-xs  text-slate-200">
+                      <CalendarDays size={16} className="text-blue-700" />
 
-                      <span className="gap-1 flex">
+                      <span className="gap-1 flex text-xs ">
                         Vergebene Fahrstunde:
                         <strong>
                           am{" "}
@@ -513,8 +515,8 @@ export default function InstructorDashBoard() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
-                      <User size={16} />
+                    <div className="flex items-center gap-2 mb-5 text-slate-200 text-xs  ">
+                      <User size={16} className="text-blue-700" />
 
                       <span className="gap-1 flex">
                         Angenommen von:
@@ -523,7 +525,7 @@ export default function InstructorDashBoard() {
                           {lesson.license_class}
                         </strong>
                       </span>
-                      <span className="gap-1 flex">
+                      <span className="gap-1 flex text-xs ">
                         Dauer:
                         <strong>{lesson.duration_minutes}</strong>
                       </span>
@@ -537,7 +539,7 @@ export default function InstructorDashBoard() {
                       <Button
                         variant="ghost"
                         onClick={() => handleUpdate(lesson)}
-                        className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-50"
+                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-slate-200 hover:bg-blue-700"
                       >
                         <Save size={14} />
                         Speichern
@@ -546,8 +548,9 @@ export default function InstructorDashBoard() {
                       <Button
                         variant="ghost"
                         onClick={handleCancelEdit}
-                        className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
+                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
                       >
+                        <Ban />
                         Abbrechen
                       </Button>
                     </>
@@ -556,7 +559,7 @@ export default function InstructorDashBoard() {
                       <Button
                         variant="ghost"
                         onClick={() => handleStartEdit(lesson)}
-                        className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
                       >
                         <Pencil size={14} />
                         Bearbeiten
@@ -564,7 +567,7 @@ export default function InstructorDashBoard() {
 
                       <Button
                         variant="ghost"
-                        className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
+                        className="flex w-52 items-center gap-2 h-8 px-3 ttext-xs  border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
                         onClick={() => setActiveDeleteId(lesson.id)}
                       >
                         <Trash2 size={14} />
@@ -575,12 +578,12 @@ export default function InstructorDashBoard() {
 
                   {activeDeleteId === lesson.id && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                      <div className="bg-white rounded-xl shadow-lg p-6 w-80">
-                        <h2 className="text-lg font-bold">
+                      <div className="bg-app-elevated border-app-border rounded-xl shadow-lg p-6 w-80 text-slate-200">
+                        <h2 className="text-md font-bold ">
                           Angenommene Fahrstunde löschen?
                         </h2>
 
-                        <p className="text-sm text-gray-600 mt-2">
+                        <p className="text-xs   mt-2">
                           Möchtest du diese angenommene Fahrstunde wirklich
                           entfernen?
                         </p>
@@ -588,15 +591,16 @@ export default function InstructorDashBoard() {
                           <Button
                             variant="ghost"
                             onClick={() => setActiveDeleteId(null)}
-                            className="flex-1 border border-blue-700 hover:bg-blue-200"
+                            className="flex-1 border text-xs  border-slate-200 hover:bg-slate-600"
                           >
+                            <Ban />
                             Abbrechen
                           </Button>
 
                           <Button
                             variant="ghost"
                             onClick={() => handleDeleteLesson(lesson.id)}
-                            className="flex-1 border-red-500 text-black bg-red-300 hover:bg-red-400"
+                            className="flex-1 text-xs  border border-slate-200 text-red-500 hover:bg-red-500 transition hover:text-slate-200"
                           >
                             <Trash2 size={14} />
                             Löschen
@@ -615,12 +619,12 @@ export default function InstructorDashBoard() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-slate-100 flex justify-center">
+    <div className="min-h-screen w-full bg-app-bg flex justify-center">
       <div
         className="
           w-full
           min-h-screen
-          bg-white
+        
           md:max-w-3xl
           md:my-8
           md:min-h-[calc(100vh-4rem)]
@@ -629,23 +633,18 @@ export default function InstructorDashBoard() {
           lg:max-w-5xl
           flex flex-col
           overflow-hidden
+          bg-app-surface
         "
       >
-        <main className="flex-1 p-4 pb-8 flex flex-col">
+        <main className="flex-1 p-4 pb-8 flex flex-col  bg-app-surface">
           <div className="flex-1">
             {activeTab === "dashboard" && instructorDashBoard}
             {activeTab === "pruefungsliste" && (
-              <>
-                {console.log(
-                  "InstructorDashBoard instructorName vor ExamList:",
-                  JSON.stringify(instructorName),
-                )}
-                <ExamList
-                  role="instructor"
-                  setActiveTab={setActiveTab}
-                  instructorName={instructorName}
-                />
-              </>
+              <ExamList
+                role="instructor"
+                setActiveTab={setActiveTab}
+                instructorName={instructorName}
+              />
             )}
             {activeTab === "schuelerliste" && (
               <StudentList
@@ -655,7 +654,7 @@ export default function InstructorDashBoard() {
             )}
           </div>
 
-          <div className="w-full mt-auto pt-4">
+          <div className="w-full mt-auto pt-4  ">
             <Footer
               activeTab={activeTab}
               setActiveTab={setActiveTab}

@@ -229,7 +229,7 @@ export default function ExamList({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
       <ExamListHeader
         role={role}
         setActiveTab={setActiveTab}
@@ -427,7 +427,7 @@ export default function ExamList({
             />
           ))
         ) : (
-          <p className="text-gray-500 text-sm italic text-center py-4">
+          <p className="text-slate-200  text-sm italic text-center py-4">
             Keine Slots für diesen Tag vorhanden.
           </p>
         )}

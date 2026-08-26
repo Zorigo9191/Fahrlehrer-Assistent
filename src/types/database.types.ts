@@ -206,16 +206,19 @@ export type Database = {
         Row: {
           email: string | null
           id: string
+          profile_name: string | null
           role: string | null
         }
         Insert: {
           email?: string | null
           id: string
+          profile_name?: string | null
           role?: string | null
         }
         Update: {
           email?: string | null
           id?: string
+          profile_name?: string | null
           role?: string | null
         }
         Relationships: []
@@ -332,7 +335,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_instructor: { Args: never; Returns: boolean }
+      is_office: { Args: { user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

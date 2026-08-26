@@ -10,6 +10,7 @@ import { getExamDays, updateExamSlot } from "./officeService/OfficeService.ts";
 
 type StudentCheckProps = {
   setActiveTab: (tab: string) => void;
+  officeName: string;
 };
 
 type ExamSlot = {
@@ -26,7 +27,10 @@ type ExamSlot = {
 
 type ColumnId = "check" | "blocked" | "missing" | "ready";
 
-export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
+export default function StudentCheck({
+  setActiveTab,
+  officeName,
+}: StudentCheckProps) {
   const [columns, setColumns] = useState<{
     check: ExamSlot[];
     blocked: ExamSlot[];
@@ -249,7 +253,7 @@ export default function StudentCheck({ setActiveTab }: StudentCheckProps) {
             Bearbeitung des Schülerstatus
           </h1>
 
-          <p className="text-sm font-semibold">Max MusterMann</p>
+          <p className="text-sm font-semibold">{officeName}</p>
         </div>
       </div>
       <div className="flex justify-end gap-2 ">

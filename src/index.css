@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-app-bg: #0b0d10;
+  --color-app-surface: #212020;
+  --color-app-elevated: #1d2229;
+  --color-app-border: #262c33;
+  --color-app-text: #e7e9ec;
+  --color-app-muted: #8a93a1;
+}
+
 body {
   font-family: "Inter", sans-serif;
 }

@@ -106,7 +106,7 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
   };
 
   return (
-    <div className="flex w-full max-w-3xl mx-auto items-center mt-10 flex-col gap-3 border rounded-2xl border-blue-700 p-2 max-h-[90vh] break-all overflow-y-auto">
+    <div className="flex w-full max-w-3xl mx-auto items-center mt-10 flex-col gap-3 border rounded-2xl border-blue-700 p-2 max-h-[90vh] break-all overflow-y-auto  ">
       {loading && (
         <p className="text-center text-gray-500">Lade Feedbacks...</p>
       )}
@@ -135,14 +135,14 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
           return (
             <div
               key={item.id}
-              className="flex flex-col w-full gap-3 border-b border-blue-200 pb-4 mb-2"
+              className="flex flex-col w-full gap-3 border-b  border-blue-200 pb-4 mb-2 "
             >
               <div className="flex gap-2 justify-between items-center px-2">
-                <h2 className="flex items-center justify-center font-bold">
+                <h2 className="flex items-center justify-center font-bold text-sm text-slate-200">
                   Feedback vom {formattedDate}
                 </h2>
-                <div className="flex items-center gap-2 text-md">
-                  <strong className="text-gray-600">Klasse:</strong>
+                <div className="flex items-center gap-2 text-md text-slate-200">
+                  <strong className="text-slate-200 text-sm">Klasse:</strong>
                   {item.license_class}
                   {currentLicense?.type === "bike" ? (
                     <Bike className="text-blue-700" size={18} />
@@ -153,112 +153,124 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
               </div>
 
               <div className="w-full max-h-[60vh] overflow-y-auto rounded-xl p-3">
-                <div className="flex flex-col gap-2 shadow-inner w-full">
+                <div className="flex flex-col gap-2 shadow-inner w-full ">
                   {/* Verkehrsbeobachtung */}
-                  <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2 gap-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2 gap-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Verkehrsbeobachtung:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded  border text-xs text-slate-200 bg-slate-800"
                         value={formData.verkehrsbeobachtung || ""}
                         onChange={(e) =>
                           handleChange("verkehrsbeobachtung", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.verkehrsbeobachtung}</p>
+                      <p className="text-xs text-slate-200">
+                        {feedbackData?.verkehrsbeobachtung}
+                      </p>
                     )}
                   </div>
 
                   {/* Geschwindigkeit */}
-                  <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Geschwindigkeit:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded text-xs text-slate-200 bg-slate-800 border"
                         value={formData.geschwindigkeit || ""}
                         onChange={(e) =>
                           handleChange("geschwindigkeit", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.geschwindigkeit}</p>
+                      <p className="text-xs text-slate-200">
+                        {feedbackData?.geschwindigkeit}
+                      </p>
                     )}
                   </div>
 
                   {/* Fahrzeugpositionierung */}
-                  <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Fahrzeugpositionierung:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded text-xs text-slate-200 bg-slate-800 border"
                         value={formData.fahrzeugpositionierung || ""}
                         onChange={(e) =>
                           handleChange("fahrzeugpositionierung", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.fahrzeugpositionierung}</p>
+                      <p className="text-xs text-slate-200">
+                        {feedbackData?.fahrzeugpositionierung}
+                      </p>
                     )}
                   </div>
 
                   {/* Kommunikation */}
-                  <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Kommunikation:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded text-xs text-slate-200 bg-slate-800 border"
                         value={formData.kommunikation || ""}
                         onChange={(e) =>
                           handleChange("kommunikation", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.kommunikation}</p>
+                      <p className="text-xs text-slate-200">
+                        {feedbackData?.kommunikation}
+                      </p>
                     )}
                   </div>
 
                   {/* Fahrzeugbedienung */}
-                  <div className="flex w-full flex-col border rounded-md bg-gray-300 p-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Fahrzeugbedienung:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded text-xs text-slate-200 bg-slate-800 border"
                         value={formData.fahrzeugbedienung || ""}
                         onChange={(e) =>
                           handleChange("fahrzeugbedienung", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.fahrzeugbedienung}</p>
+                      <p className="text-xs text-slate-200">
+                        {feedbackData?.fahrzeugbedienung}
+                      </p>
                     )}
                   </div>
 
                   {/* Allgemein */}
-                  <div className="flex w-full flex-col border rounded-md bg-blue-300 p-2">
-                    <h3 className="text-blue-700">
+                  <div className="flex w-full flex-col border rounded-md bg-slate-800 p-2">
+                    <h3 className="text-blue-700 text-sm">
                       <strong>Allgemein:</strong>
                     </h3>
                     {isEditing ? (
                       <textarea
-                        className="w-full p-2 rounded bg-white border"
+                        className="w-full p-2 rounded bg-slate-700 border text-xs text-slate-200"
                         value={formData.allgemein || ""}
                         onChange={(e) =>
                           handleChange("allgemein", e.target.value)
                         }
                       />
                     ) : (
-                      <p>{feedbackData?.allgemein}</p>
+                      <p className="text-xs text-slate-200 ">
+                        {feedbackData?.allgemein}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -269,13 +281,13 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
                 <div className="flex gap-2 w-full">
                   <Button
                     onClick={() => setEditingId(null)}
-                    className="flex-1 items-center gap-2 h-8 px-3 text-sm border border-red-700 text-red-700 hover:bg-red-100"
+                    className="flex-1 items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600"
                   >
                     <Ban size={14} /> Abbrechen
                   </Button>
                   <Button
                     onClick={() => handleSave(item.id)}
-                    className="flex-1 items-center justify-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+                    className="flex-1 items-center justify-center gap-2 h-8 px-3 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
                   >
                     <Save className="mr-2 h-4 w-4" /> Speichern
                   </Button>
@@ -283,7 +295,7 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
               ) : (
                 <Button
                   onClick={() => handleStartEdit(item)}
-                  className="flex w-full items-center gap-2 h-8 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+                  className="flex w-full items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-blue-700"
                 >
                   <Pencil size={14} /> Bearbeiten
                 </Button>

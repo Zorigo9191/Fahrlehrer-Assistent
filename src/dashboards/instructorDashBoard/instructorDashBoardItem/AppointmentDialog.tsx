@@ -113,10 +113,10 @@ export default function AppointmentDialog({
   return (
     <>
       {appointmentDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-          <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 text-slate-200">
+          <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl ">
             <form onSubmit={handleSave}>
-              <Card className="w-full max-w-lg shadow-lg border-blue-700 mt-8">
+              <Card className="w-full max-w-lg shadow-lg border-blue-700 mt-8 ">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-blue-700">
                     Anfrage für Fahrstunde

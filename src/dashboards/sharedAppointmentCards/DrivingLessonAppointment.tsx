@@ -93,7 +93,6 @@ export default function DrivingLessonAppointment({
   const [editingFormData, setEditingFormData] =
     useState<AvailableLessonRow | null>(null);
 
-  // const { session } = useContext(AuthContext);
   const student = studentId;
 
   async function fetchLessons() {
@@ -104,6 +103,7 @@ export default function DrivingLessonAppointment({
 
     try {
       setLoading(true);
+
       const data = await getAvailableLesson({
         instructorIds,
         studentLicenseClass:
@@ -273,9 +273,9 @@ export default function DrivingLessonAppointment({
   if (loading) {
     return <div className="p-4 text-slate-500">Lade Termineanfrage...</div>;
   }
-  console.log("STUDENT LICENSE CLASS:", studentLicenseClass);
+
   return (
-    <div className={`rounded-xl border p-4 ${borderColor}`}>
+    <div className={`rounded-xl border p-4 ${borderColor}  `}>
       {loading && <p className="text-center text-gray-500">Lade Anfragen...</p>}
 
       {lessons.length === 0 ? (
@@ -287,7 +287,7 @@ export default function DrivingLessonAppointment({
           >
             <Route className={`h-6 w-6 ${textColor}`} />
           </div>
-          <p className="mt-3 text-sm font-medium text-slate-700">
+          <p className="mt-3 text-sm font-medium text-slate-100">
             Keine Fahrstundenanfrage.
           </p>
         </div>
@@ -346,14 +346,14 @@ export default function DrivingLessonAppointment({
                 <div className="flex items-center gap-0.5 ">
                   <Dot size={14} className={`${textColor}`} />
                   <Dot className={`${textColor}`} />
-                  <p className="text-bold font-semibold text-gray-700">
+                  <p className="text-bold font-semibold text-slate-200">
                     {lessonStatus}
                   </p>
                   <Dot className={`${textColor}`} />
                   <Dot size={14} className={`${textColor}`} />
                 </div>
               </div>
-              <div className="flex flex-col md:flex-row md:items-center gap-3 text-slate-700 p-3">
+              <div className="flex flex-col md:flex-row md:items-center gap-3 text-slate-200 p-3">
                 {/* Datum */}
                 <div className="flex items-center gap-2">
                   <CalendarDays className={textColor} size={16} />
@@ -408,7 +408,7 @@ export default function DrivingLessonAppointment({
                 </div>
 
                 {/* Klasse ändern */}
-                <div className="flex items-center gap-2 text-slate-700 text-sm">
+                <div className="flex items-center gap-2 text-slate-200 text-sm">
                   <IdCard size={20} className={` ${textColor} `} />
                   <span className="flex items-center gap-2">
                     {!lessonEditing && <strong>Klasse:</strong>}
@@ -447,10 +447,10 @@ export default function DrivingLessonAppointment({
                     <Button
                       variant="ghost"
                       disabled={lesson.status === "vergeben"}
-                      className="h-8 w-52 px-3 text-sm border border-green-700 text-green-700 hover:bg-green-100"
+                      className="h-8 w-52 px-3 text-sm border border-slate-200 text-slate-200 hover:bg-green-700"
                       onClick={() => setActiveAcceptId(lesson.id)}
                     >
-                      <Check size={14} className="mr-2" />
+                      <Check size={14} className="mr-2 border-slate-200" />
                       {lesson.status === "vergeben"
                         ? "Bereits gebucht!"
                         : "Annehmen"}
@@ -460,7 +460,7 @@ export default function DrivingLessonAppointment({
 
                 {activeAcceptId === lesson.id && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                    <div className=" rounded-xl shadow-lg p-6 w-80 bg-app-surface">
                       <h2 className="text-lg font-bold">
                         Terminanfrage Annehmen?
                       </h2>
@@ -472,7 +472,7 @@ export default function DrivingLessonAppointment({
                         <Button
                           variant="ghost"
                           onClick={() => handleAcceptLesson(lesson.id)}
-                          className="flex-1 border border-green-700 hover:bg-green-200"
+                          className="flex-1 border border-slate-200 hover:bg-green-700"
                         >
                           <Check />
                           Bestätigen

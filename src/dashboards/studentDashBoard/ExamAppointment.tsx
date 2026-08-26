@@ -53,11 +53,11 @@ export default function ExamAppointment({
   }, [studentId]);
 
   return (
-    <div className="flex flex-col min-h-screen w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen w-full max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
+          <h1 className="text-sm text-white font-bold flex items-center gap-2">
             <User size={28} />
             Prüfungstermine
           </h1>
@@ -77,7 +77,7 @@ export default function ExamAppointment({
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-green-700 hover:bg-green-200 font-bold border border-green-700 transition"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-slate-200 hover:bg-green-700 font-bold border border-slate-200 transition"
         >
           <X />
           schließen
@@ -90,7 +90,7 @@ export default function ExamAppointment({
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
               <CalendarCheck className="h-6 w-6 text-green-700" />
             </div>
-            <p className="mt-3 text-sm font-medium text-slate-700">
+            <p className="mt-3 text-sm font-medium text-slate-100">
               Keine Prüfungstermine vorhanden.
             </p>
           </div>

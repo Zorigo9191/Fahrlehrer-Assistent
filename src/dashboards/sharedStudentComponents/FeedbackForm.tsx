@@ -96,12 +96,12 @@ export default function FeedbackForm({
 
   return (
     <form
-      className="w-full mt-2 max-w-md mx-auto "
+      className="w-full mt-2 max-w-md mx-auto scrollbar-none text-xs text-slate-200"
       onSubmit={handleSaveFeedback}
     >
-      <FieldGroup className="space-y-4">
+      <FieldGroup className="space-y-4 ">
         <Field>
-          <FieldLabel htmlFor="date">
+          <FieldLabel htmlFor="date" className="text-sm">
             <strong>Datum der Fahrstunde</strong>
           </FieldLabel>
 
@@ -109,7 +109,7 @@ export default function FeedbackForm({
             id="date"
             value={lessonDay || ""}
             type="date"
-            className="h-10 rounded-xl text-blue-700 border-2"
+            className="h-10 rounded-xl text-xs text-slate-200 border bg-slate-600"
             onChange={(e) => setLessonDay(e.target.value)}
           />
         </Field>
@@ -117,15 +117,15 @@ export default function FeedbackForm({
         <Field>
           <div className="flex items-center gap-2 ">
             {selectedLicense?.type === "bike" ? (
-              <Bike className="text-blue-700" size={18} />
+              <Bike className="text-slate-200" size={18} />
             ) : (
-              <Car className="text-blue-700" size={18} />
+              <Car className="text-slate-200" size={18} />
             )}
 
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="rounded-md border-2 text-blue-700 border-blue-700 px-2 py-1 text-sm"
+              className="rounded-md border bg-app-surface  text-slate-200  border-slate-200 px-2 py-1 text-xs"
             >
               {licenseClasses.map((category) => (
                 <option
@@ -141,7 +141,7 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Verkehrsbeobachtung</FieldLabel>
+          <FieldLabel className="text-sm">Verkehrsbeobachtung</FieldLabel>
 
           <Textarea
             value={feedbackData.verkehrsbeobachtung}
@@ -149,7 +149,7 @@ export default function FeedbackForm({
               handleChangeFeedbacks("verkehrsbeobachtung", e.target.value)
             }
             placeholder="..."
-            className="h-24 resize-none"
+            className="h-24 resize-none text-xs"
           />
         </Field>
 
@@ -162,7 +162,7 @@ export default function FeedbackForm({
               handleChangeFeedbacks("geschwindigkeit", e.target.value)
             }
             placeholder="..."
-            className="h-24 resize-none"
+            className="h-24 resize-none text-xs"
           />
         </Field>
 
@@ -175,7 +175,7 @@ export default function FeedbackForm({
               handleChangeFeedbacks("fahrzeugpositionierung", e.target.value)
             }
             placeholder="..."
-            className="h-24 resize-none"
+            className="h-24 resize-none text-xs"
           />
         </Field>
 
@@ -188,7 +188,7 @@ export default function FeedbackForm({
               handleChangeFeedbacks("kommunikation", e.target.value)
             }
             placeholder="..."
-            className="h-24 resize-none"
+            className="h-24 resize-none text-xs"
           />
         </Field>
 
@@ -201,7 +201,7 @@ export default function FeedbackForm({
               handleChangeFeedbacks("fahrzeugbedienung", e.target.value)
             }
             placeholder="..."
-            className="h-24 resize-none"
+            className="h-24 resize-none text-xs"
           />
         </Field>
 
@@ -222,7 +222,7 @@ export default function FeedbackForm({
           <Button
             type="submit"
             variant="ghost"
-            className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+            className="h-8 w-52 px-3 text-sm border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
           >
             <Save className="mr-2 h-4 w-4" />
             Speichern
@@ -232,7 +232,7 @@ export default function FeedbackForm({
             type="button"
             variant="ghost"
             onClick={onClose}
-            className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+            className="h-8 w-52 px-3 text-sm border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
           >
             <Ban className="mr-2 h-4 w-4" />
             Abbrechen

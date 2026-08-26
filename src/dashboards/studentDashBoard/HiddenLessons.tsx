@@ -8,10 +8,10 @@ export default function HiddenLessons({
   refreshKey: number;
 }) {
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6   bg-app-surface overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full justify-center bg-green-700 py-2 px-3 rounded-xl text-white">
-        <h5 className="text-md  text-white font-bold flex items-center gap-2">
+        <h5 className="text-sm  text-white font-bold flex items-center gap-2 ">
           Gebuchte Fahrstunden
         </h5>
       </div>

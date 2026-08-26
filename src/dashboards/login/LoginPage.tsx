@@ -14,6 +14,7 @@ export default function LoginPage() {
   let textColor = "";
   let borderColor = "";
   let buttonColor = "";
+
   let Icon = GraduationCap;
 
   switch (role) {
@@ -23,6 +24,7 @@ export default function LoginPage() {
       textColor = "text-green-700";
       borderColor = "border-green-700";
       buttonColor = "bg-green-700 hover:bg-green-600";
+
       Icon = User;
       break;
 
@@ -32,6 +34,7 @@ export default function LoginPage() {
       textColor = "text-blue-700";
       borderColor = "border-blue-700";
       buttonColor = "bg-blue-700 hover:bg-blue-600";
+
       Icon = GraduationCap;
       break;
 
@@ -41,6 +44,7 @@ export default function LoginPage() {
       textColor = "text-orange-700";
       borderColor = "border-orange-700";
       buttonColor = "bg-orange-500 hover:bg-orange-400";
+
       Icon = Briefcase;
       break;
 
@@ -54,7 +58,7 @@ export default function LoginPage() {
   }
 
   const content = (
-    <div className="flex h-full items-center flex-col px-6 py-10 bg-white">
+    <div className="flex h-full items-center flex-col px-6 py-10 bg- rounded-xl bg-app-elevated">
       {/* Header */}
       <div className="mt-10 mb-8 flex flex-col items-center md:flex-row md:justify-center md:gap-6">
         <h1

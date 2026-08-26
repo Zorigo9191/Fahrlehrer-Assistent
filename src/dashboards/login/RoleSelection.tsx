@@ -60,7 +60,7 @@ export default function RoleSelection() {
       </div>
 
       {/* Footer */}
-      <div className="mt-auto flex flex-col items-start gap-3 pb-3 text-slate-700 md:flex-row md:justify-center md:items-center">
+      <div className="mt-auto flex flex-col items-start gap-3 pb-3 text-slate-700 md:flex-row md:justify-center md:items-center ">
         <div className="flex items-center gap-2 ">
           <MessageCircle size={20} />
           <span>Feedback & Hilfe</span>

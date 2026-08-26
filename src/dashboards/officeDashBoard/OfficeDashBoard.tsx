@@ -9,13 +9,15 @@ import {
   X,
   ListCheck,
 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InstructoAccountItems from "./InstructorAccountItems";
 import DateCreateForm from "./DateCreateFrom";
 
 import StudentCheck from "./StudentCheck";
 import ExamList from "../sharedExamLists/ExamList.tsx";
+import { supabase } from "../../lib/supabase.ts";
+import { AuthContext } from "../../context/AuthContext.tsx";
 
 const footerItems = [
   {
@@ -45,6 +47,32 @@ export default function OfficeDashBoard() {
   const [createDate, setCreateDate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  const { session } = useContext(AuthContext);
+  const officeId = session?.user?.id;
+  const [officeName, setOfficeName] = useState<string>("Laden...");
+
+  useEffect(() => {
+    if (!officeId) return;
+
+    async function fetchOfficeName() {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("profile_name")
+        .eq("id", officeId)
+        .single();
+
+      if (error) {
+        console.error("Fehler beim Laden des Büromitarbeiter-Namens:", error);
+        setOfficeName("Büro");
+        return;
+      }
+
+      setOfficeName(data?.profile_name ?? "Büro");
+    }
+
+    fetchOfficeName();
+  }, [officeId]);
+
   const handleSaved = () => {
     setCreateDate(false);
     setRefreshTrigger((prev) => prev + 1);
@@ -60,7 +88,7 @@ export default function OfficeDashBoard() {
             Büro Dashboard
           </h1>
 
-          <p className="text-sm font-semibold">Max MusterMann</p>
+          <p className="text-sm font-semibold">{officeName}</p>
         </div>
       </div>
 
@@ -107,6 +135,7 @@ export default function OfficeDashBoard() {
         showActions={true}
         role={"office"}
         refreshTrigger={refreshTrigger}
+        instructorName={""}
       />
     </div>
   );
@@ -132,10 +161,16 @@ export default function OfficeDashBoard() {
           <div className="flex-1">
             {activeTab === "dashboard" && officeDashBoard}
             {activeTab === "instructor_acc" && (
-              <InstructoAccountItems setActiveTab={setActiveTab} />
+              <InstructoAccountItems
+                setActiveTab={setActiveTab}
+                officeName={officeName}
+              />
             )}
             {activeTab === "student_check" && (
-              <StudentCheck setActiveTab={setActiveTab} />
+              <StudentCheck
+                setActiveTab={setActiveTab}
+                officeName={officeName}
+              />
             )}
           </div>
 

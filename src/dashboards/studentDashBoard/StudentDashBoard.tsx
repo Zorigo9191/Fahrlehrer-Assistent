@@ -324,17 +324,18 @@ export default function studentDashBoard() {
   }, []);
 
   const studentDashBoard = (
-    <div className="flex min-h-screen w-full max-w-3xl mx-auto flex-col gap-6 overflow-x-hidden bg-white py-6">
+    <div className="flex min-h-screen w-full max-w-3xl mx-auto flex-col gap-6 overflow-x-hidden bg-app-surface py-6">
       {/* Header */}
-      <div className="flex h-24 w-full gap-1 rounded-xl bg-green-700 px-3 py-2 text-white">
+      <div className="flex h-24 w-full gap-1 rounded-xl bg-green-700 px-3 py-2  text-slate-200">
         <div className="flex w-full items-center justify-between">
-          <h1 className="flex items-center gap-2 text-xl font-bold text-white">
+          <h1 className="flex items-center gap-2 text-sm font-bold">
             <User size={28} />
-            Schüler Dashboard
+            <strong>Schüler Dashboard</strong>
           </h1>
 
           {/* Profilbild */}
           <div className="flex items-center gap-3">
+            <p className="text-sm font-semibold ">Schüler(in): {studentName}</p>
             <div className="relative">
               <input
                 type="file"
@@ -373,18 +374,18 @@ export default function studentDashBoard() {
 
                 {showDeleteConfirm && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-                    <div className="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl">
+                    <div className="w-full max-w-sm rounded-xl bg-app-surface border border-app-border p-5 shadow-xl text-app-text overflow-x-hidden">
                       <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
                           <Trash2 className="h-5 w-5 text-red-500" />
                         </div>
 
-                        <h2 className="text-lg font-bold text-gray-800">
+                        <h2 className="text-lg font-bold text-app-text">
                           Profilbild löschen?
                         </h2>
                       </div>
 
-                      <p className="mb-5 text-sm text-gray-600">
+                      <p className="mb-5 text-sm text-app-muted">
                         Möchtest du dein aktuelles Profilbild wirklich löschen?
                       </p>
 
@@ -392,7 +393,7 @@ export default function studentDashBoard() {
                         <Button
                           variant="outline"
                           onClick={() => setShowDeleteConfirm(false)}
-                          className="bg-green-300 border-green-300 text-black  hover:bg-green-500 "
+                          className="bg-app-elevated border-app-border text-app-text hover:bg-app-border"
                         >
                           Abbrechen
                         </Button>
@@ -450,8 +451,6 @@ export default function studentDashBoard() {
                 )}
               </div>
             </div>
-
-            <p className="text-sm font-semibold">{studentName}</p>
           </div>
         </div>
       </div>
@@ -461,7 +460,7 @@ export default function studentDashBoard() {
         <div className="flex items-center gap-2">
           <StickyNotes size={22} />
 
-          <strong>Feedbacks</strong>
+          <strong className="text-sm">Feedbacks</strong>
 
           <div className="relative" ref={notificationRef}>
             <button
@@ -480,12 +479,12 @@ export default function studentDashBoard() {
 
             {/* Dropdown */}
             {showNotifications && (
-              <div className="absolute -left-30 top-9 z-50 w-80 rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
-                <h3 className="mb-3 text-sm font-bold text-gray-800">
+              <div className="absolute -left-28 top-9 z-50 w-80 rounded-lg border border-app-border bg-green-700 p-3 shadow-xl">
+                <p className="mb-3 text-sm font-bold text-slate-200">
                   Feedbacks
-                </h3>
+                </p>
 
-                <div className="flex max-h-80 flex-col gap-2 overflow-y-auto">
+                <div className="flex max-h-80 flex-col gap-2 overflow-y-auto ">
                   {savedFeedbacks.map((feedback) => {
                     const isNew = feedback.read_at === null;
 
@@ -494,7 +493,7 @@ export default function studentDashBoard() {
                         key={feedback.id}
                         className={`rounded-lg border p-2 ${
                           isNew
-                            ? "border-gray-300 bg-white text-black"
+                            ? "border-gray-300 bg-app-surface text-slate-200"
                             : "border-gray-200 bg-gray-100 text-gray-400"
                         }`}
                       >
@@ -530,9 +529,9 @@ export default function studentDashBoard() {
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="flex h-8 items-center gap-2 border border-green-700 px-3 text-sm font-bold text-green-700 transition hover:bg-green-100"
+          className="flex h-8 items-center gap-2 border border-slate-200 px-3 text-sm font-bold text-slate-200 transition hover:bg-green-700"
         >
-          <LogOut size={16} />
+          <LogOut size={14} />
           Abmelden
         </Button>
       </div>
@@ -553,7 +552,7 @@ export default function studentDashBoard() {
   );
 
   return (
-    <div className="flex min-h-screen w-full justify-center bg-slate-100">
+    <div className="flex min-h-screen w-full justify-center bg-app-bg text-app-text">
       <div
         className="
           flex
@@ -561,16 +560,17 @@ export default function studentDashBoard() {
           w-full
           flex-col
           overflow-hidden
-          bg-white
+          bg-app-surface
           md:my-8
           md:min-h-[calc(100vh-4rem)]
           md:max-w-3xl
           md:rounded-2xl
           md:shadow-xl
           lg:max-w-5xl
+        
         "
       >
-        <main className="flex-1 p-4 pb-8">
+        <main className="flex-1 p-4 pb-8   bg-app-surface">
           <div className="flex-1">
             {activeTab === "dashboard" && studentDashBoard}
 
@@ -593,7 +593,7 @@ export default function studentDashBoard() {
             )}
           </div>
 
-          <div className="mt-auto w-full pt-4">
+          <div className="mt-auto w-full pt-4  ">
             <Footer
               activeTab={activeTab}
               setActiveTab={setActiveTab}

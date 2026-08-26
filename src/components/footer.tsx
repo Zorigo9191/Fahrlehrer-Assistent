@@ -22,13 +22,13 @@ export default function Footer({
 }: FooterProps) {
   const getButtonClass = (tabName: string) => {
     return `
-      flex flex-col items-center gap-1 h-auto py-2 bg-transparent
-      ${activeTab === tabName ? color : "text-slate-500"}
+      flex flex-col  items-center gap-1 h-auto py-2 bg-transparent  
+      ${activeTab === tabName ? color : "text-slate-100"}
     `;
   };
 
   return (
-    <footer className="border-t bg-white sticky bottom-0 w-full h-16 z-10">
+    <footer className="border-t  bg-app-surface sticky bottom-0 w-full h-16 z-10">
       <div className="flex h-full items-center justify-around">
         {items.map((item) => {
           const Icon = item.icon;

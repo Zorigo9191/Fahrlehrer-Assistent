@@ -82,11 +82,11 @@ export default function ReceivedFeedback({
   }, [studentId]);
 
   return (
-    <div className="flex min-h-screen  flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex min-h-screen  flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
+          <h1 className="text-sm text-white font-bold flex items-center gap-2">
             <User size={28} />
             Feedback zu Fahrstunden
           </h1>
@@ -108,9 +108,9 @@ export default function ReceivedFeedback({
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-green-700 hover:bg-green-200 font-bold border border-green-700 transition"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-slate-200 hover:bg-green-700 font-bold border border-slate-200  transition"
         >
-          <X />
+          <X size={14} />
           schließen
         </Button>
       </div>
@@ -123,7 +123,7 @@ export default function ReceivedFeedback({
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                 <MessageSquare className="h-6 w-6 text-green-700" />
               </div>
-              <p className="mt-3 text-sm font-medium text-slate-700">
+              <p className="mt-3 text-sm font-medium text-slate-100">
                 Kein Feedback vorhanden
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function ReceivedFeedback({
                 <button
                   key={feedback.id}
                   onClick={() => setSelectedFeedback(feedback)}
-                  className=" border-2  border-green-700 rounded-xl p-2  hover:bg-green-200 transition overflow-x-hidden"
+                  className=" border-2  border-green-700 hover:border-white rounded-xl p-2  hover:bg-green-700 transition overflow-x-hidden text-slate-200 text-sm"
                 >
                   <strong className="flex items-center gap-10">
                     <ChevronRight className="h-5 w-5" />
@@ -177,10 +177,10 @@ export default function ReceivedFeedback({
         {/* Feedback AnzeigeForm */}
         {selectedFeedback && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-3xl rounded-2xl p-4 max-h-[90vh] overflow-hidden">
+            <div className="bg-app-surface border-2 border-white w-full max-w-3xl rounded-2xl p-4 max-h-[90vh] overflow-hidden">
               {/* Header  */}
               <div className="flex justify-between items-center mb-4">
-                <h2 className="font-bold text-xl flex gap-1">
+                <h2 className="font-bold text-sm flex gap-1">
                   <p>Feedback vom:</p>
                   {new Date(selectedFeedback.created_at).toLocaleDateString(
                     "de-DE",
@@ -200,58 +200,56 @@ export default function ReceivedFeedback({
                 </button>
               </div>
 
-              <div className="overflow-y-auto max-h-[60vh] flex flex-col gap-3">
-                <div className="border rounded-md bg-gray-300 p-2">
-                  <h3 className="font-bold text-blue-700">
+              <div className="overflow-y-auto max-h-[60vh] flex flex-col gap-3 text-sm">
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold text-slate-800">
                     Verkehrsbeobachtung
                   </h3>
-                  <p>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.verkehrsbeobachtung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-300 p-2">
-                  <h3 className="font-bold text-blue-700">Geschwindigkeit</h3>
-                  <p>
-                    {" "}
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold  text-slate-800">Geschwindigkeit</h3>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.geschwindigkeit ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-300 p-2">
-                  <h3 className="font-bold text-blue-700">
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold  text-slate-800">
                     Fahrzeugpositionierung
                   </h3>
-                  <p>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.fahrzeugpositionierung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-300 p-2">
-                  <h3 className="font-bold text-blue-700">Kommunikation</h3>
-                  <p>
-                    {" "}
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold  text-slate-800">Kommunikation</h3>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.kommunikation ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-300 p-2">
-                  <h3 className="font-bold text-blue-700">Fahrzeugbedienung</h3>
-                  <p>
-                    {" "}
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold  text-slate-800">
+                    Fahrzeugbedienung
+                  </h3>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.fahrzeugbedienung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-blue-300 p-2">
-                  <h3 className="font-bold">Allgemein</h3>
-                  <p>
-                    {" "}
+                <div className="border rounded-md bg-gray-400 p-2">
+                  <h3 className="font-bold  text-slate-700">Allgemein</h3>
+                  <p className=" text-slate-700">
                     {selectedFeedback.feedbackContent.allgemein ||
                       "kein Eintrag"}
                   </p>

@@ -7,6 +7,7 @@ import { getInstructors } from "./instructorService/InstructorService";
 
 type InstructorAccountItemsProps = {
   setActiveTab: (tab: string) => void;
+  officeName: string;
 };
 
 type Instructor = {
@@ -21,6 +22,7 @@ type Instructor = {
 
 export default function InstructoAccountItems({
   setActiveTab,
+  officeName,
 }: InstructorAccountItemsProps) {
   const [createInstructor, setCreateInstructor] = useState(false);
   const [instructors, setInstructors] = useState<Instructor[]>([]);
@@ -49,7 +51,7 @@ export default function InstructoAccountItems({
             Fahrlehrer Konto
           </h1>
 
-          <p className="text-sm font-semibold">Max MusterMann</p>
+          <p className="text-sm font-semibold">{officeName}</p>
         </div>
       </div>
       <div className="flex  justify-between gap-2 ">

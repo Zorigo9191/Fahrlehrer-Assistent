@@ -98,15 +98,17 @@ export default function AcceptedDrivingLesson({
   };
 
   return (
-    <div className={`rounded-xl border ${borderColor} p-4 w-full`}>
+    <div
+      className={`rounded-xl border ${borderColor} p-4 w-full   bg-app-surface`}
+    >
       <div className="rounded-lg min-h-80 ">
         {acceptedLessons.length === 0 ? (
-          <div className="flex flex-col min-h-80 items-center justify-center text-sm text-slate-500">
+          <div className="flex flex-col min-h-80 items-center justify-center text-sm text-slate-500 ">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
               <CalendarX2 className="h-6 w-6 text-green-700" />
             </div>
 
-            <p className="mt-3 text-sm font-medium text-slate-700">
+            <p className="mt-3 text-sm font-medium text-slate-200">
               Keine Fahrstunde angenommen
             </p>
           </div>
@@ -129,11 +131,11 @@ export default function AcceptedDrivingLesson({
                         className={`flex flex-col sm:flex-row sm:items-center gap-2 text-sm font-bold ${titleColor}`}
                       >
                         <label className="flex gap-2">
-                          <CalendarDays className="text-slate-700" size={20} />
-                          <p>Datum:</p>
+                          <CalendarDays className="text-slate-200" size={20} />
+                          <p className="text-slate-200">Datum:</p>
                         </label>
 
-                        <span className="ml-7 sm:ml-0 text-black ">
+                        <span className="ml-7 sm:ml-0 text-black text-slate-200">
                           {lesson.lesson_date},{" "}
                           {lesson.lesson_time?.slice(0, 5)} Uhr
                         </span>
@@ -151,11 +153,11 @@ export default function AcceptedDrivingLesson({
                       </Button>
                     </div>
                     {isOpen && (
-                      <div className="mt-2 rounded bg-gray-300 p-4 transition">
+                      <div className="mt-2 rounded bg-slate-700 p-4 transition">
                         <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
-                          <CalendarDays className="text-green-700" size={16} />
+                          <CalendarDays className="text-green-700 " size={16} />
 
-                          <span className="flex gap-1">
+                          <span className="flex gap-1 text-slate-200">
                             Fahrstunde am:
                             <strong>
                               {lesson.lesson_date},{" "}
@@ -167,7 +169,7 @@ export default function AcceptedDrivingLesson({
                         <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
                           <User className="text-green-700" size={16} />
 
-                          <span className="flex gap-1">
+                          <span className="flex gap-1 text-slate-200">
                             Status:
                             <p className="font-bold">
                               {lesson.status === "vergeben"
@@ -178,9 +180,12 @@ export default function AcceptedDrivingLesson({
                         </div>
 
                         <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
-                          <GraduationCap className="text-green-700" size={16} />
+                          <GraduationCap
+                            className="text-green-700 "
+                            size={16}
+                          />
 
-                          <span>
+                          <span className="text-slate-200">
                             Fahrlehrer:
                             <strong> {lesson.instructors.first_name}</strong>
                           </span>
@@ -189,7 +194,7 @@ export default function AcceptedDrivingLesson({
                         <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
                           <Timer className="text-green-700" size={16} />
 
-                          <span>
+                          <span className="text-slate-200">
                             Dauer:
                             <strong> {lesson.duration_minutes}</strong>
                           </span>
@@ -206,7 +211,7 @@ export default function AcceptedDrivingLesson({
                             ) : (
                               <Car className="text-green-700" size={18} />
                             )}
-                            <span>
+                            <span className="text-slate-200">
                               Kategorie:
                               <strong> {lesson.license_class}</strong>
                             </span>

@@ -201,7 +201,11 @@ export async function createStudentFeedbacks(payload: StudentFeedInsert) {
 
 export async function getFeedbacks(studentId: string) {
   if (!studentId) {
-    return;
+    return {
+      data: [],
+      count: 0,
+      error: null,
+    };
   }
   const { data, count, error } = await supabase
     .from("student_feedback")
@@ -218,7 +222,6 @@ export async function getFeedbacks(studentId: string) {
       error,
     };
   }
-
   return {
     data,
     count: count ?? 0,

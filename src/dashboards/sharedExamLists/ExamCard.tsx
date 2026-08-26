@@ -169,7 +169,7 @@ export default function ExamCard({
         instructor_name: instructorName,
         license_class: selectedClass,
 
-        status: "gray",
+        // status: "gray",
       });
 
       if (error) {
@@ -224,7 +224,7 @@ export default function ExamCard({
         student_name: selectedStudent.full_name,
         instructor_name: instructorName,
         license_class: selectedClass,
-        status: "gray",
+        // status: "gray",
       });
 
       if (error) {
