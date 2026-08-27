@@ -282,7 +282,7 @@ export default function StudentList({
             <Users size={22} />
             Schülerliste
           </h2>
-          <p className="text-sm font-semibold">{instructorName}</p>
+          <p className="text-sm font-semibold">Fahrlehrer - {instructorName}</p>
         </div>
       </div>
 
@@ -290,7 +290,7 @@ export default function StudentList({
         <Button
           variant="ghost"
           onClick={() => setShowRegister(true)}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
+          className="flex w-52 items-center gap-2 h-8 px-3 text-xs  text-blue-700 hover:bg-blue-700 hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <Plus />
           Schüler hinzufügen
@@ -298,11 +298,11 @@ export default function StudentList({
 
         {showRegister && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-            <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+            <div className="relative w-full max-w-md rounded-xl bg-app-elevated p-6 shadow-2xl">
               <Button
                 variant="ghost"
                 onClick={() => setShowRegister(false)}
-                className="absolute border-2 right-4 top-3 text-gray-500 hover:text-black"
+                className="absolute cursor-pointer right-3 top-2 text-gray-500 hover:text-slate-200"
               >
                 <X />
               </Button>
@@ -321,7 +321,7 @@ export default function StudentList({
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
+          className="flex items-center gap-2 h-8 px-3 text-xs  text-blue-700 hover:bg-blue-700 hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <X />
           schließen
@@ -369,7 +369,7 @@ export default function StudentList({
                   <div className="flex flex-col gap-2 w-full">
                     {/* Name-Bereich */}
                     <div className="flex text-sm gap-2 text-slate-200  w-full">
-                      <label className="text-xs   text-blue-700">Name:</label>
+                      <label className="text-xs text-blue-700">Name:</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -387,7 +387,7 @@ export default function StudentList({
                     </div>
 
                     {/* E-Mail-Bereich */}
-                    <div className="flex gap-2 font-bold text-blue-700 w-full">
+                    <div className="flex gap-2 text-blue-700 w-full">
                       <label className="text-xs">Email:</label>
                       {isEditing ? (
                         <input
@@ -432,16 +432,16 @@ export default function StudentList({
               {/* BEREICH: Führerscheinklassen  */}
               <div className="flex items-center justify-between text-sm text-slate-200 border-t pt-3 mt-3">
                 {isEditing ? (
-                  <div className="flex gap-4 items-center">
+                  <div className="flex gap-4 items-center ">
                     {/* Bike Dropdown */}
-                    <div className="flex items-center gap-2">
-                      <Bike className="text-blue-700" size={18} />
+                    <div className="flex items-center gap-2 ">
+                      <Bike className="text-blue-700" size={16} />
                       <select
                         value={studentFormData.bike_license || ""}
                         onChange={(e) =>
                           handleStudentChange("bike_license", e.target.value)
                         }
-                        className="rounded-sm w-18 border text-slate-200 border-slate-200 px-2 py-1 text-xs outline-none bg-app-surface"
+                        className="rounded-sm w-16 border text-slate-200 border-slate-200 px-1 py-1 text-xs outline-none bg-app-surface "
                       >
                         <option value="">-</option>
                         {bikeCategories.map((category) => (
@@ -454,13 +454,13 @@ export default function StudentList({
 
                     {/* Car Dropdown */}
                     <div className="flex items-center gap-2">
-                      <Car className="text-blue-700" size={18} />
+                      <Car className="text-blue-700" size={16} />
                       <select
                         value={studentFormData.car_license || ""}
                         onChange={(e) =>
                           handleStudentChange("car_license", e.target.value)
                         }
-                        className="rounded-sm border text-slate-200 border-slate-200 px-2 py-1 text-sm outline-none bg-app-surface"
+                        className="rounded-sm border text-slate-200 border-slate-200 px-2 py-1 text-xs outline-none bg-app-surface"
                       >
                         <option value="">-</option>
                         {carCategories.map((category) => (
@@ -489,7 +489,7 @@ export default function StudentList({
                   <Button
                     variant="ghost"
                     onClick={() => setEditingStudentId(null)}
-                    className="flex items-center gap-2 h-8 px-4  text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 w-32"
+                    className="flex items-center gap-2 h-8 px-4 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 w-32"
                   >
                     <Ban size={14} /> Abbrechen
                   </Button>
@@ -498,7 +498,7 @@ export default function StudentList({
                     onClick={() => {
                       handleSaveStudent(student.driving_students.id);
                     }}
-                    className="flex items-center justify-center gap-2 h-8 px-4 text-xs border border-slate-200 text-slate-200 hover:bg-blue-700 w-32"
+                    className="flex items-center justify-center gap-2 h-8 px-4 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200 w-32"
                   >
                     <Save size={14} /> Speichern
                   </Button>
@@ -542,7 +542,7 @@ export default function StudentList({
               {showDeleteDialog && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
                   <div className=" rounded-xl shadow-lg p-6 w-80 bg-app-elevated">
-                    <h2 className="text-md text-slate-200 font-bold">
+                    <h2 className="text-sm flex justify-center text-blue-700 font-bold">
                       Schüler löschen?
                     </h2>
 
@@ -553,15 +553,16 @@ export default function StudentList({
                       <Button
                         variant="ghost"
                         onClick={() => setShowDeleteDialog(false)}
-                        className="flex-1 border border-slate-200 text-slate-200 hover:bg-slate-600"
+                        className="flex-1 border text-xs border-slate-200 text-slate-200 hover:bg-slate-600"
                       >
+                        <Ban />
                         Abbrechen
                       </Button>
 
                       <Button
                         variant="ghost"
                         onClick={() => handleDeleteStudent(student)}
-                        className="flex-1 border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
+                        className="flex-1 text-xs border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
                       >
                         <Trash2 size={14} />
                         Löschen
@@ -592,8 +593,8 @@ export default function StudentList({
 
       {/*  das Erstellen eines Feedbacks */}
       {feedbackGive && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto p-4 ">
-          <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl  bg-app-elevated p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 overflow-y-auto  p-4 ">
+          <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto scrollbar-none rounded-xl  bg-app-elevated p-6 shadow-2xl">
             <Button
               variant="ghost"
               onClick={() => setFeedbackGive(false)}

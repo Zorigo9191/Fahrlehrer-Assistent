@@ -131,18 +131,18 @@ export default function AcceptedDrivingLesson({
                         className={`flex flex-col sm:flex-row sm:items-center gap-2 text-sm font-bold ${titleColor}`}
                       >
                         <label className="flex gap-2">
-                          <CalendarDays className="text-slate-200" size={20} />
-                          <p className="text-slate-200">Datum:</p>
+                          <CalendarDays className="text-slate-200" size={16} />
+                          <p className="text-slate-200 text-xs">Datum:</p>
                         </label>
 
-                        <span className="ml-7 sm:ml-0 text-black text-slate-200">
+                        <span className="ml-7 sm:ml-0 text-xs text-slate-200">
                           {lesson.lesson_date},{" "}
                           {lesson.lesson_time?.slice(0, 5)} Uhr
                         </span>
                       </h4>
                       <Button
                         onClick={() => toggleOpen(lesson.id)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 text-xs"
                       >
                         <ChevronDown
                           className={`transition-transform ${
@@ -154,11 +154,11 @@ export default function AcceptedDrivingLesson({
                     </div>
                     {isOpen && (
                       <div className="mt-2 rounded bg-slate-700 p-4 transition">
-                        <div className="flex items-center gap-2 mb-3 text-slate-700 text-sm">
+                        <div className="flex items-center gap-2 mb-3 text-slate-700 text-xs">
                           <CalendarDays className="text-green-700 " size={16} />
 
                           <span className="flex gap-1 text-slate-200">
-                            Fahrstunde am:
+                            Fahrstunde am -
                             <strong>
                               {lesson.lesson_date},{" "}
                               {lesson.lesson_time?.slice(0, 5)} Uhr
@@ -166,11 +166,11 @@ export default function AcceptedDrivingLesson({
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-xs">
                           <User className="text-green-700" size={16} />
 
                           <span className="flex gap-1 text-slate-200">
-                            Status:
+                            Status -
                             <p className="font-bold">
                               {lesson.status === "vergeben"
                                 ? " von dir gebucht"
@@ -179,28 +179,27 @@ export default function AcceptedDrivingLesson({
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-xs">
                           <GraduationCap
                             className="text-green-700 "
                             size={16}
                           />
 
                           <span className="text-slate-200">
-                            Fahrlehrer:
+                            Fahrlehrer -
                             <strong> {lesson.instructors.first_name}</strong>
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-xs">
                           <Timer className="text-green-700" size={16} />
 
                           <span className="text-slate-200">
-                            Dauer:
-                            <strong> {lesson.duration_minutes}</strong>
+                            Dauer -<strong> {lesson.duration_minutes}</strong>
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-sm">
+                        <div className="flex items-center gap-2 mb-5 text-slate-700 text-xs">
                           <IdCard className="text-green-700" size={16} />
 
                           <span className="flex gap-2">
@@ -211,8 +210,8 @@ export default function AcceptedDrivingLesson({
                             ) : (
                               <Car className="text-green-700" size={18} />
                             )}
-                            <span className="text-slate-200">
-                              Kategorie:
+                            <span className="text-slate-200 ">
+                              Kategorie -
                               <strong> {lesson.license_class}</strong>
                             </span>
                           </span>

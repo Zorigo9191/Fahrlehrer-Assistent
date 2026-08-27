@@ -112,7 +112,9 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
       )}
 
       {!loading && feedbacks.length === 0 && (
-        <p className="text-center text-gray-500">Keine Feedbacks gefunden.</p>
+        <p className="text-center text-slate-200 text-xs">
+          Keine Feedbacks gefunden
+        </p>
       )}
 
       {!loading &&
@@ -138,11 +140,11 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
               className="flex flex-col w-full gap-3 border-b  border-blue-200 pb-4 mb-2 "
             >
               <div className="flex gap-2 justify-between items-center px-2">
-                <h2 className="flex items-center justify-center font-bold text-sm text-slate-200">
+                <h2 className="flex items-center justify-center font-bold text-sm  text-slate-200">
                   Feedback vom {formattedDate}
                 </h2>
-                <div className="flex items-center gap-2 text-md text-slate-200">
-                  <strong className="text-slate-200 text-sm">Klasse:</strong>
+                <div className="flex items-center gap-2 text-md text-slate-200 text-xs">
+                  <strong className="text-slate-200 ">Klasse:</strong>
                   {item.license_class}
                   {currentLicense?.type === "bike" ? (
                     <Bike className="text-blue-700" size={18} />
@@ -295,7 +297,7 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
               ) : (
                 <Button
                   onClick={() => handleStartEdit(item)}
-                  className="flex w-full items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-blue-700"
+                  className="flex  items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-blue-700 hover:text-slate-200 hover:bg-blue-700"
                 >
                   <Pencil size={14} /> Bearbeiten
                 </Button>

@@ -297,7 +297,7 @@ export default function InstructorDashBoard() {
             Fahrlehrer Dashboard
           </h1>
 
-          <p className="text-sm font-semibold">{instructorName}</p>
+          <p className="text-sm font-semibold">Fahrlehrer - {instructorName}</p>
         </div>
       </div>
 
@@ -375,7 +375,7 @@ export default function InstructorDashBoard() {
             <Button
               variant="ghost"
               onClick={() => setAppointmentDialog(true)}
-              className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
+              className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-blue-700 hover:bg-blue-700 hover:text-slate-200 font-bold border border-slate-200 transition"
             >
               <CalendarPlus size={16} />
               Anfrage erstellen
@@ -393,7 +393,7 @@ export default function InstructorDashBoard() {
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-slate-200 hover:bg-blue-700 font-bold border border-slate-200 transition"
+            className="flex items-center justify-center w-full md:w-auto gap-2 h-8 px-3 text-xs  text-blue-700 hover:bg-blue-700 hover:text-slate-200 font-bold border border-slate-200 transition"
           >
             <LogOut size={16} />
             Abmelden
@@ -447,7 +447,9 @@ export default function InstructorDashBoard() {
                               lesson_date: e.target.value,
                             })
                           }
-                          className="border border-blue-700 rounded px-2 py-1 w-full"
+                          className="border border-blue-700 rounded px-2 py-1 w-full 
+                          [&::-webkit-calendar-picker-indicator]:invert
+                          [&::-webkit-calendar-picker-indicator]:opacity-80 "
                         />
                       </div>
                       <CalendarClock size={16} className="text-blue-700" />
@@ -460,7 +462,9 @@ export default function InstructorDashBoard() {
                             lesson_time: e.target.value,
                           })
                         }
-                        className="border border-blue-700 rounded px-2 py-1 w-full md:w-auto"
+                        className="border border-blue-700 rounded px-2 py-1 w-full md:w-auto
+                        [&::-webkit-calendar-picker-indicator]:invert
+                        [&::-webkit-calendar-picker-indicator]:opacity-80 "
                       />
                     </div>
 
@@ -539,7 +543,7 @@ export default function InstructorDashBoard() {
                       <Button
                         variant="ghost"
                         onClick={() => handleUpdate(lesson)}
-                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-slate-200 hover:bg-blue-700"
+                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
                       >
                         <Save size={14} />
                         Speichern
@@ -567,7 +571,7 @@ export default function InstructorDashBoard() {
 
                       <Button
                         variant="ghost"
-                        className="flex w-52 items-center gap-2 h-8 px-3 ttext-xs  border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
+                        className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
                         onClick={() => setActiveDeleteId(lesson.id)}
                       >
                         <Trash2 size={14} />
@@ -579,11 +583,11 @@ export default function InstructorDashBoard() {
                   {activeDeleteId === lesson.id && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
                       <div className="bg-app-elevated border-app-border rounded-xl shadow-lg p-6 w-80 text-slate-200">
-                        <h2 className="text-md font-bold ">
+                        <h2 className="text-sm font-bold text-blue-700">
                           Angenommene Fahrstunde löschen?
                         </h2>
 
-                        <p className="text-xs   mt-2">
+                        <p className="text-xs mt-2">
                           Möchtest du diese angenommene Fahrstunde wirklich
                           entfernen?
                         </p>

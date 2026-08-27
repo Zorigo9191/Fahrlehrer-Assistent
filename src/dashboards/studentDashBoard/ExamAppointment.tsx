@@ -58,7 +58,7 @@ export default function ExamAppointment({
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
           <h1 className="text-sm text-white font-bold flex items-center gap-2">
-            <User size={28} />
+            <User size={22} />
             Prüfungstermine
           </h1>
         </div>
@@ -77,7 +77,7 @@ export default function ExamAppointment({
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-slate-200 hover:bg-green-700 font-bold border border-slate-200 transition"
+          className="flex items-center gap-2 h-8 px-3 text-sm text-green-700 hover:bg-green-700 hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <X />
           schließen

@@ -68,47 +68,47 @@ export default function StudentDataBox(props: StudentDataBoxProps) {
 
   return (
     <Card
-      className="flex w-full flex-col p-2 overflow-hidden bg-gray-100 border border-gray-300 cursor-grab active:cursor-grabbing select-none"
+      className="flex w-full flex-col p-2 overflow-hidden bg-app-surface border border-slate-200 border-2 cursor-grab active:cursor-grabbing select-none"
       ref={setNodeRef}
       style={styleObject}
       {...listeners}
       {...attributes}
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-xs text-orange-600">
         <Label>
-          <strong>Name:</strong>
+          <strong>Name -</strong>
         </Label>
-        <p className="text-orange-600 font-medium">
+        <p className="text-slate-200 text-xs">
           {studentName || "Kein Schüler zugewiesen"}
         </p>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-xs text-orange-600">
         <Label>
-          <strong>Klasse:</strong>
+          <strong>Klasse -</strong>
         </Label>
-        <p className="text-orange-600">{licenseClass || "-"}</p>
+        <p className="text-slate-200 text-xs">{licenseClass || "-"}</p>
         <Label>
-          <strong>FL:</strong>
+          <strong>FL -</strong>
         </Label>
-        <p className="text-orange-600">{instructorName || "-"}</p>
+        <p className="text-slate-200 text-xs">{instructorName || "-"}</p>
       </div>
 
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-orange-600 text-xs">
         <Label>
           <strong>Prüfungstag:</strong>
         </Label>
-        <p className="text-orange-600">{formattedDate}</p>
+        <p className="text-slate-200">{formattedDate}</p>
       </div>
 
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-orange-600 text-xs">
         <Label>
           <strong>Uhrzeit:</strong>
         </Label>
-        <p className="text-orange-600">{displayTime}</p>
+        <p className="text-slate-200">{displayTime}</p>
       </div>
 
       {notes && (
-        <div className="flex gap-1 mt-1">
+        <div className="flex gap-1 mt-1 text-orange-600 text-xs">
           <Label>
             <strong>Notiz:</strong>
           </Label>

@@ -43,33 +43,35 @@ export default function InstructoAccountItems({
   }, []);
 
   return (
-    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden text-sm">
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
-        <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
-            <Briefcase size={28} />
+        <div className="flex items-center w-full justify-between p-3">
+          <h1 className="text-sm text-slate-200 font-bold flex items-center gap-2 ">
+            <Briefcase size={22} />
             Fahrlehrer Konto
           </h1>
 
-          <p className="text-sm font-semibold">{officeName}</p>
+          <p className="text-sm font-semibold text-slate-200">
+            Mitarbeiter - {officeName}
+          </p>
         </div>
       </div>
       <div className="flex  justify-between gap-2 ">
         <Button
           variant="ghost"
           onClick={() => setCreateInstructor(true)}
-          className="flex w-52 items-center gap-2 h-8 px-3 text-sm text-orange-500 hover:bg-orange-200 font-bold border border-orange-500 transition"
+          className="flex w-52 items-center gap-2 h-8 px-3 text-xs text-orange-600 hover:bg-orange-500  hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <Plus />
           Fahrlehrer hinzufügen
         </Button>
         {createInstructor && (
           <div className=" fixed overflow-y-auto inset-0 z-50 flex items-center justify-center bg-black/30">
-            <div className="relative w-full  max-w-md rounded-xl bg-white p-6 shadow-2xl ">
+            <div className="relative w-full  max-w-md rounded-xl bg-app-elevated p-6 shadow-2xl ">
               <Button
                 variant="ghost"
                 onClick={() => setCreateInstructor(false)}
-                className="absolute border right-4 top-3 text-gray-500 hover:text-black"
+                className="absolute cursor-pointer right-3 top-2 text-gray-500 hover:text-slate-200"
               >
                 <X />
               </Button>
@@ -86,7 +88,7 @@ export default function InstructoAccountItems({
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500 hover:bg-orange-200 font-bold border border-orange-500 transition"
+          className="flex text-xs items-center gap-2 h-8 px-3  text-orange-500 hover:bg-orange-500 hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <X />
           schließen

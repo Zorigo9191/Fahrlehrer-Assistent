@@ -41,25 +41,28 @@ export default function ExamList({
 }: ExamListProps) {
   let textColor = "";
   let borderColor = "";
-  let bgColor = "";
+  let acticeDateBorderStyle = "";
+  // let bgColor = "";
 
   switch (role) {
     case "instructor":
       textColor = "text-blue-700";
       borderColor = "border-blue-700";
-      bgColor = "bg-blue-700";
+      // bgColor = "bg-blue-700";
+      acticeDateBorderStyle = "border-blue-700 border-2";
       break;
 
     case "office":
       textColor = "text-orange-700";
       borderColor = "border-orange-500";
-      bgColor = "bg-orange-500";
+      acticeDateBorderStyle = "border-orange-500 border-2";
+      // bgColor = "bg-app-surface";
       break;
 
     default:
       textColor = "text-black";
       borderColor = "border-black";
-      bgColor = "bg-orange-500";
+    // bgColor = "bg-orange-500";
   }
 
   const [examDays, setExamDays] = useState<any[]>([]);
@@ -229,14 +232,14 @@ export default function ExamList({
   };
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
+    <div className="flex flex-col w-full  max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
       <ExamListHeader
         role={role}
         setActiveTab={setActiveTab}
         instructorName={instructorName}
       />
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap ">
         {examDays.map((day) => {
           const formattedDate = new Date(day.exam_date).toLocaleDateString(
             "de-DE",
@@ -251,14 +254,14 @@ export default function ExamList({
           return (
             <div
               key={day.id}
-              className={`flex items-center gap-2 border px-3 py-2 rounded-md ${
-                activeDayId === day.id ? `${bgColor} text-white` : textColor
+              className={`flex items-center gap-2 text-slate-200 border-2 px-1 p-1 transition rounded-md  ${
+                activeDayId === day.id ? `${acticeDateBorderStyle}` : textColor
               }`}
             >
               {showActions && (
                 <X
                   size={20}
-                  className="cursor-pointer hover:text-black"
+                  className="cursor-pointer  text-slate-200 hover:text-orange-500 "
                   onClick={() => setShowDeleteDialog(day.id)}
                 />
               )}
@@ -266,7 +269,7 @@ export default function ExamList({
               {showActions && (
                 <Pencil
                   size={15}
-                  className="cursor-pointer hover:text-black"
+                  className="cursor-pointer  text-slate-200 hover:text-orange-500"
                   onClick={() => {
                     setEditDayId(day.id);
                     setNewDate(day.exam_date);
@@ -279,7 +282,7 @@ export default function ExamList({
               {showActions && (
                 <Plus
                   size={18}
-                  className="cursor-pointer hover:text-black"
+                  className="cursor-pointer  text-slate-200 hover:text-orange-500"
                   onClick={() => handleAddSlotToDay(day.id, day.license_class)}
                 />
               )}
@@ -289,30 +292,30 @@ export default function ExamList({
                 onClick={() => setActiveDayId(day.id)}
                 className="flex items-center gap-1.5 font-medium p-0 h-auto hover:bg-transparent"
               >
-                <span className="text-xs text-black font-bold">
+                <span className="text-xs text-slate-200 font-bold">
                   {formattedDate}
                 </span>
 
-                <span className="text-xs text-black font-bold">
+                <span className="text-xs text-slate-200 font-bold">
                   ({day.license_class})
                 </span>
-                <span className="text-xs text-black ">
+                <span className="text-xs text-slate-200 ">
                   ({slotsLength} Plätze)
                 </span>
               </Button>
 
               {showDeleteDialog === day.id && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                  <div className="bg-white flex flex-col items-center rounded-xl shadow-lg p-6 w-80">
-                    <h2 className="text-lg font-bold text-gray-500">
+                  <div className="bg-app-elevated flex flex-col items-center rounded-xl shadow-lg p-6 w-80">
+                    <h2 className="text-sm font-bold text-slate-200">
                       Datum löschen?
                     </h2>
 
-                    <p className="flex w-full justify-center text-sm text-gray-600 mt-2">
+                    <p className="flex w-full justify-center text-xs text-slate-200 mt-2">
                       Möchtest du wirklich diesen Prüfungstag löschen?
                     </p>
 
-                    <span className="bg-gray-300 text-sm font-semibold text-gray-600 px-2 py-1 rounded-md mt-2">
+                    <span className="bg-gray-300 text-xs font-semibold text-gray-600 px-2 py-1 rounded-md mt-2">
                       {formattedDate}
                     </span>
 
@@ -320,7 +323,7 @@ export default function ExamList({
                       <Button
                         variant="ghost"
                         onClick={() => setShowDeleteDialog(null)}
-                        className="flex-1 text-gray-500 bg-orange-200 hover:bg-orange-300"
+                        className="flex-1 text-slate-200 border-slate-200 border hover:bg-slate-600"
                       >
                         <Ban />
                         Abbrechen
@@ -329,7 +332,7 @@ export default function ExamList({
                       <Button
                         variant="ghost"
                         onClick={() => handleDeleteExamDay(day.id)}
-                        className="flex-1 bg-red-300 hover:bg-red-400"
+                        className="flex-1 text-red-500 border border-slate-200 hover:bg-red-500 hover:text-slate-200"
                       >
                         <Trash2 size={14} />
                         Löschen
@@ -341,40 +344,40 @@ export default function ExamList({
 
               {editDayId === day.id && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                  <div className="bg-white flex flex-col items-center rounded-xl shadow-lg p-6 w-80">
-                    <h2 className="text-lg font-bold text-gray-500">
+                  <div className="bg-app-elevated flex flex-col items-center rounded-xl shadow-lg p-6 w-80">
+                    <h2 className="text-sm font-bold text-slate-200">
                       Datum bearbeiten?
                     </h2>
 
                     <div className="space-y-2 w-full">
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="w-28 bg-gray-300 text-sm font-semibold text-gray-600 px-1 py-1 rounded-md">
+                        <span className="w-28 bg-gray-300  font-semibold text-gray-600 px-1 py-1 rounded-md text-xs">
                           Datum
                         </span>
                         <Input
-                          className="border border-gray-500 h-7 text-black"
+                          className="border border-gray-500 h-7 text-slate-200"
                           value={newDate}
                           onChange={(e) => setNewDate(e.target.value)}
                         />
                       </div>
 
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="w-28 bg-gray-300 text-sm font-semibold text-gray-600 px-1 py-1 rounded-md">
+                        <span className="w-28 bg-gray-300 text-xs font-semibold text-gray-600 px-1 py-1 rounded-md">
                           Klassen
                         </span>
                         <Input
-                          className="border border-gray-500 h-7 text-black"
+                          className="border border-gray-500 h-7 text-slate-200"
                           value={newLicense}
                           onChange={(e) => setNewLicense(e.target.value)}
                         />
                       </div>
 
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="w-28 bg-gray-300 text-sm font-semibold text-gray-600 px-1 py-1 rounded-md">
+                        <span className="w-28 bg-gray-300 text-xs font-semibold text-gray-600 px-1 py-1 rounded-md">
                           Slots
                         </span>
                         <Input
-                          className="border border-gray-500 h-7 text-black"
+                          className="border border-gray-500 h-7 text-slate-200"
                           value={slotCount}
                           onChange={(e) => setSlotCount(e.target.value)}
                           placeholder="Anzahl"
@@ -391,7 +394,7 @@ export default function ExamList({
                           setNewLicense("");
                           setSlotCount("");
                         }}
-                        className="flex-1 text-gray-500 border border-gray-500 hover:bg-orange-200"
+                        className="flex-1 text-slate-200 text-xs border border-slate-200 hover:bg-slate-600 "
                       >
                         <Ban />
                         Abbrechen
@@ -400,7 +403,7 @@ export default function ExamList({
                       <Button
                         variant="ghost"
                         onClick={handleUpdateExamDate}
-                        className="flex-1 bg-red-300 hover:bg-red-400"
+                        className="flex-1 text-red-500 hover:bg-red-500 border border-slate-200  hover:text-slate-200 text-xs"
                       >
                         <Save size={14} />
                         Speichern

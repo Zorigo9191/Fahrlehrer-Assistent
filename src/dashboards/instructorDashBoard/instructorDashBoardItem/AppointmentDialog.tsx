@@ -113,35 +113,49 @@ export default function AppointmentDialog({
   return (
     <>
       {appointmentDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 text-slate-200">
-          <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl ">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 ">
+          <div className="relative w-full max-w-md rounded-xl bg-app-elevated p-6 shadow-2xl ">
             <form onSubmit={handleSave}>
               <Card className="w-full max-w-lg shadow-lg border-blue-700 mt-8 ">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-blue-700">
+                  <CardTitle className="text-sm  justify-center flex font-bold text-blue-700">
                     Anfrage für Fahrstunde
                   </CardTitle>
-                  <CardDescription>
-                    Bitte alle Felder ausfüllen!
+                  <CardDescription className="text-xs text-slate-200">
+                    * Bitte alle Felder ausfüllen
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="date">Tag für Fahrstunde</Label>
+                    <Label
+                      htmlFor="date"
+                      className="text-blue-700 font-bold text-xs"
+                    >
+                      Tag für Fahrstunde
+                    </Label>
                     <Input
                       id="date"
                       type="date"
+                      className="[&::-webkit-calendar-picker-indicator]:invert
+                                 [&::-webkit-calendar-picker-indicator]:opacity-80 text-slate-200 text-xs h-7"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="time">Uhrzeit</Label>
+                    <Label
+                      htmlFor="time"
+                      className="text-blue-700 font-bold text-xs"
+                    >
+                      Uhrzeit
+                    </Label>
                     <Input
                       id="time"
                       type="time"
+                      className="[&::-webkit-calendar-picker-indicator]:invert
+                                 [&::-webkit-calendar-picker-indicator]:opacity-80 text-slate-200 text-xs h-7"
                       value={time}
                       onChange={(e) => setTime(e.target.value)}
                       required
@@ -149,10 +163,16 @@ export default function AppointmentDialog({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="klasse">Klasse</Label>
+                    <Label
+                      htmlFor="klasse"
+                      className="text-blue-700 font-bold text-xs"
+                    >
+                      Klasse
+                    </Label>
                     <Input
                       id="klasse"
                       type="text"
+                      className="text-slate-200 text-xs h-7"
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                       placeholder="B, BE, A ..."
@@ -161,10 +181,17 @@ export default function AppointmentDialog({
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="slots">Dauer</Label>
+                    <Label
+                      htmlFor="slots"
+                      className="text-blue-700 font-bold text-xs"
+                    >
+                      Dauer
+                    </Label>
                     <Input
                       id="duration"
                       type="text"
+                      className="[&::-webkit-calendar-picker-indicator]:invert
+                                 [&::-webkit-calendar-picker-indicator]:opacity-80 text-slate-200 text-xs h-7"
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
                       placeholder="90-Min"
@@ -179,7 +206,7 @@ export default function AppointmentDialog({
                       variant="ghost"
                       type="submit"
                       disabled={isLoading}
-                      className="h-8 w-full px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-200"
+                      className="h-8 w-full px-3 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
                     >
                       {isLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -193,7 +220,7 @@ export default function AppointmentDialog({
                       variant="ghost"
                       disabled={isLoading}
                       onClick={() => setAppointmentDialog(false)}
-                      className="h-8 w-full px-3 text-sm border border-red-500 text-red-500 hover:bg-red-200"
+                      className="h-8 w-full px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
                     >
                       <Ban className="mr-2 h-4 w-4" />
                       Abbrechen

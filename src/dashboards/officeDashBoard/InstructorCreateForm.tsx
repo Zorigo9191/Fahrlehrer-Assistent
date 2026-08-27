@@ -49,26 +49,24 @@ export default function InstructorCreateForm({
   };
 
   return (
-    <div className="flex justify-center items-center min-h-90 bg-gray-50 p-4 overflow-x-hidden ">
+    <div className="flex justify-center items-center min-h-70 bg-app-elevated p-4 overflow-x-hidden ">
       <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8 ">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-orange-500">
+          <CardTitle className="text-sm font-bold text-orange-500">
             Fahrlehrer-Konto erstellen
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs text-slate-200">
             Trage die vollständigen Daten für den neuen Fahrlehrer ein.
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
-          *
-          {/* <div className="space-y-2">
-            <Label htmlFor="id">Fahrlehrer-ID</Label>
-            <Input id="id" type="text" placeholder="Fl-4" required />
-          </div> */}
-          {/* Namen */}
-          <div className="space-y-2">
-            <Label htmlFor="name"> Vorname</Label>
+        <CardContent className="space-y-4 text-slate-200 text-xs">
+          *{/* Namen */}
+          <div className="space-y-2 ">
+            <Label htmlFor="name" className="text-xs">
+              {" "}
+              Vorname
+            </Label>
             <Input
               id="firstName"
               type="text"
@@ -79,7 +77,10 @@ export default function InstructorCreateForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="name"> Nachname</Label>
+            <Label htmlFor="name" className="text-xs">
+              {" "}
+              Nachname
+            </Label>
             <Input
               id="lastName"
               type="text"
@@ -91,7 +92,10 @@ export default function InstructorCreateForm({
           </div>
           {/* Emmail Adresse */}
           <div className="space-y-2">
-            <Label htmlFor="name"> E-mail</Label>
+            <Label htmlFor="name" className="text-xs">
+              {" "}
+              E-mail
+            </Label>
             <Input
               type="email"
               value={email}
@@ -101,7 +105,9 @@ export default function InstructorCreateForm({
           </div>
           {/* Passwort */}
           <div className="space-y-2">
-            <Label htmlFor="password">Passwort vergeben</Label>
+            <Label htmlFor="password" className="text-xs">
+              Passwort vergeben
+            </Label>
             <div className="relative">
               <Input
                 id="password"
@@ -123,7 +129,9 @@ export default function InstructorCreateForm({
           </div>
           {/* AusbildungsKlasse  */}
           <div className="space-y-2">
-            <Label htmlFor="klasse">Ausbildungsklasse</Label>
+            <Label htmlFor="klasse" className="text-xs">
+              Ausbildungsklasse
+            </Label>
             <Input
               id="klasse"
               type="text"
@@ -138,7 +146,9 @@ export default function InstructorCreateForm({
           </div>
           {/*  Telefonnummer */}
           <div className="space-y-2">
-            <Label htmlFor="telefon">Telefonnummer</Label>
+            <Label htmlFor="telefon" className="text-xs">
+              Telefonnummer
+            </Label>
             <Input
               id="telefon"
               type="tel"
@@ -156,7 +166,7 @@ export default function InstructorCreateForm({
               variant="ghost"
               type="button"
               onClick={handleSave}
-              className=" h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+              className=" h-8 w-full px-3 text-xs border border-slate-200 text-orange-500 hover:bg-orange-500 hover:text-slate-200"
             >
               <Save className="mr-2 h-4 w-4" />
               Speichern
@@ -165,7 +175,7 @@ export default function InstructorCreateForm({
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+              className=" h-8 w-full px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
             >
               <Ban className="mr-2 h-4 w-4" />
               Abbrechen

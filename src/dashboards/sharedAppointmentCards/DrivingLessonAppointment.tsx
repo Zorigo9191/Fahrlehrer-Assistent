@@ -339,14 +339,14 @@ export default function DrivingLessonAppointment({
                 <div className="flex items-center gap-2 mb-4">
                   <Zap className="text-yellow-500" size={20} />
 
-                  <h2 className={`text-lg font-bold ${titleColor}`}>
+                  <h2 className={`text-sm font-bold ${titleColor}`}>
                     Anfrage für Fahrstunde
                   </h2>
                 </div>
                 <div className="flex items-center gap-0.5 ">
                   <Dot size={14} className={`${textColor}`} />
                   <Dot className={`${textColor}`} />
-                  <p className="text-bold font-semibold text-slate-200">
+                  <p className="text-xs font-semibold text-slate-200">
                     {lessonStatus}
                   </p>
                   <Dot className={`${textColor}`} />
@@ -364,10 +364,13 @@ export default function DrivingLessonAppointment({
                       onChange={(e) =>
                         handleLessonChange("lesson_date", e.target.value)
                       }
-                      className="border-2 border-blue-700 h-9 px-2 rounded font-normal text-black w-full"
+                      className="border border-blue-700 h-7 px-2 rounded font-normal text-slate-200 text-xs w-full
+                      [&::-webkit-calendar-picker-indicator]:invert
+                      [&::-webkit-calendar-picker-indicator]:opacity-80
+                      "
                     />
                   ) : (
-                    <p className="text-sm font-semibold">
+                    <p className="text-xs font-semibold">
                       {formattedLessonDate}
                     </p>
                   )}
@@ -383,10 +386,12 @@ export default function DrivingLessonAppointment({
                       onChange={(e) =>
                         handleLessonChange("lesson_time", e.target.value)
                       }
-                      className="border-2 border-blue-700 h-9 px-2 rounded font-normal text-black w-full"
+                      className="border border-blue-700 h-7 px-2 rounded font-normal text-slate-200 text-xs w-full 
+                      [&::-webkit-calendar-picker-indicator]:invert
+                      [&::-webkit-calendar-picker-indicator]:opacity-80"
                     />
                   ) : (
-                    <p className="text-sm font-semibold">{formattedTime}</p>
+                    <p className="text-xs font-semibold">{formattedTime}</p>
                   )}
                 </div>
 
@@ -400,17 +405,17 @@ export default function DrivingLessonAppointment({
                       onChange={(e) =>
                         handleLessonChange("duration_minutes", e.target.value)
                       }
-                      className="border-2 border-blue-700 h-9 px-2 rounded font-normal text-black w-20"
+                      className="border border-blue-700 h-7 px-2 rounded font-normal text-slate-200 text-xs w-20"
                     />
                   ) : (
-                    <p className="text-sm font-semibold">{duration} min</p>
+                    <p className="text-xs font-semibold">{duration} min</p>
                   )}
                 </div>
 
                 {/* Klasse ändern */}
                 <div className="flex items-center gap-2 text-slate-200 text-sm">
                   <IdCard size={20} className={` ${textColor} `} />
-                  <span className="flex items-center gap-2">
+                  <span className="flex text-xs items-center gap-2">
                     {!lessonEditing && <strong>Klasse:</strong>}
                     {lessonEditing ? (
                       <select
@@ -418,7 +423,7 @@ export default function DrivingLessonAppointment({
                         onChange={(e) =>
                           handleLessonChange("license_class", e.target.value)
                         }
-                        className="border-2 border-blue-700 h-9 px-2 rounded font-normal text-black w-32 bg-white"
+                        className="border border-blue-700 h-7 px-2 rounded font-normal text-slate-200 w-22 bg-app-elevated"
                       >
                         {licenseClasses.map((license) => (
                           <option key={license.value} value={license.value}>
@@ -427,7 +432,7 @@ export default function DrivingLessonAppointment({
                         ))}
                       </select>
                     ) : (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 ">
                         <span>{currentClass}</span>
                         {selectedLicense?.type === "bike" ? (
                           <Bike className={` ${textColor} `} size={18} />
@@ -447,7 +452,7 @@ export default function DrivingLessonAppointment({
                     <Button
                       variant="ghost"
                       disabled={lesson.status === "vergeben"}
-                      className="h-8 w-52 px-3 text-sm border border-slate-200 text-slate-200 hover:bg-green-700"
+                      className="h-8 w-52 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-green-700"
                       onClick={() => setActiveAcceptId(lesson.id)}
                     >
                       <Check size={14} className="mr-2 border-slate-200" />
@@ -460,31 +465,31 @@ export default function DrivingLessonAppointment({
 
                 {activeAcceptId === lesson.id && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <div className=" rounded-xl shadow-lg p-6 w-80 bg-app-surface">
-                      <h2 className="text-lg font-bold">
+                    <div className=" rounded-xl shadow-lg p-6 w-80 bg-app-elevated">
+                      <h2 className="flex justify-center text-green-700 text-sm font-bold">
                         Terminanfrage Annehmen?
                       </h2>
 
-                      <p className="text-sm text-gray-600 mt-2">
+                      <p className="text-xs  text-center text-slate-200 mt-2">
                         Möchtest du diese Terminanfrage wirklich annehmen?
                       </p>
                       <div className="flex gap-3 mt-5">
                         <Button
                           variant="ghost"
-                          onClick={() => handleAcceptLesson(lesson.id)}
-                          className="flex-1 border border-slate-200 hover:bg-green-700"
-                        >
-                          <Check />
-                          Bestätigen
-                        </Button>
-
-                        <Button
-                          variant="ghost"
-                          className="flex-1  border-red-500 text-black bg-red-300 hover:bg-red-400"
+                          className="flex-1 border text-xs border-slate-200 text-slate-200 hover:bg-slate-600"
                           onClick={() => setActiveAcceptId(null)}
                         >
                           <Ban size={14} />
                           Abbrechen
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleAcceptLesson(lesson.id)}
+                          className="flex-1 border border-slate-200 text-green-700 hover:bg-green-700 hover:text-slate-200 text-xs"
+                        >
+                          <Check />
+                          Bestätigen
                         </Button>
                       </div>
                     </div>
@@ -501,7 +506,7 @@ export default function DrivingLessonAppointment({
                             setEditingItemId(null);
                             setEditingFormData(null);
                           }}
-                          className="flex items-center gap-2 h-8 px-4 text-sm border border-red-700 text-red-700 hover:bg-red-100 w-32"
+                          className="flex items-center gap-2 h-8 px-4 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 w-42"
                         >
                           <Ban size={14} /> Abbrechen
                         </Button>
@@ -510,7 +515,7 @@ export default function DrivingLessonAppointment({
                           onClick={() => {
                             handleSaveLesson();
                           }}
-                          className="flex items-center justify-center gap-2 h-8 px-4 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100 w-32"
+                          className="flex items-center justify-center gap-2 h-8 px-4 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200 w-42"
                         >
                           <Save size={14} /> Speichern
                         </Button>
@@ -519,7 +524,7 @@ export default function DrivingLessonAppointment({
                       <div className="flex gap-2 flex-wrap">
                         <Button
                           variant="ghost"
-                          className="h-8 w-52 px-3 text-sm border border-blue-700 text-blue-700 hover:bg-blue-100"
+                          className="h-8 w-52 px-3 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200 transition"
                           onClick={() => handleStartEditLesson(lesson.id)}
                         >
                           <Pencil size={14} />
@@ -527,7 +532,7 @@ export default function DrivingLessonAppointment({
                         </Button>
                         <Button
                           variant="ghost"
-                          className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-50"
+                          className="flex w-52 items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200 transition"
                           onClick={() => setActiveDeleteId(lesson.id)}
                         >
                           <Trash2 size={14} />
@@ -538,27 +543,28 @@ export default function DrivingLessonAppointment({
 
                     {activeDeleteId === lesson.id && (
                       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                        <div className="bg-white rounded-xl shadow-lg p-6 w-80">
-                          <h2 className="text-lg font-bold">
+                        <div className="bg-app-elevated rounded-xl shadow-lg p-6 w-80">
+                          <h2 className="text-sm text-blue-700 font-bold">
                             Terminanfrage löschen?
                           </h2>
 
-                          <p className="text-sm text-gray-600 mt-2">
+                          <p className="text-xs text-slate-200 mt-2">
                             Möchtest du diese Terminanfrage wirklich entfernen?
                           </p>
                           <div className="flex gap-3 mt-5">
                             <Button
                               variant="ghost"
                               onClick={() => setActiveDeleteId(null)}
-                              className="flex-1 border border-blue-700 hover:bg-blue-200"
+                              className="flex-1 border border-slate-200 text-slate-200 text-xs hover:bg-slate-600"
                             >
+                              <Ban />
                               Abbrechen
                             </Button>
 
                             <Button
                               variant="ghost"
                               onClick={() => handleDeleteLesson(lesson.id)}
-                              className="flex-1  border-red-500 text-black bg-red-300 hover:bg-red-400"
+                              className="flex-1 text-red-500 border border-slate-200 hover:bg-red-500 hover:text-slate-200 text-xs"
                             >
                               <Trash2 size={14} />
                               Löschen

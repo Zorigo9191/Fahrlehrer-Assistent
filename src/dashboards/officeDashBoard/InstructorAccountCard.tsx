@@ -106,43 +106,41 @@ export default function InstructorAccountCard({
   }, [instructor.id]);
 
   return (
-    <Card className="w-full  max-w-xs min-h-45 transition-all duration-300 ease-in-out border border-orange-500">
+    <Card className="w-full  max-w-xs h-85 flex flex-col transition-all duration-300 ease-in-out border border-orange-500">
       <CardHeader>
         {isEditing ? (
-          <div className="space-y-2">
-            <label className="space-y-2 text-orange-400 font-bold">
+          <div className="space-y-1 text-xs">
+            <label className="space-y-1 text-orange-400 font-bold">
               Vorname:
             </label>
             <Input
-              className="h-8"
+              className="h-6 text-slate-200 "
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
-            <label className="space-y-2 text-orange-400 font-bold">
-              Nachname:
-            </label>
+            <label className=" text-orange-400 font-bold ">Nachname:</label>
             <Input
-              className="h-8"
+              className="h-6 text-slate-200 "
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
         ) : (
-          <CardTitle className="text-md text-orange-400 flex gap-2">
-            Name:
-            <p className="text-gray-700 font-bold">
+          <CardTitle className="text-xs text-orange-400 flex gap-2">
+            Name -
+            <p className="text-slate-200">
               {instructor.first_name} {instructor.last_name}
             </p>
           </CardTitle>
         )}
       </CardHeader>
 
-      <CardContent className="space-y-2 [&>p>strong]:text-orange-400">
-        <p>
-          <strong>Ausbildungsklasse: </strong>
+      <CardContent className="space-y-0.5  [&>p>strong]:text-orange-400 text-xs">
+        <p className="text-slate-200">
+          <strong>Ausbildungsklasse - </strong>
           {isEditing ? (
             <Input
-              className="h-8"
+              className="h-6 "
               value={classes}
               onChange={(e) => setClasses(e.target.value)}
             />
@@ -151,11 +149,11 @@ export default function InstructorAccountCard({
           )}
         </p>
 
-        <p>
-          <strong>Telefon: </strong>
+        <p className="text-slate-200">
+          <strong>Telefon : </strong>
           {isEditing ? (
             <Input
-              className="h-8"
+              className="h-6 "
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -163,21 +161,20 @@ export default function InstructorAccountCard({
             instructor.phone_number
           )}
         </p>
-        <p>
-          <strong>Erstellt am:</strong>{" "}
+        <p className="text-slate-200">
+          <strong>Erstellt am - </strong>{" "}
           {new Date(instructor.created_at).toLocaleString("de-DE", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
           })}
         </p>
-        <p>
-          <strong>Schülerzahl:</strong> {studentCount}
+        <p className="text-slate-200">
+          <strong>Schülerzahl - </strong>
+          {studentCount}
         </p>
       </CardContent>
-      <div className="flex gap-2 mt-5 flex-wrap justify-center p-2">
+      <div className="flex flex-col  gap-2 mt-auto flex-wrap justify-center p-1 ">
         <Button
           variant="ghost"
           onClick={() => {
@@ -187,7 +184,7 @@ export default function InstructorAccountCard({
               setIsEditing(true);
             }
           }}
-          className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+          className="flex flex-1  min-w-35 items-center justify-center gap-2 h-6 p-1 text-xs border border-slate-200 text-orange-500 hover:bg-orange-500 hover:text-slate-200"
         >
           {isEditing ? (
             <>
@@ -214,7 +211,7 @@ export default function InstructorAccountCard({
 
               setIsEditing(false);
             }}
-            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-red-500 text-black bg-red-300 hover:bg-red-400"
+            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-6 p-1 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
           >
             <Ban size={14} />
             Abbrechen
@@ -223,7 +220,7 @@ export default function InstructorAccountCard({
           <Button
             variant="ghost"
             onClick={() => setShowDeleteDialog(true)}
-            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-8 px-3 text-sm border border-red-500 text-black bg-red-300 hover:bg-red-400"
+            className="flex flex-1 min-w-35 items-center justify-center gap-2 h-6 p-1 text-xs  text-red-500 border border-slate-200  hover:bg-red-500 hover:text-slate-200 transition "
           >
             <Trash2 size={14} />
             Löschen
@@ -233,25 +230,28 @@ export default function InstructorAccountCard({
 
       {showDeleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-80">
-            <h2 className="text-lg font-bold">Fahrlehrer löschen?</h2>
+          <div className="bg-app-elevated rounded-xl shadow-lg p-6 w-80">
+            <h2 className="text-sm text-slate-200 font-bold">
+              Fahrlehrer löschen?
+            </h2>
 
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-xs text-slate-200 mt-2">
               Möchtest du diesen Fahrlehrer wirklich entfernen?
             </p>
             <div className="flex gap-3 mt-5">
               <Button
                 variant="ghost"
                 onClick={() => setShowDeleteDialog(false)}
-                className="flex-1 border border-orange-500 hover:bg-orange-200"
+                className="flex-1 border text-xs text-slate-200 border-slate-200 hover:bg-slate-600"
               >
+                <Ban />
                 Abbrechen
               </Button>
 
               <Button
                 variant="ghost"
                 onClick={handleDelete}
-                className="flex-1  border-red-500 text-black bg-red-300 hover:bg-red-400"
+                className="flex-1 border border-slate-200 text-red-500 hover:text-slate-200 hover:bg-red-500"
               >
                 <Trash2 size={14} />
                 Löschen

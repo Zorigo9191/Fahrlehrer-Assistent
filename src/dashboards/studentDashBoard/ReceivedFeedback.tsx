@@ -87,7 +87,7 @@ export default function ReceivedFeedback({
       <div className="flex gap-1 w-full h-24 bg-green-700 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
           <h1 className="text-sm text-white font-bold flex items-center gap-2">
-            <User size={28} />
+            <User size={22} />
             Feedback zu Fahrstunden
           </h1>
         </div>
@@ -138,7 +138,7 @@ export default function ReceivedFeedback({
                   className=" border-2  border-green-700 hover:border-white rounded-xl p-2  hover:bg-green-700 transition overflow-x-hidden text-slate-200 text-sm"
                 >
                   <strong className="flex items-center gap-10">
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-5 w-5 " />
                     Feedback vom <br />
                     {new Date(feedback.created_at).toLocaleDateString("de-DE", {
                       day: "2-digit",
@@ -177,10 +177,10 @@ export default function ReceivedFeedback({
         {/* Feedback AnzeigeForm */}
         {selectedFeedback && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-app-surface border-2 border-white w-full max-w-3xl rounded-2xl p-4 max-h-[90vh] overflow-hidden">
+            <div className="bg-app-elevated border-2 border-white w-full max-w-3xl rounded-2xl p-4 max-h-[90vh] overflow-hidden ">
               {/* Header  */}
               <div className="flex justify-between items-center mb-4">
-                <h2 className="font-bold text-sm flex gap-1">
+                <h2 className="font-bold text-sm  flex gap-1">
                   <p>Feedback vom:</p>
                   {new Date(selectedFeedback.created_at).toLocaleDateString(
                     "de-DE",
@@ -194,62 +194,68 @@ export default function ReceivedFeedback({
 
                 <button
                   onClick={() => setSelectedFeedback(null)}
-                  className="text-red-600 font-bold text-lg"
+                  className="text-gray-500 font-bold text-md hover:text-slate-200 cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="overflow-y-auto max-h-[60vh] flex flex-col gap-3 text-sm">
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold text-slate-800">
-                    Verkehrsbeobachtung
+              <div className="overflow-y-auto scrollbar-none max-h-[60vh] flex flex-col gap-3 text-sm">
+                <div className="border rounded-md text-xs p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
+                    Verkehrsbeobachtung:
                   </h3>
-                  <p className=" text-slate-700">
+                  <p className=" text-slate-200 mt-2">
                     {selectedFeedback.feedbackContent.verkehrsbeobachtung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold  text-slate-800">Geschwindigkeit</h3>
-                  <p className=" text-slate-700">
+                <div className="border rounded-md p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
+                    Geschwindigkeit
+                  </h3>
+                  <p className=" text-slate-200 text-xs mt-2">
                     {selectedFeedback.feedbackContent.geschwindigkeit ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold  text-slate-800">
+                <div className="border rounded-md  p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
                     Fahrzeugpositionierung
                   </h3>
-                  <p className=" text-slate-700">
+                  <p className=" text-slate-200 text-xs mt-2">
                     {selectedFeedback.feedbackContent.fahrzeugpositionierung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold  text-slate-800">Kommunikation</h3>
-                  <p className=" text-slate-700">
+                <div className="border rounded-md  p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
+                    Kommunikation
+                  </h3>
+                  <p className=" text-slate-200 text-xs mt-2">
                     {selectedFeedback.feedbackContent.kommunikation ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold  text-slate-800">
+                <div className="border rounded-md p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
                     Fahrzeugbedienung
                   </h3>
-                  <p className=" text-slate-700">
+                  <p className=" text-slate-200 text-xs mt-2">
                     {selectedFeedback.feedbackContent.fahrzeugbedienung ||
                       "kein Eintrag"}
                   </p>
                 </div>
 
-                <div className="border rounded-md bg-gray-400 p-2">
-                  <h3 className="font-bold  text-slate-700">Allgemein</h3>
-                  <p className=" text-slate-700">
+                <div className="border rounded-md  p-2">
+                  <h3 className="text-sm font-bold text-green-700 ">
+                    Allgemein
+                  </h3>
+                  <p className=" text-slate-200 text-xs mt-2">
                     {selectedFeedback.feedbackContent.allgemein ||
                       "kein Eintrag"}
                   </p>

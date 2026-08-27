@@ -101,7 +101,7 @@ export default function FeedbackForm({
     >
       <FieldGroup className="space-y-4 ">
         <Field>
-          <FieldLabel htmlFor="date" className="text-sm">
+          <FieldLabel htmlFor="date" className="text-sm text-blue-700">
             <strong>Datum der Fahrstunde</strong>
           </FieldLabel>
 
@@ -109,23 +109,27 @@ export default function FeedbackForm({
             id="date"
             value={lessonDay || ""}
             type="date"
-            className="h-10 rounded-xl text-xs text-slate-200 border bg-slate-600"
+            className="h-10 rounded-xl text-xs text-slate-200 border
+            [&::-webkit-calendar-picker-indicator]:invert
+            [&::-webkit-calendar-picker-indicator]:opacity-80
+            transition
+            "
             onChange={(e) => setLessonDay(e.target.value)}
           />
         </Field>
 
         <Field>
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-2">
             {selectedLicense?.type === "bike" ? (
-              <Bike className="text-slate-200" size={18} />
+              <Bike className=" text-blue-700" size={18} />
             ) : (
-              <Car className="text-slate-200" size={18} />
+              <Car className=" text-blue-700" size={18} />
             )}
 
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
-              className="rounded-md border bg-app-surface  text-slate-200  border-slate-200 px-2 py-1 text-xs"
+              className="rounded-md border bg-app-elevated  text-slate-200  border-slate-200 px-2 py-1 text-xs transition"
             >
               {licenseClasses.map((category) => (
                 <option
@@ -141,7 +145,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel className="text-sm">Verkehrsbeobachtung</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Verkehrsbeobachtung
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.verkehrsbeobachtung}
@@ -154,7 +160,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Geschwindigkeit</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Geschwindigkeit
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.geschwindigkeit}
@@ -167,7 +175,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Fahrzeugpositionierung</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Fahrzeugpositionierung
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.fahrzeugpositionierung}
@@ -180,7 +190,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Kommunikation</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Kommunikation
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.kommunikation}
@@ -193,7 +205,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Fahrzeugbedienung</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Fahrzeugbedienung
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.fahrzeugbedienung}
@@ -206,7 +220,9 @@ export default function FeedbackForm({
         </Field>
 
         <Field>
-          <FieldLabel>Allgemeines Feedback</FieldLabel>
+          <FieldLabel className="text-xs text-blue-700">
+            Allgemeines Feedback
+          </FieldLabel>
 
           <Textarea
             value={feedbackData.allgemeines}
@@ -222,7 +238,7 @@ export default function FeedbackForm({
           <Button
             type="submit"
             variant="ghost"
-            className="h-8 w-52 px-3 text-sm border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
+            className="h-8 w-52 px-3 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
           >
             <Save className="mr-2 h-4 w-4" />
             Speichern
@@ -232,7 +248,7 @@ export default function FeedbackForm({
             type="button"
             variant="ghost"
             onClick={onClose}
-            className="h-8 w-52 px-3 text-sm border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
+            className="h-8 w-52 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
           >
             <Ban className="mr-2 h-4 w-4" />
             Abbrechen

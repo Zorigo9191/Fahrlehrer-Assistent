@@ -49,18 +49,27 @@ type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"];
 const styles = {
   instructor: {
     text: "text-blue-700",
-    border: "border-blue-700",
-    hover: "hover:bg-blue-100",
+    border: "border-slate-200",
+    hover: "hover:bg-blue-700 hover:text-slate-200",
+    textXs: "text-xs",
+    textColor: "text-slate-200",
+    examCardBorder: "border border-blue-700",
   },
   office: {
     text: "text-orange-500",
-    border: "border-orange-500",
-    hover: "hover:bg-orange-100",
+    border: "border-slate-200",
+    hover: "hover:bg-orange-500 hover:text-slate-200",
+    textXs: "text-xs",
+    textColor: "text-slate-200",
+    examCardBorder: "border border-orange-500",
   },
   student: {
     text: "text-green-700",
-    border: "border-green-700",
-    hover: "hover:bg-green-100",
+    border: "border-slate-200",
+    hover: "hover:bg-green-700 hover:text-slate-200",
+    textXs: "text-xs",
+    textColor: "text-slate-200",
+    examCardBorder: "border border-green-700",
   },
 };
 
@@ -94,7 +103,7 @@ export default function ExamCard({
   date,
 }: ExamCardProps) {
   const [students, setStudents] = useState<Student[]>([]);
-
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   // Der aktuell ausgewählte Schüler
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(
     exam.student_id && exam.student_name
@@ -334,15 +343,21 @@ export default function ExamCard({
   // --------------------------------------------------
 
   return (
-    <div className="rounded-xl p-4 overflow-hidden bg-gray-100">
+    <div
+      className={`rounded-xl p-3 overflow-hidden  bg-app-surface border ${styles[role].examCardBorder}`}
+    >
       {/* HEADER */}
 
       <div className="flex justify-between gap-2 mb-4">
         <div className="flex gap-2">
           <Zap className="text-yellow-500" size={20} />
-          <h2 className={`text-lg font-bold ${styles[role].text}`}>Termin</h2>
+          <h2
+            className={`text-sm font-bold ${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+          >
+            Termin
+          </h2>
           {/* Date kommt von examAppointment (getExamSlots) */}
-          <span className="flex items-center text-lg font-bold">
+          <span className="flex items-center text-xs font-bold">
             {date
               ? new Date(date).toLocaleDateString("de-DE", {
                   day: "2-digit",
@@ -359,28 +374,31 @@ export default function ExamCard({
 
       {/* CONTENT */}
 
-      <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-10 flex-wrap">
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 flex-wrap ">
         {/* UHRZEIT + SCHÜLER */}
 
-        <div className="flex flex-col md:flex-row md:items-center gap-4 font-bold">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 font-bold">
           {/* UHRZEIT */}
 
           <div className="flex items-center gap-2">
-            <label className={`${styles[role].text} text-sm font-bold`}>
+            <Clock className={styles[role].text} size={18} />
+            <label
+              className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+            >
               Uhr:
             </label>
-
-            <Clock className={styles[role].text} size={18} />
 
             {editing ? (
               <Input
                 value={examAppointment}
                 onChange={(e) => setExamAppointment(e.target.value)}
                 placeholder="Uhrzeit wählen"
-                className="border rounded px-2 py-1 w-24 h-8"
+                className="border  border-slate-200 text-slate-200 rounded px-2 py-1 w-14 h-6"
               />
             ) : (
-              <span>
+              <span
+                className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+              >
                 {exam.student_appointment || exam.exam_time || "08:00"}
               </span>
             )}
@@ -391,7 +409,11 @@ export default function ExamCard({
           <div className="flex items-center gap-2 text-sm font-semibold">
             <UserRound className={styles[role].text} size={18} />
 
-            <label className={styles[role].text}>Schüler:</label>
+            <label
+              className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+            >
+              Schüler -
+            </label>
 
             {editing ? (
               <Popover>
@@ -399,15 +421,15 @@ export default function ExamCard({
                   <Button
                     variant="outline"
                     role="combobox"
-                    className="w-52 justify-between h-8"
+                    className="w-40 justify-between h-6 text-slate-200 text-xs  "
                   >
                     {selectedStudent?.full_name ?? "Schüler auswählen..."}
 
-                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50 " />
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-52 p-0">
+                <PopoverContent className="w-52 p-0 ">
                   <Command>
                     <CommandInput placeholder="Schüler suchen..." />
 
@@ -440,47 +462,39 @@ export default function ExamCard({
                 </PopoverContent>
               </Popover>
             ) : (
-              <span className="text-lg">{exam.student_name || "Frei"}</span>
+              <span
+                className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+              >
+                {exam.student_name || "..."}
+              </span>
             )}
           </div>
         </div>
 
         {/* FAHRLEHRER + KLASSE */}
 
-        <div className="flex flex-col md:flex-row md:items-center gap-4 text-sm font-semibold">
-          {/* FAHRLEHRER */}
-
-          <div className="flex items-center gap-2">
-            <GraduationCap className={styles[role].text} size={18} />
-
-            <label className={styles[role].text}>Fahrlehrer:</label>
-
-            {editing ? (
-              <Input
-                value={instructorName}
-                onChange={(e) => setInstructorName(e.target.value)}
-                placeholder="FL-Kürzel"
-                className="border rounded px-2 py-1 h-8 w-44"
-              />
-            ) : (
-              <span className="flex gap-1 text-lg">
-                {exam.instructor_name || "-"}
-              </span>
-            )}
-          </div>
-
+        <div className="flex flex-col md:flex-row md:items-center gap-2 text-xs font-semibold">
           {/* KLASSE */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             <IdCard className={styles[role].text} size={18} />
+            {selectedLicense?.type === "bike" ? (
+              <Bike className={styles[role].text} size={18} />
+            ) : (
+              <Car className={styles[role].text} size={18} />
+            )}
 
-            <label className={styles[role].text}>Klasse:</label>
+            <label
+              className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+            >
+              Klasse:
+            </label>
 
             {editing ? (
               <select
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
-                className="rounded-md border border-slate-300 px-2 py-1 text-sm bg-white"
+                className="rounded-md border border-slate-200 p-1 h-6 text-xs bg-app-surface text-slate-200"
               >
                 <option value="">-</option>
 
@@ -491,13 +505,37 @@ export default function ExamCard({
                 ))}
               </select>
             ) : (
-              <span className="text-lg">{exam.license_class || "-"}</span>
+              <span
+                className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+              >
+                {exam.license_class || "..."}
+              </span>
             )}
+          </div>
+          {/* FAHRLEHRER */}
 
-            {selectedLicense?.type === "bike" ? (
-              <Bike className={styles[role].text} size={18} />
+          <div className="flex items-center gap-2">
+            <GraduationCap className={styles[role].text} size={18} />
+
+            <label
+              className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+            >
+              Fahrlehrer -
+            </label>
+
+            {editing ? (
+              <Input
+                value={instructorName}
+                onChange={(e) => setInstructorName(e.target.value)}
+                placeholder="..."
+                className="border rounded p-1 h-6 w-40 text-xs text-slate-200"
+              />
             ) : (
-              <Car className={styles[role].text} size={18} />
+              <span
+                className={`${styles[role].text} ${styles[role].textXs} ${styles[role].textColor}`}
+              >
+                {exam.instructor_name || "..."}
+              </span>
             )}
           </div>
         </div>
@@ -505,13 +543,13 @@ export default function ExamCard({
 
       {/* BUTTONS */}
 
-      <div className="flex gap-2 mt-5 flex-wrap">
+      <div className="flex gap-2 mt-2 flex-wrap">
         {editing ? (
           <>
             <Button
               variant="ghost"
               onClick={saveExam}
-              className={`h-8 w-52 px-3 text-sm border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
+              className={`h-8 w-52 px-3 text-xs border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
             >
               <Save className="mr-2 h-4 w-4" />
               Speichern
@@ -520,7 +558,7 @@ export default function ExamCard({
             <Button
               variant="ghost"
               onClick={handleCancel}
-              className="w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-500 hover:bg-red-100"
+              className="w-52 items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600"
             >
               <Ban size={14} />
               Abbrechen
@@ -531,7 +569,7 @@ export default function ExamCard({
             <Button
               variant="ghost"
               onClick={() => setEditing(true)}
-              className={`flex w-52 items-center gap-2 h-8 px-3 text-sm border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
+              className={`flex w-52 items-center gap-2 h-8 px-3 text-xs border ${styles[role].border} ${styles[role].text} ${styles[role].hover}`}
             >
               <Pencil size={14} />
               Bearbeiten
@@ -542,22 +580,61 @@ export default function ExamCard({
         {role === "office" && (
           <Button
             variant="ghost"
-            onClick={handleDelete}
-            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border border-red-500 text-red-600 hover:bg-red-200"
+            onClick={() => setShowDeleteDialog(true)}
+            className="flex w-52 items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
           >
             <Trash2 size={14} />
             Löschen
           </Button>
         )}
 
+        {/* Delete Dialog für den einzelnen Prüfungsplatz*/}
+        {showDeleteDialog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-app-elevated flex flex-col items-center rounded-xl shadow-lg p-6 w-80">
+              <h2 className="text-sm font-bold text-slate-200">
+                Prüfungsplatz löschen?
+              </h2>
+
+              <p className="flex w-full justify-center text-xs text-slate-200 mt-2">
+                Möchtest du wirklich diesen Prüfungsplatz löschen?
+              </p>
+
+              <span className="bg-gray-300 text-xs font-semibold text-gray-600 px-2 py-1 rounded-md mt-2">
+                {examAppointment}
+              </span>
+
+              <div className="flex gap-3 mt-5">
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowDeleteDialog(null)}
+                  className="flex-1 text-slate-200 border-slate-200 border hover:bg-slate-600 text-xs"
+                >
+                  <Ban />
+                  Abbrechen
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  onClick={handleDelete}
+                  className="flex-1 w-40 text-red-500 border border-slate-200 hover:bg-red-500 hover:text-slate-200 text-xs"
+                >
+                  <Trash2 size={14} />
+                  Löschen
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex ml-2 gap-1 p-2">
           <MessageSquareText className={styles[role].text} size={18} />
 
-          <label className={`${styles[role].text} text-sm font-bold`}>
+          <label className={`${styles[role].text} text-xs font-bold`}>
             Bemerkung:
           </label>
 
-          <span className="text-sm font-bold ">
+          <span className="text-xs font-bold text-slate-200">
             {exam.notes || "......................."}
           </span>
         </div>

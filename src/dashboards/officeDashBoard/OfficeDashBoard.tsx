@@ -79,34 +79,36 @@ export default function OfficeDashBoard() {
   };
 
   const officeDashBoard = (
-    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
       {/* Header */}
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
-            <Briefcase size={28} />
+          <h1 className="text-sm text-slate-200 font-bold flex items-center gap-2 p-3">
+            <Briefcase size={22} />
             Büro Dashboard
           </h1>
 
-          <p className="text-sm font-semibold">{officeName}</p>
+          <p className="text-sm text-slate-200 font-semibold">
+            Mitarbeiter - {officeName}
+          </p>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row  items-stretch sm:items-center justify-between gap-2 font-bold text-black">
         <Button
           onClick={() => setCreateDate(true)}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500  hover:bg-orange-500 hover:text-white font-bold border border-orange-500 transition "
+          className="flex items-center gap-2 h-8 px-3 text-xs text-orange-500 hover:bg-orange-500  hover:text-slate-200 font-bold border border-slate-200 transition "
         >
           <Plus />
           Prüfungsdatum hinzufügen
         </Button>
         {createDate && (
           <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-            <div className="relative  w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+            <div className="relative w-full max-w-md rounded-xl bg-app-elevated p-6 shadow-2xl">
               <Button
                 variant="ghost"
                 onClick={() => setCreateDate(false)}
-                className="absolute border right-4 top-3 text-gray-500 hover:text-black"
+                className="absolute  right-3 top-2 text-gray-500 hover:text-slate-200 cursor-pointer"
               >
                 <X />
               </Button>
@@ -123,7 +125,7 @@ export default function OfficeDashBoard() {
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500  hover:bg-orange-500 hover:text-white font-bold border border-orange-500 transition "
+          className="flex items-center gap-2 h-8 px-3 text-xs text-orange-500 hover:bg-orange-500 hover:text-slate-200 font-bold border border-slate-200 transition "
         >
           <LogOut size={16} />
           Abmelden
@@ -141,12 +143,12 @@ export default function OfficeDashBoard() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-slate-100 flex justify-center">
+    <div className="min-h-screen w-full bg-app-bg flex justify-center">
       <div
         className="
           w-full
           min-h-screen
-          bg-white
+          bg-app-surface
           md:max-w-3xl
           md:my-8
           md:min-h-[calc(100vh-4rem)]

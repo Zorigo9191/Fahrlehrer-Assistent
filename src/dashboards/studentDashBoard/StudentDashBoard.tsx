@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   StickyNotes,
   Save,
+  Ban,
 } from "lucide-react";
 
 import { useContext, useEffect, useRef, useState } from "react";
@@ -329,7 +330,7 @@ export default function studentDashBoard() {
       <div className="flex h-24 w-full gap-1 rounded-xl bg-green-700 px-3 py-2  text-slate-200">
         <div className="flex w-full items-center justify-between">
           <h1 className="flex items-center gap-2 text-sm font-bold">
-            <User size={28} />
+            <User size={22} />
             <strong>Schüler Dashboard</strong>
           </h1>
 
@@ -374,18 +375,14 @@ export default function studentDashBoard() {
 
                 {showDeleteConfirm && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-                    <div className="w-full max-w-sm rounded-xl bg-app-surface border border-app-border p-5 shadow-xl text-app-text overflow-x-hidden">
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
-                          <Trash2 className="h-5 w-5 text-red-500" />
-                        </div>
-
-                        <h2 className="text-lg font-bold text-app-text">
+                    <div className="w-full max-w-sm rounded-xl bg-app-elevated border border-app-border p-5 shadow-xl text-app-text overflow-x-hidden">
+                      <div className="mb-4 flex  justify-center items-center gap-3">
+                        <h2 className="text-sm  font-bold text-green-700">
                           Profilbild löschen?
                         </h2>
                       </div>
 
-                      <p className="mb-5 text-sm text-app-muted">
+                      <p className="mb-5 text-xs flex justify-center text-slate-200">
                         Möchtest du dein aktuelles Profilbild wirklich löschen?
                       </p>
 
@@ -393,8 +390,9 @@ export default function studentDashBoard() {
                         <Button
                           variant="outline"
                           onClick={() => setShowDeleteConfirm(false)}
-                          className="bg-app-elevated border-app-border text-app-text hover:bg-app-border"
+                          className="border border-slate-200 text-xs hover:bg-slate-600"
                         >
+                          <Ban />
                           Abbrechen
                         </Button>
 
@@ -441,8 +439,9 @@ export default function studentDashBoard() {
                               },
                             });
                           }}
-                          className="bg-red-400 text-white hover:bg-red-600"
+                          className="border border-slate-200 text-red-500 hover:text-slate-200 hover:bg-red-500"
                         >
+                          <Trash2 />
                           Löschen
                         </Button>
                       </div>
@@ -480,7 +479,7 @@ export default function studentDashBoard() {
             {/* Dropdown */}
             {showNotifications && (
               <div className="absolute -left-28 top-9 z-50 w-80 rounded-lg border border-app-border bg-green-700 p-3 shadow-xl">
-                <p className="mb-3 text-sm font-bold text-slate-200">
+                <p className="mb-3 text-xs font-bold text-slate-200">
                   Feedbacks
                 </p>
 
@@ -529,7 +528,7 @@ export default function studentDashBoard() {
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="flex h-8 items-center gap-2 border border-slate-200 px-3 text-sm font-bold text-slate-200 transition hover:bg-green-700"
+          className="flex h-8 items-center gap-2 border border-slate-200 px-3 text-xs font-bold hover:text-slate-200 transition text-green-700 hover:bg-green-700"
         >
           <LogOut size={14} />
           Abmelden

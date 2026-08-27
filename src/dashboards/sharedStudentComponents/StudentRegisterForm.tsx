@@ -141,13 +141,18 @@ export default function StudentRegisterForm({
         e.preventDefault();
         handleSaveStudent();
       }}
-      className="w-full mt-2 max-w-md mx-auto"
+      className="w-full mt-2 max-w-md mx-auto "
     >
       <FieldGroup className="space-y-5">
         <Field>
-          <FieldLabel htmlFor="name">Name eingeben</FieldLabel>
+          <FieldLabel
+            htmlFor="name"
+            className="text-xs text-blue-700 font-bold"
+          >
+            Name eingeben
+          </FieldLabel>
           <Input
-            className="border-2 border-blue-600 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
+            className="border text-slate-200 h-7 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
             id="name"
             type="text"
             placeholder="Max Mustermann"
@@ -157,9 +162,14 @@ export default function StudentRegisterForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="email">E-Mail-Adresse</FieldLabel>
+          <FieldLabel
+            htmlFor="email"
+            className="text-xs text-blue-700 font-bold"
+          >
+            E-Mail-Adresse
+          </FieldLabel>
           <Input
-            className="border-2 border-blue-600 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
+            className="border  text-slate-200 h-7 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
             id="email"
             type="email"
             placeholder="max@mustermann.de"
@@ -170,9 +180,14 @@ export default function StudentRegisterForm({
 
         {/* Neues Passwort-Feld */}
         <Field>
-          <FieldLabel htmlFor="password">Passwort</FieldLabel>
+          <FieldLabel
+            htmlFor="password"
+            className="text-xs text-blue-700 font-bold"
+          >
+            Passwort
+          </FieldLabel>
           <Input
-            className="border-2 border-blue-600 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
+            className="border text-slate-200 h-7 outline-none! ring-0! shadow-none! focus:ring-0! focus:outline-none!"
             id="password"
             type="password"
             placeholder="Mindestens 6 Zeichen"
@@ -188,11 +203,9 @@ export default function StudentRegisterForm({
             <select
               value={bikeLicense}
               onChange={(e) => setBikeLicense(e.target.value)}
-              className="rounded-sm w-18 border-2 text-black border-blue-700 px-2 py-1 text-sm outline-none focus:outline-none focus:ring-0"
+              className="rounded-sm w-18 border bg-app-elevated text-slate-200  border-slate-200 px-2 py-1 text-xs outline-none focus:outline-none focus:ring-0 transition"
             >
-              <option value="" className="text-black">
-                -
-              </option>
+              <option value="">-</option>
               {bikeCategories.map((category) => (
                 <option key={category.value} value={category.value}>
                   {category.value}
@@ -209,7 +222,7 @@ export default function StudentRegisterForm({
                 console.log(e);
                 setCarLicense(e.target.value);
               }}
-              className="rounded-sm border-2 text-black border-blue-700 px-2 py-1 text-sm"
+              className="rounded-sm w-18 border bg-app-elevated text-slate-200  border-slate-200 px-2 py-1 text-xs outline-none focus:outline-none focus:ring-0 transition"
             >
               <option value="">-</option>
               {carCategories.map((category) => (
@@ -225,9 +238,9 @@ export default function StudentRegisterForm({
           <Button
             variant="ghost"
             type="submit"
-            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border-2 border-blue-700 text-black hover:bg-blue-100"
+            className="flex w-52 items-center gap-2 h-8 px-3 text-xs text-blue-700 border border-slate-200  hover:bg-blue-700 hover:text-slate-200"
           >
-            <Save className="mr-2 h-4 w-4 text-blue-700" />
+            <Save className="mr-2 h-4 w-4" />
             Speichern
           </Button>
 
@@ -235,9 +248,9 @@ export default function StudentRegisterForm({
             type="button"
             variant="ghost"
             onClick={onClose}
-            className="flex w-52 items-center gap-2 h-8 px-3 text-sm border-2 border-blue-700 text-black hover:bg-blue-100"
+            className="flex w-52 items-center gap-2 h-8 px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600"
           >
-            <Ban className="text-blue-700" />
+            <Ban />
             Abbrechen
           </Button>
         </div>

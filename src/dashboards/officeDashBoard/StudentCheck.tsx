@@ -244,23 +244,25 @@ export default function StudentCheck({
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-white overflow-x-hidden text-sm ">
+    <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden text-sm ">
       {/* Header */}
       <div className="flex gap-1 w-full bg-orange-500 py-2 px-3 rounded-xl text-white">
         <div className="flex items-center w-full justify-between">
-          <h1 className="text-xl text-white font-bold flex items-center gap-2">
-            <Briefcase size={28} />
+          <h1 className="text-sm text-slate-200 font-bold flex items-center gap-2 p-3">
+            <Briefcase size={22} />
             Bearbeitung des Schülerstatus
           </h1>
 
-          <p className="text-sm font-semibold">{officeName}</p>
+          <p className="text-sm font-semibold  text-slate-200">
+            Mitarbeiter - {officeName}
+          </p>
         </div>
       </div>
       <div className="flex justify-end gap-2 ">
         <Button
           variant="ghost"
           onClick={() => setActiveTab("dashboard")}
-          className="flex items-center gap-2 h-8 px-3 text-sm text-orange-500 hover:bg-orange-200 font-bold border border-orange-500 transition"
+          className="flex items-center gap-2 h-8 px-3 text-xs text-orange-500 hover:bg-orange-500 hover:text-slate-200 font-bold border border-slate-200 transition"
         >
           <X />
           schließen
@@ -268,7 +270,7 @@ export default function StudentCheck({
       </div>
 
       {/* Titels */}
-      <div className="grid grid-cols-4 w-full gap-2 rounded-2xl text-white bg-orange-500 p-1 overflow-x-hidden break-all">
+      <div className="grid grid-cols-4 w-full gap-2 rounded-2xl text-slate-200 bg-orange-500 p-3 overflow-x-hidden break-all text-sm ">
         <h2 className="border-r border-gray-300 w-full flex justify-center font-bold">
           Zum Überprüfen
         </h2>
@@ -286,14 +288,14 @@ export default function StudentCheck({
         {/* Schüler update inputs für Studentdatabox */}
         {editingStudentDataBox && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-5 w-96 space-y-3">
-              <h2 className="flex justify-center font-bold text-lg text-orange-500">
+            <div className="bg-app-elevated rounded-xl p-5 w-96 space-y-3">
+              <h2 className="flex justify-center font-bold text-sm text-orange-500">
                 Schüler bearbeiten
               </h2>
 
-              <label className="text-orange-500 font-bold">Name:</label>
+              <label className="text-orange-500 font-bold text-xs">Name:</label>
               <input
-                className="border rounded p-2 w-full"
+                className="border border-slate-200 text-slate-200 text-xs rounded p-2 w-full"
                 value={editingStudentDataBox.student_name}
                 onChange={(e) =>
                   setEditingStudentDataBox({
@@ -302,9 +304,11 @@ export default function StudentCheck({
                   })
                 }
               />
-              <label className="text-orange-500 font-bold">Klasse:</label>
+              <label className="text-orange-500 font-bold text-xs">
+                Klasse:
+              </label>
               <input
-                className="border rounded p-2 w-full"
+                className="border  border-slate-200 text-slate-200 text-xs rounded p-2 w-full"
                 value={editingStudentDataBox.license_class ?? ""}
                 onChange={(e) =>
                   setEditingStudentDataBox({
@@ -313,9 +317,11 @@ export default function StudentCheck({
                   })
                 }
               />
-              <label className="text-orange-500 font-bold">Fahrlehrer:</label>
+              <label className="text-orange-500 font-bold text-xs">
+                Fahrlehrer:
+              </label>
               <input
-                className="border rounded p-2 w-full"
+                className="border  border-slate-200 text-slate-200 text-xs rounded p-2 w-full"
                 value={editingStudentDataBox.instructor_name ?? ""}
                 onChange={(e) =>
                   setEditingStudentDataBox({
@@ -325,9 +331,13 @@ export default function StudentCheck({
                 }
               />
 
-              <label className="text-orange-500 font-bold">Uhrzeit:</label>
+              <label className="text-orange-500 font-bold text-xs">
+                Uhrzeit:
+              </label>
               <input
-                className="border rounded p-2 w-full"
+                className="border border-slate-200 text-slate-200 text-xs rounded p-2 w-full
+                  [&::-webkit-calendar-picker-indicator]:invert
+                  [&::-webkit-calendar-picker-indicator]:opacity-80"
                 type="time"
                 value={editingStudentDataBox.student_appointment ?? ""}
                 onChange={(e) =>
@@ -342,15 +352,15 @@ export default function StudentCheck({
                 <Button
                   variant="ghost"
                   onClick={() => setEditingStudentDataBox(null)}
-                  className="flex-1 text-gray-500 border border-gray-500 hover:bg-orange-200"
+                  className="flex-1 text-slate-200 border border-slate-200 hover:bg-slate-600 text-xs"
                 >
-                  <Ban className="text-red-500" />
+                  <Ban className="text-slate-200 " />
                   Abbrechen
                 </Button>
 
                 <Button
                   onClick={handleSaveStudent}
-                  className="flex-1 bg-green-300 hover:bg-green-400"
+                  className="flex-1 text-orange-500 border border-slate-200 hover:bg-orange-500 hover:text-slate-200  text-xs "
                 >
                   <Save size={14} />
                   Speichern
@@ -363,14 +373,14 @@ export default function StudentCheck({
         {/* // Notizen in StudentDataBox */}
         {editingNoteStudent && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-5 w-80 space-y-3">
+            <div className="bg-app-elevated rounded-xl p-5 w-80 space-y-3">
               <h2 className="text-center font-bold text-orange-500">
                 Grund eingeben
               </h2>
 
               <textarea
-                className="border rounded p-2 w-full h-24 resize-none"
-                placeholder="Warum bekommt der Schüler diesen Status?"
+                className="border rounded p-2 w-full h-24 resize-none border-slate-200 text-xs text-slate-200"
+                placeholder="etwas fehlt..."
                 value={editingNoteStudent.notes ?? ""}
                 onChange={(e) =>
                   setEditingNoteStudent({
@@ -384,15 +394,15 @@ export default function StudentCheck({
                 <Button
                   variant="ghost"
                   onClick={() => setEditingNoteStudent(null)}
-                  className="flex-1 text-gray-500 border border-gray-500 hover:bg-orange-200"
+                  className="flex-1 text-slate-200 border border-slate-200 hover:bg-slate-600 text-xs"
                 >
-                  <Ban className="text-red-500" />
+                  <Ban className="text-slate-200" />
                   Abbrechen
                 </Button>
 
                 <Button
                   onClick={handleSaveNote}
-                  className="flex-1 bg-green-300 hover:bg-green-400"
+                  className="flex-1 text-orange-500 border border-slate-200 hover:bg-orange-500 hover:text-slate-200 text-xs"
                 >
                   <Save size={14} />
                   Speichern
@@ -403,7 +413,7 @@ export default function StudentCheck({
         )}
 
         {/* Spalten (Columns), denen die StudentDataBox zugewiesen wird */}
-        <div className="grid grid-cols-4 w-full overflow-y-scroll gap-2 rounded-2xl bg-orange-50 p-1 ">
+        <div className="grid grid-cols-4 w-full overflow-y-scroll gap-2 rounded-2xl bg-app-surface p-1 scrollbar-none">
           {/* Spalte 1: Check */}
           <DropColumn
             id="check"

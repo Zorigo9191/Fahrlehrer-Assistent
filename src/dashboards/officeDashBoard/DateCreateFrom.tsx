@@ -89,24 +89,28 @@ export default function DateCreateForm({
   }
 
   return (
-    <div className="flex justify-center items-center min-h-90 bg-gray-50 p-4 overflow-x-hidden">
+    <div className="flex justify-center items-center min-h-90 bg-app-elevated p-4 overflow-x-hidden">
       <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-orange-500">
+          <CardTitle className="text-sm font-bold text-orange-500">
             Prüfungstermin erstellen
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs text-slate-200 ">
             Trage die Daten für den Prüfungstag ein. Die Plätze werden direkt
             als Slots generiert.
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="date">Prüfungsdatum</Label>
+        <CardContent className="space-y-4  text-slate-200">
+          <div className="space-y-2 ">
+            <Label htmlFor="date" className="text-xs">
+              Prüfungsdatum
+            </Label>
             <Input
               id="date"
               type="date"
+              className="[&::-webkit-calendar-picker-indicator]:invert
+              [&::-webkit-calendar-picker-indicator]:opacity-80 h-8"
               value={examDay}
               onChange={(e) => setExamDate(e.target.value)}
               required
@@ -114,11 +118,14 @@ export default function DateCreateForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="klasse">Klassen</Label>
+            <Label htmlFor="klasse" className="text-xs">
+              Klassen
+            </Label>
             <Input
               id="klasse"
               type="text"
               value={license}
+              className="h-8"
               onChange={(e) => setLicense(e.target.value)}
               placeholder="B, BE, A ..."
               required
@@ -126,16 +133,32 @@ export default function DateCreateForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slots">Anzahl der Plätze</Label>
+            <Label htmlFor="slots" className="text-xs">
+              Anzahl der Plätze
+            </Label>
             <Input
               id="slots"
-              type="text"
+              type="number"
+              min={0}
+              max={20}
               value={slot}
               onChange={(e) =>
                 setSlots(e.target.value === "" ? "" : Number(e.target.value))
               }
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               placeholder="8"
               required
+              className="
+              h-8 w-15
+              [&::-webkit-inner-spin-button]:h-6
+              [&::-webkit-inner-spin-button]:w-4
+              [&::-webkit-inner-spin-button]:-mr-1
+            
+            "
             />
           </div>
         </CardContent>
@@ -146,7 +169,7 @@ export default function DateCreateForm({
               variant="ghost"
               type="button"
               onClick={saveExamDate}
-              className="h-8 w-full px-3 text-sm border border-orange-500 text-orange-500 hover:bg-orange-200"
+              className="h-8 w-full px-3 text-xs border border-slate-200 text-orange-500 hover:bg-orange-500 hover:text-slate-200"
             >
               <Save className="mr-2 h-4 w-4" />
               Speichern
@@ -155,7 +178,7 @@ export default function DateCreateForm({
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="h-8 w-full px-3 text-sm border border-red-500 text-red-500 hover:bg-red-200"
+              className="h-8 w-full px-3 text-xs border border-slate-200 text-slate-200 hover:bg-slate-600 hover:text-slate-200"
             >
               <Ban className="mr-2 h-4 w-4" />
               Abbrechen
