@@ -101,10 +101,12 @@ export default function StudentList({
   );
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { session } = useContext(AuthContext);
-  const instructorId = session?.user?.id;
-
+  const instructorId = useContext(AuthContext)?.session?.user?.id;
+  if (!instructorId) {
+    return <div>Lädt Fahrlehrer...</div>;
+  }
   async function fetchStudents() {
+    if (!instructorId) return;
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -132,12 +134,15 @@ export default function StudentList({
           },
         });
       } else if (data) {
-        const studentsWithCount = data.map((student) => ({
-          ...student,
-          feedback_count:
-            student.driving_students.student_feedback?.length ?? 0,
-        }));
-        setStudents(studentsWithCount);
+        const studentsWithCount = data
+          .filter((student) => student.driving_students !== null)
+          .map((student) => ({
+            ...student,
+            feedback_count:
+              student.driving_students?.student_feedback?.length ?? 0,
+          }));
+
+        setStudents(studentsWithCount as StudentWithLicenses[]);
       }
     } finally {
       setLoading(false);
@@ -342,9 +347,11 @@ export default function StudentList({
       {/* Schüler Karten durchgehen und anzeigen */}
       {!loading &&
         students.map((student) => {
-          const formattedDate = new Date(
-            student.driving_students.created_at,
-          ).toLocaleDateString("de-DE");
+          const formattedDate = student.driving_students.created_at
+            ? new Date(student.driving_students.created_at).toLocaleDateString(
+                "de-DE",
+              )
+            : "Unbekannt";
 
           // Prüft, ob genau DIESER Schüler gerade bearbeitet wird
           const isEditing = editingStudentId === student.driving_students.id;

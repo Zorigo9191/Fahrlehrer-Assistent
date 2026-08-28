@@ -15,13 +15,13 @@ type StudentCheckProps = {
 
 type ExamSlot = {
   id: string;
-  student_name: string;
+  student_name: string | null;
   license_class: string | null;
   instructor_name: string | null;
   exam_date: string;
   student_appointment: string | null;
   exam_time: string;
-  status: string;
+  status: string | null;
   notes: string | null;
 };
 
@@ -72,13 +72,13 @@ export default function StudentCheck({
       data.forEach((day) => {
         if (day.exam_slots && day.exam_slots.length > 0) {
           // Nur Slots filtern, bei denen ein Schüler eingetragen ist
+
           const filledSlots = day.exam_slots.filter(
-            (slot: ExamSlot) =>
-              slot.student_name && slot.student_name.trim() !== "",
+            (slot) => slot.student_name && slot.student_name.trim() !== "",
           );
 
-          filledSlots.forEach((slot: ExamSlot) => {
-            const slotWithDate = {
+          filledSlots.forEach((slot) => {
+            const slotWithDate: ExamSlot = {
               ...slot,
               exam_date: day.exam_date,
             };
@@ -296,7 +296,7 @@ export default function StudentCheck({
               <label className="text-orange-500 font-bold text-xs">Name:</label>
               <input
                 className="border border-slate-200 text-slate-200 text-xs rounded p-2 w-full"
-                value={editingStudentDataBox.student_name}
+                value={editingStudentDataBox.student_name ?? ""}
                 onChange={(e) =>
                   setEditingStudentDataBox({
                     ...editingStudentDataBox,

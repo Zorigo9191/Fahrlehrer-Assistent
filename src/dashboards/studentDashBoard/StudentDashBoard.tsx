@@ -75,8 +75,12 @@ export default function studentDashBoard() {
 
   const notificationRef = useRef<HTMLDivElement>(null);
 
-  const { session } = useContext(AuthContext);
-  const studentId = session?.user?.id;
+  const studentId = useContext(AuthContext)?.session?.user?.id;
+
+  if (!studentId) {
+    return <div>Lädt Student...</div>;
+  }
+
   const [studentName, setStudentName] = useState<string>("Laden...");
   const [studentLicenseClass, setStudentLicenseClass] = useState<string[]>([]);
 
@@ -281,6 +285,7 @@ export default function studentDashBoard() {
   }
 
   async function loadSavedFeedbacks() {
+    if (!studentId) return;
     const { data, error } = await getFeedbacks(studentId);
 
     if (error) {
@@ -497,14 +502,16 @@ export default function studentDashBoard() {
                         }`}
                       >
                         <div className="text-xs font-semibold">
-                          {new Date(feedback.created_at).toLocaleDateString(
-                            "de-DE",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                            },
-                          )}
+                          {feedback.created_at
+                            ? new Date(feedback.created_at).toLocaleDateString(
+                                "de-DE",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                },
+                              )
+                            : "Unbekannt"}
                         </div>
 
                         <div className="text-xs">

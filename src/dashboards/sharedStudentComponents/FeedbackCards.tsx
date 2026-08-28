@@ -64,7 +64,7 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
 
   // Startet den Bearbeitungsmodus
   const handleStartEdit = (item: feedBacksUpdate) => {
-    setEditingId(item.id);
+    setEditingId(item.id ?? null);
     const parsedFeedback =
       typeof item.feedback === "string"
         ? JSON.parse(item.feedback)
@@ -130,9 +130,9 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
             (license) => license.value === item.license_class,
           );
 
-          const formattedDate = new Date(item.created_at).toLocaleDateString(
-            "de-DE",
-          );
+          const formattedDate = item.created_at
+            ? new Date(item.created_at).toLocaleDateString("de-DE")
+            : "Unbekannt";
 
           return (
             <div
@@ -288,7 +288,9 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
                     <Ban size={14} /> Abbrechen
                   </Button>
                   <Button
-                    onClick={() => handleSave(item.id)}
+                    onClick={() => {
+                      if (item.id) handleSave(item.id);
+                    }}
                     className="flex-1 items-center justify-center gap-2 h-8 px-3 text-xs border border-slate-200 text-blue-700 hover:bg-blue-700 hover:text-slate-200"
                   >
                     <Save className="mr-2 h-4 w-4" /> Speichern

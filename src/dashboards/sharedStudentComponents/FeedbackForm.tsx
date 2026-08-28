@@ -43,8 +43,10 @@ export default function FeedbackForm({
     setFeedbackData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const { session } = useContext(AuthContext);
-  const instructorId = session?.user?.id;
+  const instructorId = useContext(AuthContext)?.session?.user?.id;
+  if (!instructorId) {
+    return <div>Lädt Fahrlehrer...</div>;
+  }
 
   const selectedLicense = licenseClasses.find(
     (license) => license.value === selectedClass,
@@ -52,6 +54,7 @@ export default function FeedbackForm({
 
   async function handleSaveFeedback(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!instructorId) return;
     try {
       const { data, error } = await createStudentFeedbacks({
         feedback: JSON.stringify(feedbackData),

@@ -607,7 +607,7 @@ export default function ExamCard({
               <div className="flex gap-3 mt-5">
                 <Button
                   variant="ghost"
-                  onClick={() => setShowDeleteDialog(null)}
+                  onClick={() => setShowDeleteDialog(false)}
                   className="flex-1 text-slate-200 border-slate-200 border hover:bg-slate-600 text-xs"
                 >
                   <Ban />

@@ -12,7 +12,7 @@ type StudentDataBoxProps = {
   examDate: string;
   studentAppointment: string | null;
   examTime: string;
-  status: string;
+  status: string | null;
   notes: string | null;
 
   onEdit?: () => void;

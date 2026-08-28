@@ -140,16 +140,21 @@ export default function ReceivedFeedback({
                   <strong className="flex items-center gap-10">
                     <ChevronRight className="h-5 w-5 " />
                     Feedback vom <br />
-                    {new Date(feedback.created_at).toLocaleDateString("de-DE", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
+                    {feedback.created_at
+                      ? new Date(feedback.created_at).toLocaleDateString(
+                          "de-DE",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          },
+                        )
+                      : "Unbekannt"}
                   </strong>
                   <div className="flex w-full text-sm justify-between">
                     <div className="flex gap-1">
                       <label>F-lehrer:</label>
-                      <p> {feedback.instructors.first_name || "Unbekannt"}</p>
+                      <p> {feedback.instructors?.first_name || "Unbekannt"}</p>
                     </div>
                     <div className="flex gap-1">
                       <label>Kl:</label>
@@ -182,14 +187,16 @@ export default function ReceivedFeedback({
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-bold text-sm  flex gap-1">
                   <p>Feedback vom:</p>
-                  {new Date(selectedFeedback.created_at).toLocaleDateString(
-                    "de-DE",
-                    {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    },
-                  )}
+                  {selectedFeedback.created_at
+                    ? new Date(selectedFeedback.created_at).toLocaleDateString(
+                        "de-DE",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        },
+                      )
+                    : "Unbekannt"}
                 </h2>
 
                 <button

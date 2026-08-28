@@ -34,10 +34,13 @@ export default function StudentRegisterForm({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { session } = useContext(AuthContext);
-  const instructorId = session?.user?.id;
-
+  const instructorId = useContext(AuthContext)?.session?.user?.id;
+  if (!instructorId) {
+    return <div>Lädt Fahrlehrer...</div>;
+  }
   async function handleSaveStudent() {
+    if (!instructorId) return;
+
     if (!fullName.trim() || !email.trim() || !password.trim()) {
       toast.warning("Bitte Name, E-Mail und Passwort eingeben", {
         unstyled: true,
@@ -70,9 +73,6 @@ export default function StudentRegisterForm({
 
     const categories = [bikeLicense, carLicense].filter(Boolean);
 
-    console.log("session:", session);
-    console.log("instructorId:", instructorId);
-
     const { error } = await createStudentWithLicenseClasses(
       {
         full_name: fullName,
@@ -85,9 +85,17 @@ export default function StudentRegisterForm({
 
     // Falls E-Mail bereits vorhanden
     if (error) {
+      const errorCode =
+        typeof error === "object" && error !== null && "code" in error
+          ? (error as { code?: string }).code
+          : undefined;
+
+      const errorMessage = error instanceof Error ? error.message : undefined;
+
       if (
-        error === "EMAIL_EXISTS" ||
-        (typeof error === "object" && error.code === "23505")
+        errorCode === "23505" ||
+        errorMessage ===
+          "User existiert bereits, aber kein Schüler-Datensatz wurde gefunden."
       ) {
         toast.warning(
           "Dieser Schüler mit dieser E-Mail-Adresse existiert bereits",

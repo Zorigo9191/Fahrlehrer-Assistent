@@ -40,28 +40,28 @@ export default function ExamList({
   refreshTrigger = 0,
 }: ExamListProps) {
   let textColor = "";
-  let borderColor = "";
+
   let acticeDateBorderStyle = "";
   // let bgColor = "";
 
   switch (role) {
     case "instructor":
       textColor = "text-blue-700";
-      borderColor = "border-blue-700";
+
       // bgColor = "bg-blue-700";
       acticeDateBorderStyle = "border-blue-700 border-2";
       break;
 
     case "office":
       textColor = "text-orange-700";
-      borderColor = "border-orange-500";
+
       acticeDateBorderStyle = "border-orange-500 border-2";
       // bgColor = "bg-app-surface";
       break;
 
     default:
       textColor = "text-black";
-      borderColor = "border-black";
+
     // bgColor = "bg-orange-500";
   }
 

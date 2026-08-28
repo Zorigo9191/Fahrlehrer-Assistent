@@ -61,7 +61,7 @@ type AcceptedlessonRow =
   Database["public"]["Tables"]["available_lessons"]["Row"] & {
     driving_students: {
       full_name: string;
-      student_id: string;
+      id: string;
     } | null;
   };
 
@@ -76,8 +76,10 @@ export default function InstructorDashBoard() {
   const [editingLessonId, setEditingLessonId] = useState<number | null>(null);
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
 
-  const { session } = useContext(AuthContext);
-  const instructorId = session?.user?.id;
+  const instructorId = useContext(AuthContext)?.session?.user?.id;
+  if (!instructorId) {
+    return <div>Lädt Fahrlehrer...</div>;
+  }
 
   const [editForm, setEditForm] = useState({
     lesson_date: "",
@@ -89,7 +91,7 @@ export default function InstructorDashBoard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [instructorName, setInstructorName] = useState<string>("Laden...");
-  const studentId = acceptedLesson[0]?.student_id ?? null;
+  const studentId = acceptedLesson[0]?.student_id ?? "";
   const [refreshStudentList, setRefreshStudentList] = useState(0);
   const refreshStudents = () => {
     setRefreshStudentList((prev) => prev + 1);
@@ -108,7 +110,7 @@ export default function InstructorDashBoard() {
       .select("first_name")
       .eq("id", instructorId)
       .single();
-    console.log(data.first_name);
+
     if (error) {
       console.error("Fehler beim Laden des Fahrlehrernamens:", error);
       setInstructorName("Fahrlehrer");
@@ -127,6 +129,7 @@ export default function InstructorDashBoard() {
   }, [instructorId]);
 
   async function acceptedLessonsByStudent() {
+    if (!instructorId) return;
     const { data, error } = await getAcceptedLessonsByStudent(instructorId);
 
     if (error) {

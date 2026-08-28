@@ -47,14 +47,17 @@ export default function OfficeDashBoard() {
   const [createDate, setCreateDate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const { session } = useContext(AuthContext);
-  const officeId = session?.user?.id;
+  const officeId = useContext(AuthContext)?.session?.user?.id;
+  if (!officeId) {
+    return <div>Lädt Officemitarbeiter...</div>;
+  }
   const [officeName, setOfficeName] = useState<string>("Laden...");
 
   useEffect(() => {
     if (!officeId) return;
 
     async function fetchOfficeName() {
+      if (!officeId) return;
       const { data, error } = await supabase
         .from("profiles")
         .select("profile_name")

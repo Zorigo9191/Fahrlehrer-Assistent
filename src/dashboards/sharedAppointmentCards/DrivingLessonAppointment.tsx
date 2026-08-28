@@ -146,12 +146,14 @@ export default function DrivingLessonAppointment({
     field: keyof AvailableLessonUpdate,
     value: string,
   ) => {
-    setEditingFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setEditingFormData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [field]: value,
+      };
+    });
   };
-
   const handleSaveLesson = async () => {
     if (!editingFormData || !editingItemId) return;
     setLoading(true);

@@ -20,6 +20,8 @@ export async function createStudentWithLicenseClasses(
   licenseClasses: string[],
 ) {
   const { instructorId } = student;
+  if (!instructorId)
+    return { data: null, error: new Error("Keine Instructor-ID vorhanden") };
   // 1. Auth-User erstellen mit E-Mail und Passwort
   const { data: authStudent, error: authStudentError } =
     await tempAuthsupabase.auth.signUp({
