@@ -19,7 +19,7 @@ import {
   CalendarClock,
   Ban,
 } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StudentList from "../sharedStudentComponents/StudentList.tsx";
 
@@ -36,6 +36,8 @@ import type { Database } from "../../types/database.types.ts";
 import { supabase } from "../../lib/supabase.ts";
 import { deleteLesson } from "./instructorDashBoardItem/AppointmentService.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
+
+const EMPTY_LICENSE_CLASSES: string[] = [];
 
 const footerItems = [
   {
@@ -88,6 +90,11 @@ export default function InstructorDashBoard() {
   const notificationRef = useRef<HTMLDivElement>(null);
   const [instructorName, setInstructorName] = useState<string>("Laden...");
   const studentId = acceptedLesson[0]?.student_id ?? null;
+  const [refreshStudentList, setRefreshStudentList] = useState(0);
+  const refreshStudents = () => {
+    setRefreshStudentList((prev) => prev + 1);
+  };
+
   // Nur neue acceptedLesson zählen
   const notificationCount = acceptedLesson.filter(
     (lesson) => lesson.read_at === null,
@@ -164,7 +171,7 @@ export default function InstructorDashBoard() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [instructorId]);
+  }, [instructorId, refreshStudentList]);
 
   const handleUpdate = async (lesson: AcceptedlessonRow) => {
     const { data, error } = await updateAcceptedLesson(
@@ -287,6 +294,11 @@ export default function InstructorDashBoard() {
     };
   }, []);
 
+  const instructorIds = useMemo(
+    () => (instructorId ? [instructorId] : []),
+    [instructorId],
+  );
+
   const instructorDashBoard = (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6  bg-app-surface overflow-x-hidden">
       {/* Header */}
@@ -403,11 +415,11 @@ export default function InstructorDashBoard() {
 
       <DrivingLessonAppointment
         role={"instructor"}
-        instructorIds={instructorId ? [instructorId] : []}
+        instructorIds={instructorIds}
         refreshKey={refreshKey}
         setRefreshKey={setRefreshKey}
         studentId={studentId}
-        studentLicenseClass={[]}
+        studentLicenseClass={EMPTY_LICENSE_CLASSES}
       />
 
       {/* Angenommene Fahrstunde */}
@@ -654,6 +666,7 @@ export default function InstructorDashBoard() {
               <StudentList
                 setActiveTab={setActiveTab}
                 instructorName={instructorName}
+                refreshStudentList={refreshStudents}
               />
             )}
           </div>

@@ -344,11 +344,11 @@ export default function ExamCard({
 
   return (
     <div
-      className={`rounded-xl p-3 overflow-hidden  bg-app-surface border ${styles[role].examCardBorder}`}
+      className={`rounded-xl p-3 overflow-hidden bg-app-surface border ${styles[role].examCardBorder} shadow-[0_0_18px_rgba(148,163,184,0.40)]`}
     >
       {/* HEADER */}
 
-      <div className="flex justify-between gap-2 mb-4">
+      <div className="flex justify-between gap-2 mb-4 ">
         <div className="flex gap-2">
           <Zap className="text-yellow-500" size={20} />
           <h2

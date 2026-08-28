@@ -88,10 +88,7 @@ export function LoginForm({ buttonColor, role }: LoginFormProps) {
   }
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="w-full max-w-md mx-auto text-slate-200"
-    >
+    <form onSubmit={handleLogin} className=" max-w-sm mx-auto text-slate-200">
       <FieldGroup className="space-y-5 sm:space-y-6">
         {error && (
           <div className="p-3 text-sm text-red-500 bg-red-50 rounded-xl border border-red-200">
@@ -114,7 +111,7 @@ export function LoginForm({ buttonColor, role }: LoginFormProps) {
               rounded-xl
               px-4
               text-base
-              md:h-14
+              md:h-10
             
             "
           />
@@ -136,14 +133,14 @@ export function LoginForm({ buttonColor, role }: LoginFormProps) {
                 rounded-xl
                 px-4
                 text-base
-                md:h-14
+                md:h-10
               "
             />
 
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-200 hover:text-gray-700"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -159,7 +156,8 @@ export function LoginForm({ buttonColor, role }: LoginFormProps) {
             w-full
             rounded-xl
             text-white
-            md:h-14
+            md:h-10
+            text-xs
             ${buttonColor}
           `}
         >

@@ -417,9 +417,7 @@ export default function ExamList({
         })}
       </div>
 
-      <div
-        className={`border flex flex-col gap-4 p-4 rounded-sm ${borderColor}`}
-      >
+      <div className={` flex flex-col gap-4 p-4 rounded-sm `}>
         {activeSlots.length > 0 ? (
           activeSlots.map((slot: any) => (
             <ExamCard

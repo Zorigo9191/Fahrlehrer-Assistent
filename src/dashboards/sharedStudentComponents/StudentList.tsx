@@ -59,6 +59,7 @@ type StudentWithLicenses = {
 type StudentListProps = {
   setActiveTab: (tab: string) => void;
   instructorName: string;
+  refreshStudentList: () => void;
 };
 
 type DrivingStudentUpdate =
@@ -84,6 +85,7 @@ const carCategories = [
 export default function StudentList({
   setActiveTab,
   instructorName,
+  refreshStudentList,
 }: StudentListProps) {
   const [showRegister, setShowRegister] = useState(false);
   const [feedbackGive, setFeedbackGive] = useState(false);
@@ -144,7 +146,7 @@ export default function StudentList({
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [instructorId]);
 
   const handleStartEditStudent = (student: StudentWithLicenses) => {
     setEditingStudentId(student.driving_students.id);
@@ -270,7 +272,10 @@ export default function StudentList({
       },
     });
 
-    setLoading(true);
+    // setStudents((prev) => prev.filter((s) => s.id !== student.id));
+    setShowDeleteDialog(false);
+    await fetchStudents();
+    refreshStudentList();
   };
 
   return (
