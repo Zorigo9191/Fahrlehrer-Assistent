@@ -21,7 +21,7 @@ export default function InstructorCreateForm({
   onClose,
 }: instructorCreateFormProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [role] = useState("instructor");
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,7 +37,6 @@ export default function InstructorCreateForm({
       password,
       phone_number: phoneNumber,
       teaching_classes: teachingClasses,
-      role: role,
     });
 
     if (error) {

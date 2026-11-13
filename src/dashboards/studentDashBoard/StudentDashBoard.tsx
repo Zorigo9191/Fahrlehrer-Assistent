@@ -26,7 +26,7 @@ import ReceivedFeedback from "./ReceivedFeedback";
 import HiddenLessons from "./HiddenLessons";
 
 import DrivingLessonAppointment from "../sharedAppointmentCards/DrivingLessonAppointment.tsx";
-import { getFeedbacks } from "../sharedStudentComponents/sharedService/SharedService.ts";
+import { studentGetFeedbacks } from "../sharedStudentComponents/sharedService/SharedService.ts";
 
 import type { Database } from "../../types/database.types.ts";
 import { toast } from "sonner";
@@ -64,6 +64,32 @@ const footerItems = [
   },
 ];
 
+function showToast(type: "success" | "error", message: string) {
+  if (type === "error") {
+    toast.error(message, {
+      unstyled: true,
+      icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
+        title: "text-red-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
+  } else {
+    toast.success(message, {
+      unstyled: true,
+      icon: <Save className="h-5 w-5 text-green-400" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+        title: "text-green-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
+  }
+}
+
 export default function studentDashBoard() {
   const navigate = useNavigate();
 
@@ -76,10 +102,6 @@ export default function studentDashBoard() {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   const studentId = useContext(AuthContext)?.session?.user?.id;
-
-  if (!studentId) {
-    return <div>Lädt Student...</div>;
-  }
 
   const [studentName, setStudentName] = useState<string>("Laden...");
   const [studentLicenseClass, setStudentLicenseClass] = useState<string[]>([]);
@@ -157,136 +179,96 @@ export default function studentDashBoard() {
     }
   }, [studentId]);
 
-  // ProfileBild update
+  // ProfileBild hochladen
   async function handleAvatarChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
     const file = event.target.files?.[0];
+    if (!file || !studentId) return;
 
-    if (!file || !studentId) {
+    const allowed = ["image/png", "image/jpeg", "image/webp"];
+    if (!allowed.includes(file.type) || file.size > 2 * 1024 * 1024) {
+      showToast("error", "Nur PNG, JPG oder WebP bis 2 MB!");
+      event.target.value = "";
       return;
     }
+
+    const fileExt = file.type.split("/")[1];
+    const fileName = `${studentId}/${Date.now()}.${fileExt}`;
+    const oldPath = avatarUrl?.split("/images/")[1];
 
     try {
       setUploading(true);
 
-      const fileExt = file.name.split(".").pop()?.toLowerCase();
-
-      if (!fileExt) {
-        toast.error("Ungültiges Bildformat!", {
-          unstyled: true,
-          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
-          classNames: {
-            toast:
-              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-            title: "text-red-500 text-sm font-medium",
-            icon: "flex items-center justify-center",
-          },
-        });
-
-        return;
-      }
-
-      // Eindeutiger Dateiname
-      const fileName = `${studentId}-${Date.now()}.${fileExt}`;
-
-      console.log("Upload startet:", fileName);
-
-      // Bild in Supabase Storage hochladen
       const { error: uploadError } = await supabase.storage
         .from("images")
         .upload(fileName, file);
+      if (uploadError) throw uploadError;
 
-      if (uploadError) {
-        console.error("Storage Upload Error:", uploadError);
-
-        toast.error("Storage Upload Error!", {
-          unstyled: true,
-          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
-          classNames: {
-            toast:
-              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-            title: "text-red-500 text-sm font-medium",
-            icon: "flex items-center justify-center",
-          },
-        });
-
-        throw uploadError;
-      }
-
-      console.log("Upload erfolgreich:", fileName);
-
-      // Öffentliche URL des Bildes holen
       const { data: publicUrlData } = supabase.storage
         .from("images")
         .getPublicUrl(fileName);
-
       const newUrl = publicUrlData.publicUrl;
 
-      console.log("Neue Bild-URL:", newUrl);
-
-      // URL in driving_students speichern
-      const { error: updateError } = await supabase
+      const { data: updated, error: updateError } = await supabase
         .from("driving_students")
-        .update({
-          avatar_url: newUrl,
-        })
-        .eq("id", studentId);
+        .update({ avatar_url: newUrl })
+        .eq("id", studentId)
+        .select();
 
-      if (updateError) {
-        console.error("Database Update Error:", updateError);
-
-        toast.error("Database Update Error!", {
-          unstyled: true,
-          icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
-          classNames: {
-            toast:
-              "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-            title: "text-red-500 text-sm font-medium",
-            icon: "flex items-center justify-center",
-          },
-        });
-
-        throw updateError;
+      if (updateError || !updated || updated.length === 0) {
+        await supabase.storage.from("images").remove([fileName]);
+        throw updateError ?? new Error("Update ohne Treffer");
       }
 
-      // das neue Bild SOFORT gerendert.
-      setAvatarUrl(newUrl);
+      if (oldPath) {
+        await supabase.storage.from("images").remove([oldPath]);
+      }
 
-      toast.success("Profilbild erfolgreich aktualisiert!", {
-        unstyled: true,
-        icon: <Save className="h-5 w-5 text-green-400" />,
-        classNames: {
-          toast:
-            "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
-          title: "text-green-500 text-sm font-medium",
-          icon: "flex items-center justify-center",
-        },
-      });
+      setAvatarUrl(newUrl);
+      showToast("success", "Profilbild erfolgreich aktualisiert!");
     } catch (error) {
       console.error("Fehler beim Hochladen:", error);
-
-      toast.error("Fehler beim Hochladen des Bildes!", {
-        unstyled: true,
-        icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
-        classNames: {
-          toast:
-            "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-          title: "text-red-500 text-sm font-medium",
-          icon: "flex items-center justify-center",
-        },
-      });
+      showToast("error", "Fehler beim Hochladen des Bildes!");
     } finally {
       setUploading(false);
-
-      // Datei-Input zurücksetzen
       event.target.value = "";
+    }
+  }
+
+  // ProfileBild löschen
+  async function handleAvatarDelete() {
+    if (!avatarUrl || !studentId) return;
+    const path = avatarUrl.split("/images/")[1];
+
+    try {
+      setUploading(true);
+
+      const { data: updated, error: dbError } = await supabase
+        .from("driving_students")
+        .update({ avatar_url: null })
+        .eq("id", studentId)
+        .select();
+
+      if (dbError || !updated || updated.length === 0) {
+        throw dbError ?? new Error("Update ohne Treffer");
+      }
+
+      if (path) await supabase.storage.from("images").remove([path]);
+
+      setAvatarUrl(null);
+      showToast("success", "Profilbild wurde gelöscht!");
+    } catch (error) {
+      console.error("Fehler beim Löschen:", error);
+      showToast("error", "Profilbild konnte nicht gelöscht werden!");
+    } finally {
+      setUploading(false);
     }
   }
 
   async function loadSavedFeedbacks() {
     if (!studentId) return;
-    const { data, error } = await getFeedbacks(studentId);
+    const { data, error } = await studentGetFeedbacks();
 
     if (error) {
       console.error("Fehler beim Laden der gespeicherten Feedbacks", error);
@@ -328,6 +310,10 @@ export default function studentDashBoard() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  if (!studentId) {
+    return <div>Lädt Student...</div>;
+  }
 
   const studentDashBoard = (
     <div className="flex min-h-screen w-full max-w-3xl mx-auto flex-col gap-6 overflow-x-hidden bg-app-surface py-6">
@@ -403,47 +389,10 @@ export default function studentDashBoard() {
 
                         <Button
                           onClick={async () => {
-                            const { error } = await supabase
-                              .from("driving_students")
-                              .update({ avatar_url: null })
-                              .eq("id", studentId);
-
-                            if (error) {
-                              console.error("Fehler beim Löschen:", error);
-
-                              toast.error(
-                                "Profilbild konnte nicht gelöscht werden!",
-                                {
-                                  unstyled: true,
-                                  icon: (
-                                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                                  ),
-                                  classNames: {
-                                    toast:
-                                      "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-                                    title: "text-red-500 text-sm font-medium",
-                                    icon: "flex items-center justify-center",
-                                  },
-                                },
-                              );
-
-                              return;
-                            }
-
-                            setAvatarUrl(null);
+                            await handleAvatarDelete();
                             setShowDeleteConfirm(false);
-
-                            toast.success("Profilbild gelöscht!", {
-                              unstyled: true,
-                              icon: <Trash2 className="h-5 w-5 text-red-500" />,
-                              classNames: {
-                                toast:
-                                  "flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-5 py-4 shadow-md",
-                                title: "text-red-500 text-sm font-medium",
-                                icon: "flex items-center justify-center",
-                              },
-                            });
                           }}
+                          disabled={uploading}
                           className="border border-slate-200 text-red-500 hover:text-slate-200 hover:bg-red-500"
                         >
                           <Trash2 />

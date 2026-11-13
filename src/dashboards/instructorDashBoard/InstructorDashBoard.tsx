@@ -38,6 +38,7 @@ import { deleteLesson } from "./instructorDashBoardItem/AppointmentService.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
 
 const EMPTY_LICENSE_CLASSES: string[] = [];
+const API_URL = import.meta.env.VITE_API_URL;
 
 const footerItems = [
   {
@@ -77,9 +78,6 @@ export default function InstructorDashBoard() {
   const [activeDeleteId, setActiveDeleteId] = useState<number | null>(null);
 
   const instructorId = useContext(AuthContext)?.session?.user?.id;
-  if (!instructorId) {
-    return <div>Lädt Fahrlehrer...</div>;
-  }
 
   const [editForm, setEditForm] = useState({
     lesson_date: "",
@@ -103,34 +101,26 @@ export default function InstructorDashBoard() {
   ).length;
 
   // instructor Name holen
-  async function fetchInstructorName() {
-    if (!instructorId) return;
-    const { data, error } = await supabase
-      .from("instructors")
-      .select("first_name")
-      .eq("id", instructorId)
-      .single();
-
-    if (error) {
-      console.error("Fehler beim Laden des Fahrlehrernamens:", error);
-      setInstructorName("Fahrlehrer");
-      return;
-    }
-
-    if (data) {
-      setInstructorName(data.first_name ?? "Fahrlehrer");
-    }
+  async function getInstructorName(id: string): Promise<string> {
+    const res = await fetch(`${API_URL}/instructor-dashboard/${id}`);
+    if (!res.ok) throw new Error("Fahrlehrer nicht gefuden");
+    const data: { first_name: string } = await res.json();
+    return data.first_name;
   }
 
   useEffect(() => {
-    if (instructorId) {
-      fetchInstructorName();
-    }
+    if (!instructorId) return;
+    getInstructorName(instructorId)
+      .then(setInstructorName)
+      .catch((error) => {
+        console.error("Fehler beim Laden des Fahrlehrernamens:", error);
+        setInstructorName("Fahrlehrer");
+      });
   }, [instructorId]);
 
   async function acceptedLessonsByStudent() {
     if (!instructorId) return;
-    const { data, error } = await getAcceptedLessonsByStudent(instructorId);
+    const { data, error } = await getAcceptedLessonsByStudent();
 
     if (error) {
       console.error("Fehler beim Laden von angennomenen Fahrstuden!", error);
@@ -301,6 +291,10 @@ export default function InstructorDashBoard() {
     () => (instructorId ? [instructorId] : []),
     [instructorId],
   );
+
+  if (!instructorId) {
+    return <div>Lädt Fahrlehrer...</div>;
+  }
 
   const instructorDashBoard = (
     <div className="flex flex-col w-full max-w-3xl mx-auto gap-6 py-6  bg-app-surface overflow-x-hidden">

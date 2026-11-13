@@ -1,4 +1,7 @@
+import { apiFetch } from "../../../lib/apiFetch.ts";
 import { supabase } from "../../../lib/supabase.ts";
+
+const API_URL = "http://localhost:3000";
 
 // Angenommene Fahstuden holen
 export async function AcceptedLessons(studentId: string) {
@@ -17,16 +20,19 @@ export async function AcceptedLessons(studentId: string) {
 
 // ExamSlots holen
 
-export async function getExamSlots(studentId: string) {
-  const { data, error } = await supabase
-    .from("exam_slots")
-    .select("*, exam_days(exam_date)")
-    .eq("student_id", studentId);
+export async function getExamAppointments() {
+  const res = await apiFetch(`${API_URL}/student/exam-appointments`, {
+    method: "GET",
+  });
 
-  if (error) {
-    console.error("Fehler beim Laden der Feedbacks:", error);
-    return { data: null, error };
+  if (!res.ok) {
+    return {
+      data: null,
+      error: new Error("Prüfungstermine können nicht geladen werden"),
+    };
   }
+
+  const data = await res.json();
   return { data, error: null };
 }
 

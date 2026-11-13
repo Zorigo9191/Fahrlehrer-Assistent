@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import {
+  acceptLessonByStudent,
   deleteLesson,
   getAvailableLesson,
   updateAvailableLesson,
@@ -93,7 +94,7 @@ export default function DrivingLessonAppointment({
   const [editingFormData, setEditingFormData] =
     useState<AvailableLessonRow | null>(null);
 
-  const student = studentId;
+  // const student = studentId;
 
   async function fetchLessons() {
     if (!instructorIds || instructorIds.length === 0) {
@@ -165,6 +166,7 @@ export default function DrivingLessonAppointment({
           lesson_time: editingFormData.lesson_time,
           duration_minutes: editingFormData.duration_minutes,
           license_class: editingFormData.license_class,
+          status: "vergeben",
         },
       });
 
@@ -203,13 +205,8 @@ export default function DrivingLessonAppointment({
   //  zum Annehmen der Terminanfrage durch den Schüler
   const handleAcceptLesson = async (lessonId: number) => {
     try {
-      await updateAvailableLesson({
-        lessonId: lessonId,
-        payload: {
-          status: "vergeben",
-          student_id: student,
-        },
-      });
+      const { error } = await acceptLessonByStudent(lessonId);
+      if (error) throw error;
 
       toast.success("Terminanfrage erfolgreich angenommen!", {
         unstyled: true,

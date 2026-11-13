@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/input";
 import { toast } from "sonner";
 import { getStudentCount } from "./officeService/OfficeService.ts";
+import { showWarning } from "./utils/showWarning.tsx";
 
 interface Instructor {
   id: string;
@@ -47,7 +48,8 @@ export default function InstructorAccountCard({
       teaching_classes: classes.split(",").map((item) => item.trim()),
     });
     if (instructorError) {
-      console.error(instructorError);
+      showWarning(instructorError);
+
       return;
     }
 
@@ -59,8 +61,7 @@ export default function InstructorAccountCard({
     const { error: instructorError } = await deleteInstructor(instructor.id);
 
     if (instructorError) {
-      toast.error("Löschen fehlgeschlagen");
-      console.error(instructorError);
+      showWarning(instructorError);
       return;
     }
     setShowDeleteDialog(false);

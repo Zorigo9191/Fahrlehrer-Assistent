@@ -1,11 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { AlertTriangle, CalendarCheck, User, X } from "lucide-react";
-import { getExamSlots } from "./studenDashboardService/StudentDashService.ts";
+
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import ExamCard from "../sharedExamLists/ExamCard.tsx";
 import type { Database } from "../../types/database.types.ts";
+import { getExamAppointments } from "./studenDashboardService/StudentDashService.ts";
 
 type ExamSlots = Database["public"]["Tables"]["exam_slots"]["Row"] & {
   exam_days: { exam_date: string };
@@ -27,11 +28,11 @@ export default function ExamAppointment({
   const [examSlot, setExamSlot] = useState<ExamSlots[]>([]);
 
   async function getExamSlotsForThisStudent() {
-    const { data, error } = await getExamSlots(studentId);
+    const { data, error } = await getExamAppointments();
 
     if (error) {
       console.error("Fehler beim laden der Prüfungstermine!", error);
-      toast.error("Fehler beim Aktualisieren des Tages!", {
+      toast.error("Fehler beim laden der Prüfungstermine!", {
         unstyled: true,
         icon: <AlertTriangle className="h-5 w-5 text-gray-500" />,
         classNames: {

@@ -60,7 +60,8 @@ export function LoginForm({ buttonColor, role }: LoginFormProps) {
 
     if (role && profileData.role !== role) {
       setLoading(false);
-      await supabase.auth.signOut(); // Sofort wieder ausloggen, wenn der Bereich falsch ist!
+      await supabase.auth.signOut();
+      // Sofort wieder ausloggen, wenn der Bereich falsch ist!
       setError(
         `Zugriff verweigert. Du bist als ${profileData.role} registriert.`,
       );

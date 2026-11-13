@@ -54,11 +54,10 @@ export default function FeedbackForm({
 
   async function handleSaveFeedback(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!instructorId) return;
+
     try {
       const { data, error } = await createStudentFeedbacks({
         feedback: JSON.stringify(feedbackData),
-        instructor_id: instructorId,
         license_class: selectedClass,
         student_id: studentId,
         created_at: lessonDay,
@@ -84,7 +83,7 @@ export default function FeedbackForm({
     } catch (error) {
       console.error(error);
 
-      toast.warning("Bitte Datum auswählen", {
+      toast.warning("Feedback konnte nicht gespeichert werden", {
         unstyled: true,
         icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
         classNames: {

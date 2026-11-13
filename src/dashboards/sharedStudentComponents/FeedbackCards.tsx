@@ -85,24 +85,33 @@ export default function FeedbackCards({ studentId }: FeedbackCardProps) {
   const handleSave = async (id: number) => {
     setLoading(true);
 
-    //  das formData-Objekt wieder in einen String um,
-    const feedbackPayload = JSON.stringify(formData);
+    try {
+      //  das formData-Objekt wieder in einen String um,
+      const feedbackPayload = JSON.stringify(formData);
 
-    const { error } = await updateStudentFeedback(id, feedbackPayload);
-    if (error) {
-      console.error("Fehler beim Speichern:", error);
+      const { error } = await updateStudentFeedback(
+        studentId,
+        id,
+        feedbackPayload,
+      );
+      if (error) {
+        console.error("Fehler beim Speichern:", error);
+        setLoading(false);
+        return;
+      }
+
+      console.log("Erfolgreich gespeichert für ID:", id);
+
+      // Bearbeitungsmodus beenden
+      setEditingId(null);
+
+      //  neu  laden
+      await loadFeedback();
+    } catch (err) {
+      console.error("Unerwarteter Fehler", err);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    console.log("Erfolgreich gespeichert für ID:", id);
-
-    // Bearbeitungsmodus beenden
-    setEditingId(null);
-
-    //  neu  laden
-    await loadFeedback();
-    setLoading(false);
   };
 
   return (

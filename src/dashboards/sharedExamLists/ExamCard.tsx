@@ -177,8 +177,6 @@ export default function ExamCard({
         student_name: selectedStudent?.full_name ?? "",
         instructor_name: instructorName,
         license_class: selectedClass,
-
-        // status: "gray",
       });
 
       if (error) {
@@ -227,14 +225,18 @@ export default function ExamCard({
       // BESTEHENDEN PRÜFUNGSPLATZ UPDATE
       // ================================================
 
-      const { error } = await updateExamSlot(exam.id, {
-        student_id: selectedStudent.id,
-        student_appointment: examAppointment,
-        student_name: selectedStudent.full_name,
-        instructor_name: instructorName,
-        license_class: selectedClass,
-        // status: "gray",
-      });
+      const { error } = await updateExamSlot(
+        exam.id,
+        {
+          student_id: selectedStudent.id,
+          student_appointment: examAppointment,
+          student_name: selectedStudent.full_name,
+          instructor_name: instructorName,
+          license_class: selectedClass,
+          // status: "gray",
+        },
+        role as "instructor" | "office",
+      );
 
       if (error) {
         console.error("Fehler beim Update:", error);

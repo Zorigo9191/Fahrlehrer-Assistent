@@ -76,7 +76,7 @@ export default function ExamList({
   const [slotCount, setSlotCount] = useState("");
 
   async function loadExamData() {
-    const { data } = await getExamDays();
+    const { data } = await getExamDays(role);
 
     if (data) {
       setExamDays(data ?? []);

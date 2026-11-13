@@ -48,9 +48,7 @@ export default function OfficeDashBoard() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const officeId = useContext(AuthContext)?.session?.user?.id;
-  if (!officeId) {
-    return <div>Lädt Officemitarbeiter...</div>;
-  }
+
   const [officeName, setOfficeName] = useState<string>("Laden...");
 
   useEffect(() => {
@@ -80,6 +78,10 @@ export default function OfficeDashBoard() {
     setCreateDate(false);
     setRefreshTrigger((prev) => prev + 1);
   };
+
+  if (!officeId) {
+    return <div>Lädt Officemitarbeiter...</div>;
+  }
 
   const officeDashBoard = (
     <div className="flex flex-col w-full min-h-screen max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
@@ -175,6 +177,7 @@ export default function OfficeDashBoard() {
               <StudentCheck
                 setActiveTab={setActiveTab}
                 officeName={officeName}
+                role={"office"}
               />
             )}
           </div>

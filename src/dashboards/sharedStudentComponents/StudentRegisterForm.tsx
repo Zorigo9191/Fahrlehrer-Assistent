@@ -78,7 +78,6 @@ export default function StudentRegisterForm({
         full_name: fullName,
         email: email,
         password: password,
-        instructorId: instructorId,
       },
       categories,
     );

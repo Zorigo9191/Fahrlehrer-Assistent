@@ -9,12 +9,19 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { CustomFeedbackForm } from "./utils/customFeedbackForm.tsx";
+import { ContactCard } from "./utils/customContact.tsx";
+import { AboutApp } from "./utils/aboutApp.tsx";
 
 export default function RoleSelection() {
   const navigate = useNavigate();
 
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showContact, setShowContact] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const content = (
-    <div className="flex h-full flex-col bg-app-elevated px-6 py-10">
+    <div className="flex h-full flex-col bg-app-elevated overflow-hidden px-6 py-10">
       {/* ==================== Header ==================== */}
       <div className="mt-10 flex flex-col items-center md:flex-row md:justify-center md:gap-6">
         {/* AutoLogo */}
@@ -79,21 +86,40 @@ export default function RoleSelection() {
       {/* ==================== Footer ==================== */}
       <div className="mt-auto flex flex-col items-start gap-3 pb-3 text-xs text-slate-200 md:flex-row md:items-center md:justify-center">
         {/* Feedback */}
-        <div className="flex cursor-pointer items-center gap-2">
-          <MessageCircle size={16} />
-          <span>Feedback & Hilfe</span>
+
+        <div className="flex cursor-pointer items-center gap-2 ">
+          <button
+            type="button"
+            onClick={() => setShowFeedback(true)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <MessageCircle size={16} />
+            <span>Feedback & Hilfe</span>
+          </button>
         </div>
 
         {/* Kontakt */}
         <div className="flex cursor-pointer items-center gap-2">
-          <Phone size={16} />
-          <span>Kontakt aufnehmen</span>
+          <button
+            type="button"
+            onClick={() => setShowContact(true)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <Phone size={16} />
+            <span>Kontakt aufnehmen</span>
+          </button>
         </div>
 
         {/* Über */}
         <div className="flex cursor-pointer items-center gap-2">
-          <Info size={16} />
-          <span>Über den Assistenten</span>
+          <button
+            type="button"
+            onClick={() => setShowAbout(true)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <Info size={16} />
+            <span>Über die App</span>
+          </button>
         </div>
       </div>
     </div>
@@ -116,6 +142,28 @@ export default function RoleSelection() {
       >
         {content}
       </div>
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center overflow-y-auto bg-black/60 p-4 scroll-smooth ">
+          <div className="max-h-[90vh]  w-full max-w-md animate-pop-in overflow-y-auto rounded-xl  bg-slate-700  p-4">
+            <CustomFeedbackForm onClose={() => setShowFeedback(false)} />
+          </div>
+        </div>
+      )}
+      {showContact && (
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center overflow-y-auto bg-black/60 p-4 scroll-smooth ">
+          <div className="max-h-[90vh]  w-full max-w-md animate-pop-in overflow-y-auto rounded-xl  bg-slate-700  p-4">
+            <ContactCard onClose={() => setShowContact(false)} />
+          </div>
+        </div>
+      )}
+
+      {showAbout && (
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center overflow-y-auto bg-black/60 p-4 scroll-smooth ">
+          <div className="max-h-[90vh]  w-full max-w-md animate-pop-in overflow-y-auto rounded-xl  bg-slate-700  p-4">
+            <AboutApp onClose={() => setShowAbout(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,15 +19,13 @@ import StudentRegisterForm from "./StudentRegisterForm";
 import FeedbackForm from "./FeedbackForm";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
-import { supabase } from "../../lib/supabase.ts";
+
 import type { Database } from "../../types/database.types.ts";
 import FeedbackCards from "./FeedbackCards.tsx";
-import {
-  updateStudentsData,
-  DeleteStudent,
-} from "./sharedService/SharedService.ts";
+import { updateStudent, deleteStudent } from "./sharedService/SharedService.ts";
 import { toast } from "sonner";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import { apiFetch } from "../../lib/apiFetch.ts";
 
 type StudentWithLicenses = {
   feedback_count: number;
@@ -101,54 +99,44 @@ export default function StudentList({
   );
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const instructorId = useContext(AuthContext)?.session?.user?.id;
+  const [studentToDelete, setStudentToDelete] = useState<StudentWithLicenses>();
+
+  const session = useContext(AuthContext)?.session;
+  const instructorId = session?.user?.id;
+
   if (!instructorId) {
     return <div>Lädt Fahrlehrer...</div>;
   }
+
+  // Studenten laden
   async function fetchStudents() {
-    if (!instructorId) return;
     try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("student_instructors")
-        .select(
-          `
-    id,
-    driving_students(*, student_feedback(*), student_license_classes(*))
-  `,
-        )
-        .eq("instructor_id", instructorId);
+      const res = await apiFetch(
+        `http://localhost:3000/students/instructorStudents`,
+      );
 
-      console.log(data);
-
-      if (error) {
-        console.error("Fehler beim Laden:", error);
-        toast.warning("Fehler beim Laden", {
-          unstyled: true,
-          icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
-          classNames: {
-            toast:
-              "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
-            title: "text-yellow-500 text-sm font-medium",
-            icon: "flex items-center justify-center",
-          },
-        });
-      } else if (data) {
-        const studentsWithCount = data
-          .filter((student) => student.driving_students !== null)
-          .map((student) => ({
-            ...student,
-            feedback_count:
-              student.driving_students?.student_feedback?.length ?? 0,
-          }));
-
-        setStudents(studentsWithCount as StudentWithLicenses[]);
+      if (!res.ok) {
+        throw new Error("Fehler beim Abrufen der Daten");
       }
+
+      const data = await res.json();
+      const studentsWithCount = data
+        .filter(
+          (student: StudentWithLicenses) => student.driving_students !== null,
+        )
+        .map((student: StudentWithLicenses) => ({
+          ...student,
+          feedback_count:
+            student.driving_students?.student_feedback?.length ?? 0,
+        }));
+      console.log(studentsWithCount);
+      setStudents(studentsWithCount);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   }
-
   useEffect(() => {
     fetchStudents();
   }, [instructorId]);
@@ -191,18 +179,17 @@ export default function StudentList({
   const handleSaveStudent = async (id: string) => {
     setLoading(true);
 
-    // Trennt die temporären Klassen-Felder von den echten Tabellenspalten ab
-    const { bike_license, car_license, ...studentFieldsToUpdate } =
-      studentFormData;
+    const { error } = await updateStudent(id, {
+      full_name: studentFormData.full_name,
+      email: studentFormData.email,
+      license_classes: [
+        studentFormData.bike_license,
+        studentFormData.car_license,
+      ].filter(Boolean) as string[],
+    });
 
-    // Stammdaten  in der Tabelle "driving_students" aktualisieren
-    const { error: studentError } = await updateStudentsData(
-      id,
-      studentFieldsToUpdate,
-    );
-
-    if (studentError) {
-      console.error("Fehler beim Speichern des Schülers:", studentError);
+    if (error) {
+      console.error("Fehler beim Speichern des Schülers:", error);
 
       toast.warning("Fehler beim Speichern des Schülers", {
         unstyled: true,
@@ -219,33 +206,13 @@ export default function StudentList({
       return;
     }
 
-    //  Alte Klassen des Schülers in der Zwischentabelle löschen
-    await supabase
-      .from("student_license_classes")
-      .delete()
-      .eq("student_id", id);
-
-    //  Neu ausgewählte Klassen in die Zwischentabelle eintragen
-    const newClassesToInsert = [];
-    if (bike_license) {
-      newClassesToInsert.push({ student_id: id, license_class: bike_license });
-    }
-    if (car_license) {
-      newClassesToInsert.push({ student_id: id, license_class: car_license });
-    }
-
-    if (newClassesToInsert.length > 0) {
-      await supabase.from("student_license_classes").insert(newClassesToInsert);
-    }
-
-    // Bearbeitungsmodus beenden und Liste frisch von der Datenbank laden
     setEditingStudentId(null);
     await fetchStudents();
     setLoading(false);
   };
 
   const handleDeleteStudent = async (student: StudentWithLicenses) => {
-    const { error } = await DeleteStudent(student.driving_students.id);
+    const { error } = await deleteStudent(student.driving_students.id);
 
     if (error) {
       console.error("Fehler beim Löschen des Schülers:", error);
@@ -277,7 +244,6 @@ export default function StudentList({
       },
     });
 
-    // setStudents((prev) => prev.filter((s) => s.id !== student.id));
     setShowDeleteDialog(false);
     await fetchStudents();
     refreshStudentList();
@@ -542,7 +508,10 @@ export default function StudentList({
                   <Button
                     variant="ghost"
                     className="flex w-52 items-center gap-2 h-8 px-3 text-xs  border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
-                    onClick={() => setShowDeleteDialog(true)}
+                    onClick={() => {
+                      setShowDeleteDialog(true);
+                      setStudentToDelete(student);
+                    }}
                   >
                     <Trash2 size={14} />
                     Löschen
@@ -573,7 +542,7 @@ export default function StudentList({
 
                       <Button
                         variant="ghost"
-                        onClick={() => handleDeleteStudent(student)}
+                        onClick={() => handleDeleteStudent(studentToDelete)}
                         className="flex-1 text-xs border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
                       >
                         <Trash2 size={14} />

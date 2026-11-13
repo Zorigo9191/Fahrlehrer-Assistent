@@ -93,7 +93,7 @@ export default function DateCreateForm({
       <Card className="w-full max-w-lg shadow-lg border-orange-600 mt-8">
         <CardHeader>
           <CardTitle className="text-sm font-bold text-orange-500">
-            Prüfungstermin erstellen
+            Prüfungstag erstellen
           </CardTitle>
           <CardDescription className="text-xs text-slate-200 ">
             Trage die Daten für den Prüfungstag ein. Die Plätze werden direkt

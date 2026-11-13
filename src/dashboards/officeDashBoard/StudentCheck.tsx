@@ -1,16 +1,21 @@
 import { Button } from "@/components/button";
-import { Ban, Briefcase, Plus, Save, X } from "lucide-react";
+import { AlertTriangle, Ban, Briefcase, Plus, Save, X } from "lucide-react";
 import StudentDataBox from "./StudentDataBox";
 import { useEffect, useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import DropColumn from "./DropColumn";
 import { toast } from "sonner";
-import { getExamDays, updateExamSlot } from "./officeService/OfficeService.ts";
+import {
+  getExamDays,
+  updateExamSlot,
+  updateExamSlotStatus,
+} from "./officeService/OfficeService.ts";
 
 type StudentCheckProps = {
   setActiveTab: (tab: string) => void;
   officeName: string;
+  role: "office";
 };
 
 type ExamSlot = {
@@ -30,6 +35,7 @@ type ColumnId = "check" | "blocked" | "missing" | "ready";
 export default function StudentCheck({
   setActiveTab,
   officeName,
+  role,
 }: StudentCheckProps) {
   const [columns, setColumns] = useState<{
     check: ExamSlot[];
@@ -53,10 +59,20 @@ export default function StudentCheck({
   );
 
   async function loadAndDistributeData() {
-    const { data, error } = await getExamDays();
+    const { data, error } = await getExamDays(role);
 
     if (error) {
-      toast.error("Fehler beim Laden der Prüfungsdaten");
+      toast.warning("Fehler beim Laden der Prüfungsdaten", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+
       return;
     }
 
@@ -148,10 +164,20 @@ export default function StudentCheck({
             status: newDbStatus,
           };
 
-    const { error } = await updateExamSlot(studentId, updateData);
+    const { error } = await updateExamSlotStatus(studentId, updateData);
 
     if (error) {
-      toast.error("Fehler beim Speichern des Status!");
+      toast.warning("Fehler beim Speichern des Status!", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+
       return;
     }
 
@@ -175,7 +201,6 @@ export default function StudentCheck({
       if (movedStudent) {
         updatedColumns[newColumnId] = [
           ...updatedColumns[newColumnId],
-          // { ...movedStudent, status: newDbStatus },
 
           {
             ...movedStudent,
@@ -202,20 +227,43 @@ export default function StudentCheck({
   const handleSaveStudent = async () => {
     if (!editingStudentDataBox) return;
 
-    const { error } = await updateExamSlot(editingStudentDataBox.id, {
-      student_name: editingStudentDataBox.student_name,
-      license_class: editingStudentDataBox.license_class,
-      instructor_name: editingStudentDataBox.instructor_name,
-      student_appointment: editingStudentDataBox.student_appointment,
-      exam_time: editingStudentDataBox.exam_time,
-    });
+    const { error } = await updateExamSlot(
+      editingStudentDataBox.id,
+      {
+        student_name: editingStudentDataBox.student_name,
+        license_class: editingStudentDataBox.license_class,
+        instructor_name: editingStudentDataBox.instructor_name,
+        student_appointment: editingStudentDataBox.student_appointment,
+        exam_time: editingStudentDataBox.exam_time,
+      },
+      role,
+    );
 
     if (error) {
-      toast.error("Fehler beim Aktualisieren");
+      toast.warning("Fehler beim Aktualisieren der Schülerdaten", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+
       return;
     }
 
-    toast.success("Schülerdaten gespeichert");
+    toast.success("Schülerdaten gespeichert", {
+      unstyled: true,
+      icon: <Save className="h-5 w-5 text-green-400" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+        title: "text-green-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
 
     // Fenster schließen
     setEditingStudentDataBox(null);
@@ -227,16 +275,39 @@ export default function StudentCheck({
   const handleSaveNote = async () => {
     if (!editingNoteStudent) return;
 
-    const { error } = await updateExamSlot(editingNoteStudent.id, {
-      notes: editingNoteStudent.notes,
-    });
+    const { error } = await updateExamSlot(
+      editingNoteStudent.id,
+      {
+        notes: editingNoteStudent.notes,
+      },
+      role,
+    );
 
     if (error) {
-      toast.error("Fehler beim Speichern der Notiz");
+      toast.warning("Fehler beim Speichern der Notiz", {
+        unstyled: true,
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+        classNames: {
+          toast:
+            "flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-md",
+          title: "text-yellow-500 text-sm font-medium",
+          icon: "flex items-center justify-center",
+        },
+      });
+
       return;
     }
 
-    toast.success("Notiz gespeichert");
+    toast.success("Notiz gespeichert", {
+      unstyled: true,
+      icon: <Save className="h-5 w-5 text-green-400" />,
+      classNames: {
+        toast:
+          "flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-5 py-4 shadow-md",
+        title: "text-green-500 text-sm font-medium",
+        icon: "flex items-center justify-center",
+      },
+    });
 
     setEditingNoteStudent(null);
 

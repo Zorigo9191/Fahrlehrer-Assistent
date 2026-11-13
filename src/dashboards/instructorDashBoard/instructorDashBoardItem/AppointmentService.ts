@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { Database } from "../../../types/database.types.ts";
+import { apiFetch } from "../../../lib/apiFetch.ts";
 
 type AvailableLessonInsert =
   Database["public"]["Tables"]["available_lessons"]["Insert"];
@@ -20,23 +21,48 @@ type UpdateLessonParams = {
   lessonId: number;
 };
 
-// Update
+const API_URL = "http://localhost:3000";
+
+//////////// Schüler nimmt Fahrstunde an /////////////
+export async function acceptLessonByStudent(lessonId: number) {
+  const res = await apiFetch(`${API_URL}/student/lessons/${lessonId}/accept`, {
+    method: "PATCH",
+  });
+
+  if (!res.ok) {
+    return {
+      data: null,
+      error: new Error("Fehler beim Annehmen der Fahrstunde"),
+    };
+  }
+  return { data: await res.json(), error: null };
+}
+
+// Update Terminanfrage
 
 export async function updateAvailableLesson({
   lessonId,
   payload,
 }: UpdateLessonParams) {
-  const { data, error } = await supabase
-    .from("available_lessons")
-    .update(payload)
-    .select()
-    .eq("id", lessonId);
+  const res = await apiFetch(`${API_URL}/instructor/lessons/${lessonId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      duration_minutes: Number(payload.duration_minutes),
+      lesson_date: payload.lesson_date,
+      lesson_time: payload.lesson_time,
+      license_class: payload.license_class,
+    }),
+  });
 
-  if (error) {
-    throw error;
+  if (!res.ok) {
+    return {
+      data: null,
+      error: new Error("Termin Anfrage konnte nicht updated werden."),
+    };
   }
 
-  return data;
+  const data = await res.json();
+  return { data, error: null };
 }
 
 // Nur ausgewählte Daten auslesen
@@ -70,32 +96,49 @@ export async function getAvailableLesson({
 }
 
 // Termin Anfrage in der DB Speichern
-export async function createAvailableLesson(payload: AvailableLessonInsert) {
-  const { data, error } = await supabase
-    .from("available_lessons")
-    .insert([payload])
-    .select();
 
-  if (error) {
-    console.error("Fehler beim Erstellen der Terminanfrage:", error);
-    return { data: null, error };
+export async function createAvailableLesson(payload: AvailableLessonInsert) {
+  const res = await apiFetch(`${API_URL}/instructor/lessons`, {
+    method: "POST",
+    body: JSON.stringify({
+      duration_minutes: payload.duration_minutes,
+      lesson_date: payload.lesson_date,
+      lesson_time: payload.lesson_time,
+      license_class: payload.license_class,
+      status: payload.status,
+    }),
+  });
+
+  if (!res.ok) {
+    return {
+      data: null,
+      error: new Error("Termin Anfrage konnte nicht angelegt werden."),
+    };
   }
 
+  const data = await res.json();
   return { data, error: null };
 }
 
-// DeleteLesson
-
 export async function deleteLesson(lessonId: number) {
-  const { error } = await supabase
-    .from("available_lessons")
-    .delete()
-    .eq("id", lessonId);
+  const res = await apiFetch(`${API_URL}/instructor/lessons/${lessonId}`, {
+    method: "DELETE",
+  });
 
-  if (error) {
-    console.error("Fehler beim Löschen der Terminanfrage:", error);
-    throw error;
+  if (!res.ok) {
+    return {
+      data: null,
+      error: new Error("Termin konnte nicht gelöscht werden"),
+    };
   }
 
-  return true;
+  let data = null;
+  try {
+    const text = await res.text();
+    data = text ? JSON.parse(text) : { success: true };
+  } catch (e) {
+    data = { success: true };
+  }
+
+  return { data, error: null };
 }

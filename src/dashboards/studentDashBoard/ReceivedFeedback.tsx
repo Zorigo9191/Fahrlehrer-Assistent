@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getFeedbacks } from "../sharedStudentComponents/sharedService/SharedService.ts";
+import { studentGetFeedbacks } from "../sharedStudentComponents/sharedService/SharedService.ts";
 import { toast } from "sonner";
 import type { Database } from "../../types/database.types.ts";
 
@@ -40,7 +40,7 @@ type FeedbackWithInstructor =
 export default function ReceivedFeedback({
   studentName,
   setActiveTab,
-  studentId,
+
   avatarUrl,
 }: ReceivedFeedbackProps) {
   const [ratedFeedback, setRatedFeedback] = useState<FeedbackWithInstructor[]>(
@@ -51,7 +51,7 @@ export default function ReceivedFeedback({
     useState<FeedbackWithInstructor | null>(null);
 
   async function fetchFeedbacks() {
-    const { data, error } = await getFeedbacks(studentId);
+    const { data, error } = await studentGetFeedbacks();
 
     if (error) {
       console.error("Fehler beim Laden des Feedbacks", error);
@@ -79,7 +79,7 @@ export default function ReceivedFeedback({
 
   useEffect(() => {
     fetchFeedbacks();
-  }, [studentId]);
+  }, []);
 
   return (
     <div className="flex min-h-screen  flex-col w-full max-w-3xl mx-auto gap-6 py-6 bg-app-surface overflow-x-hidden">
