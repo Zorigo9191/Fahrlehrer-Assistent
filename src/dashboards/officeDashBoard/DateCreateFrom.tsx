@@ -28,7 +28,7 @@ export default function DateCreateForm({
   const [slot, setSlots] = useState<number | "">(0);
 
   async function saveExamDate() {
-    const { data: existingExam } = await getExamDays();
+    const { data: existingExam } = await getExamDays("office");
     const dateAlreadyExists = existingExam?.some(
       (exam) => exam.exam_date === examDay,
     );

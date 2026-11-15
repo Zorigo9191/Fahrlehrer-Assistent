@@ -21,11 +21,9 @@ type UpdateLessonParams = {
   lessonId: number;
 };
 
-const API_URL = "http://localhost:3000";
-
 //////////// Schüler nimmt Fahrstunde an /////////////
 export async function acceptLessonByStudent(lessonId: number) {
-  const res = await apiFetch(`${API_URL}/student/lessons/${lessonId}/accept`, {
+  const res = await apiFetch(`/student/lessons/${lessonId}/accept`, {
     method: "PATCH",
   });
 
@@ -44,7 +42,7 @@ export async function updateAvailableLesson({
   lessonId,
   payload,
 }: UpdateLessonParams) {
-  const res = await apiFetch(`${API_URL}/instructor/lessons/${lessonId}`, {
+  const res = await apiFetch(`/instructor/lessons/${lessonId}`, {
     method: "PATCH",
     body: JSON.stringify({
       duration_minutes: Number(payload.duration_minutes),
@@ -98,7 +96,7 @@ export async function getAvailableLesson({
 // Termin Anfrage in der DB Speichern
 
 export async function createAvailableLesson(payload: AvailableLessonInsert) {
-  const res = await apiFetch(`${API_URL}/instructor/lessons`, {
+  const res = await apiFetch(`/instructor/lessons`, {
     method: "POST",
     body: JSON.stringify({
       duration_minutes: payload.duration_minutes,
@@ -121,7 +119,7 @@ export async function createAvailableLesson(payload: AvailableLessonInsert) {
 }
 
 export async function deleteLesson(lessonId: number) {
-  const res = await apiFetch(`${API_URL}/instructor/lessons/${lessonId}`, {
+  const res = await apiFetch(`/instructor/lessons/${lessonId}`, {
     method: "DELETE",
   });
 

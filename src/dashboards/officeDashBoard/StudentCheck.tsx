@@ -18,6 +18,11 @@ type StudentCheckProps = {
   role: "office";
 };
 
+type ExamDay = {
+  exam_date: string;
+  exam_slots: Omit<ExamSlot, "exam_date">[] | null;
+};
+
 type ExamSlot = {
   id: string;
   student_name: string | null;
@@ -85,7 +90,7 @@ export default function StudentCheck({
         ready: [] as ExamSlot[],
       };
 
-      data.forEach((day) => {
+      data.forEach((day: ExamDay) => {
         if (day.exam_slots && day.exam_slots.length > 0) {
           // Nur Slots filtern, bei denen ein Schüler eingetragen ist
 

@@ -14,14 +14,12 @@ export type ExamDayWithSlots = ExamDayRow & {
   exam_slots: ExamSlotRow[];
 };
 
-const API_URL = "http://localhost:3000";
-
 // 1. Alle Prüfungsdaten ink. ihrer verknüpften Slots abrufen
-export async function getExamDays(role: "office" | "instructor") {
+export async function getExamDays(
+  role: "office" | "instructor",
+): Promise<{ data: ExamDayWithSlots[] | null; error: unknown }> {
   const url =
-    role === "office"
-      ? `${API_URL}/office/exam-days`
-      : `${API_URL}/instructor/exam-slots`;
+    role === "office" ? `/office/exam-days` : `/instructor/exam-slots`;
 
   const res = await apiFetch(url, { method: "GET" });
 
@@ -34,7 +32,7 @@ export async function getExamDays(role: "office" | "instructor") {
 
 // 2. Einen neuen PrüfungsTag erstellen
 export async function createExamDay(payload: ExamDayInsert) {
-  const res = await apiFetch(`${API_URL}/office/exam-days`, {
+  const res = await apiFetch(`/office/exam-days`, {
     method: "POST",
     body: JSON.stringify({
       exam_date: payload.exam_date,
@@ -52,7 +50,7 @@ export async function createExamDay(payload: ExamDayInsert) {
 
 // 3. Ein gesamtes Prüfungsdatum löschen
 export async function deleteExamDay(dayId: string) {
-  const res = await apiFetch(`${API_URL}/office/exam-days/${dayId}`, {
+  const res = await apiFetch(`/office/exam-days/${dayId}`, {
     method: "DELETE",
   });
 
@@ -68,7 +66,7 @@ export async function deleteExamDay(dayId: string) {
 //4. Prüfungsdatum und Klassen updaten
 
 export async function updateExamDate(dayId: string, payload: ExamDayUpdate) {
-  const res = await apiFetch(`${API_URL}/office/exam-days/${dayId}`, {
+  const res = await apiFetch(`/office/exam-days/${dayId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -94,8 +92,8 @@ export async function updateExamSlot(
 ) {
   const url =
     role === "office"
-      ? `${API_URL}/office/exam-slots/${slotId}`
-      : `${API_URL}/instructor/exam-slots/${slotId}`;
+      ? `/office/exam-slots/${slotId}`
+      : `/instructor/exam-slots/${slotId}`;
 
   const res = await apiFetch(url, {
     method: "PATCH",
@@ -121,12 +119,9 @@ export async function updateExamSlot(
 
 export async function deleteExamSlot(slotId: string) {
   console.log(slotId);
-  const res = await apiFetch(
-    `${API_URL}/office/exam-days/delete-slot/${slotId}`,
-    {
-      method: "DELETE",
-    },
-  );
+  const res = await apiFetch(`/office/exam-days/delete-slot/${slotId}`, {
+    method: "DELETE",
+  });
   console.log(res);
   if (!res.ok) {
     console.error(
@@ -139,7 +134,7 @@ export async function deleteExamSlot(slotId: string) {
 
 // 7. Einen einzelnen Prüfungsslot neu anlegen (für neue Karten)
 export async function createExamSlot(payload: ExamSlotInsert) {
-  const res = await apiFetch(`${API_URL}/office/exam-days/slot`, {
+  const res = await apiFetch(`/office/exam-days/slot`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -157,7 +152,7 @@ export async function updateExamSlotStatus(
   slotId: string,
   data: { status: string; notes?: string | null },
 ) {
-  const res = await apiFetch(`${API_URL}/office/exam-slots/${slotId}/status`, {
+  const res = await apiFetch(`/office/exam-slots/${slotId}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

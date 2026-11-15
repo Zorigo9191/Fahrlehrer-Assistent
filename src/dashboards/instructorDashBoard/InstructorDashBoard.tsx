@@ -36,9 +36,9 @@ import type { Database } from "../../types/database.types.ts";
 import { supabase } from "../../lib/supabase.ts";
 import { deleteLesson } from "./instructorDashBoardItem/AppointmentService.ts";
 import { AuthContext } from "../../context/AuthContext.tsx";
+import { apiFetch } from "../../lib/apiFetch.ts";
 
 const EMPTY_LICENSE_CLASSES: string[] = [];
-const API_URL = import.meta.env.VITE_API_URL;
 
 const footerItems = [
   {
@@ -102,7 +102,7 @@ export default function InstructorDashBoard() {
 
   // instructor Name holen
   async function getInstructorName(id: string): Promise<string> {
-    const res = await fetch(`${API_URL}/instructor-dashboard/${id}`);
+    const res = await apiFetch(`/instructor-dashboard/${id}`);
     if (!res.ok) throw new Error("Fahrlehrer nicht gefuden");
     const data: { first_name: string } = await res.json();
     return data.first_name;

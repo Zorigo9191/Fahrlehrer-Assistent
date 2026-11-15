@@ -7,7 +7,9 @@ type StudentFeedInsert = Pick<
   "feedback" | "license_class" | "student_id" | "created_at"
 > & { student_id: string };
 
-const API_URL = "http://localhost:3000";
+type FeedbackRow = Database["public"]["Tables"]["student_feedback"]["Row"] & {
+  instructors: { id: string; first_name: string } | null;
+};
 
 ///////// SchülerAcc neu erstellen und dem FL hinzufügen ////////////
 
@@ -19,7 +21,7 @@ export async function createStudentWithLicenseClasses(
   },
   licenseClasses: string[],
 ) {
-  const res = await apiFetch(`${API_URL}/students/createStudent`, {
+  const res = await apiFetch(`/students/createStudent`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -51,18 +53,15 @@ export async function createStudentWithLicenseClasses(
 //////// Feedback speichern //////////
 
 export async function createStudentFeedbacks(payload: StudentFeedInsert) {
-  const res = await apiFetch(
-    `${API_URL}/student/${payload.student_id}/feedback`,
-    {
-      method: "POST",
+  const res = await apiFetch(`/student/${payload.student_id}/feedback`, {
+    method: "POST",
 
-      body: JSON.stringify({
-        feedback: payload.feedback,
-        license_class: payload.license_class,
-        created_at: payload.created_at,
-      }),
-    },
-  );
+    body: JSON.stringify({
+      feedback: payload.feedback,
+      license_class: payload.license_class,
+      created_at: payload.created_at,
+    }),
+  });
 
   if (!res.ok) {
     return {
@@ -85,7 +84,7 @@ export async function getFeedbacks(studentId: string) {
     };
   }
 
-  const res = await apiFetch(`${API_URL}/student/${studentId}/feedback`);
+  const res = await apiFetch(`/student/${studentId}/feedback`);
 
   if (!res.ok) {
     console.error("Fehler beim Laden der Feedbacks: ", res.status);
@@ -100,8 +99,12 @@ export async function getFeedbacks(studentId: string) {
 
 ///////// student get feedbacks ////////////
 
-export async function studentGetFeedbacks() {
-  const res = await apiFetch(`${API_URL}/student/feedbacks`);
+export async function studentGetFeedbacks(): Promise<{
+  data: FeedbackRow[] | null;
+  count: number;
+  error: unknown;
+}> {
+  const res = await apiFetch(`/student/feedbacks`);
 
   if (!res.ok) {
     console.error("Fehler beim Laden der Feedbacks: ", res.status);
@@ -122,7 +125,7 @@ export async function updateStudentFeedback(
   id: number,
   feedbackJsonString: string,
 ) {
-  const res = await apiFetch(`${API_URL}/student/${studentId}/feedback/${id}`, {
+  const res = await apiFetch(`/student/${studentId}/feedback/${id}`, {
     method: "PATCH",
     body: JSON.stringify({ feedback: feedbackJsonString }),
   });
@@ -148,7 +151,7 @@ export async function updateStudent(
   } = await supabase.auth.getSession();
   if (!session) return { data: null, error: new Error("Nicht eingeloggt") };
 
-  const res = await fetch(`${API_URL}/students/${studentId}`, {
+  const res = await fetch(`/students/${studentId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -178,7 +181,7 @@ export async function deleteStudent(studentId: string) {
 
   if (!session) return { error: new Error("Nicht eingeloggt") };
 
-  const res = await fetch(`${API_URL}/students/${studentId}`, {
+  const res = await fetch(`/students/${studentId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${session.access_token}` },
   });

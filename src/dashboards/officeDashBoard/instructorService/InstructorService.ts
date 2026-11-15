@@ -3,8 +3,6 @@ import { apiFetch } from "../../../lib/apiFetch.ts";
 
 import { getErrorMessage } from "../utils/getErrorMessage.ts";
 
-const API_URL = "http://localhost:3000";
-
 // Daten für Instructor holen
 export async function getInstructors() {
   const { data, error } = await supabase
@@ -33,7 +31,7 @@ export type CreateInstructorInput = {
 };
 
 export async function createInstructor(instructor: CreateInstructorInput) {
-  const res = await apiFetch(`${API_URL}/office/instructor-account`, {
+  const res = await apiFetch(`/office/instructor-account`, {
     method: "POST",
     body: JSON.stringify(instructor),
   });
@@ -64,13 +62,10 @@ export async function updateInstructor(
   instructorId: string,
   instructor: UpdateInstructorInput,
 ) {
-  const res = await apiFetch(
-    `${API_URL}/office/instructor-account/${instructorId}`,
-    {
-      method: "PATCH",
-      body: JSON.stringify(instructor),
-    },
-  );
+  const res = await apiFetch(`/office/instructor-account/${instructorId}`, {
+    method: "PATCH",
+    body: JSON.stringify(instructor),
+  });
 
   if (!res.ok) return { data: null, error: await getErrorMessage(res) };
 
@@ -79,12 +74,9 @@ export async function updateInstructor(
 
 // Instructor löschen
 export async function deleteInstructor(instructorId: string) {
-  const res = await apiFetch(
-    `${API_URL}/office/instructor-account/${instructorId}`,
-    {
-      method: "DELETE",
-    },
-  );
+  const res = await apiFetch(`/office/instructor-account/${instructorId}`, {
+    method: "DELETE",
+  });
 
   if (!res.ok) return { data: null, error: await getErrorMessage(res) };
 
@@ -94,7 +86,7 @@ export async function deleteInstructor(instructorId: string) {
 // Angenommene Fahrstunde
 
 export async function getAcceptedLessonsByStudent() {
-  const res = await apiFetch(`${API_URL}/instructor/acceptedlesson`);
+  const res = await apiFetch(`/instructor/acceptedlesson`);
 
   if (!res.ok) {
     console.error("Fehler beim Laden der Termine:", res.status);
@@ -116,19 +108,16 @@ export async function updateAcceptedLesson(
   durationMinutes: number,
   licenseClass: string,
 ) {
-  const res = await apiFetch(
-    `${API_URL}/instructor/acceptedlesson/${lessonId}`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        lesson_date: lessonDate,
-        lesson_time: lessonTime,
-        duration_minutes: durationMinutes,
-        license_class: licenseClass,
-      }),
-    },
-  );
+  const res = await apiFetch(`/instructor/acceptedlesson/${lessonId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lesson_date: lessonDate,
+      lesson_time: lessonTime,
+      duration_minutes: durationMinutes,
+      license_class: licenseClass,
+    }),
+  });
 
   if (!res.ok) {
     console.error("Fehler beim Update der angenommenen Fahrstunde");

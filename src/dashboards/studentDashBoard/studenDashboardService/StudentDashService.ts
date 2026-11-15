@@ -1,8 +1,6 @@
 import { apiFetch } from "../../../lib/apiFetch.ts";
 import { supabase } from "../../../lib/supabase.ts";
 
-const API_URL = "http://localhost:3000";
-
 // Angenommene Fahstuden holen
 export async function AcceptedLessons(studentId: string) {
   const { data, error } = await supabase
@@ -21,7 +19,7 @@ export async function AcceptedLessons(studentId: string) {
 // ExamSlots holen
 
 export async function getExamAppointments() {
-  const res = await apiFetch(`${API_URL}/student/exam-appointments`, {
+  const res = await apiFetch(`/student/exam-appointments`, {
     method: "GET",
   });
 

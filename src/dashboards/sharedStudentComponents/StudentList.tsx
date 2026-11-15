@@ -111,9 +111,7 @@ export default function StudentList({
   // Studenten laden
   async function fetchStudents() {
     try {
-      const res = await apiFetch(
-        `http://localhost:3000/students/instructorStudents`,
-      );
+      const res = await apiFetch(`/students/instructorStudents`);
 
       if (!res.ok) {
         throw new Error("Fehler beim Abrufen der Daten");
@@ -542,7 +540,10 @@ export default function StudentList({
 
                       <Button
                         variant="ghost"
-                        onClick={() => handleDeleteStudent(studentToDelete)}
+                        onClick={() =>
+                          studentToDelete &&
+                          handleDeleteStudent(studentToDelete)
+                        }
                         className="flex-1 text-xs border border-slate-200 text-red-500 hover:bg-red-500 hover:text-slate-200"
                       >
                         <Trash2 size={14} />
