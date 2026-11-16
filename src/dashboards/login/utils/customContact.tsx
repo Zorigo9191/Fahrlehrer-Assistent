@@ -8,7 +8,7 @@ export function ContactCard({ onClose }: { onClose: () => void }) {
       <div className="mb-4 border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2 text-base font-bold text-slate-900">
           <User className="h-4 w-4 text-blue-600 " />
-          <span>Max Mustermann</span>
+          <span>Zo En</span>
         </div>
         <div className="mt-1 flex items-center gap-2 text-xs font-medium text-slate-900">
           <Building2 className="h-3.5 w-3.5 " />
