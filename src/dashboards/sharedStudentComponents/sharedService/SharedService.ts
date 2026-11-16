@@ -151,7 +151,7 @@ export async function updateStudent(
   } = await supabase.auth.getSession();
   if (!session) return { data: null, error: new Error("Nicht eingeloggt") };
 
-  const res = await fetch(`/students/${studentId}`, {
+  const res = await apiFetch(`/students/${studentId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -181,7 +181,7 @@ export async function deleteStudent(studentId: string) {
 
   if (!session) return { error: new Error("Nicht eingeloggt") };
 
-  const res = await fetch(`/students/${studentId}`, {
+  const res = await apiFetch(`/students/${studentId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${session.access_token}` },
   });
