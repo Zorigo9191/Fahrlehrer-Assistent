@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 import type { Database } from "../../../types/database.types.ts";
 import { apiFetch } from "../../../lib/apiFetch.ts";
 
@@ -73,24 +72,23 @@ export async function getAvailableLesson({
     return [];
   }
 
-  let query = supabase
-    .from("available_lessons")
-    .select("*")
-    .in("instructor_id", instructorIds)
-    .eq("status", "offen");
+  const params = new URLSearchParams();
+  params.append("instructorIds", instructorIds.join(","));
 
-  if (studentLicenseClass) {
-    query = query.in("license_class", studentLicenseClass);
+  if (studentLicenseClass && studentLicenseClass.length > 0) {
+    params.append("studentLicenseClass", studentLicenseClass.join(","));
   }
 
-  const { data, error } = await query;
+  const queryString = params.toString() ? `?${params.toString()}` : "";
 
-  if (error) {
-    console.error("getAvailableLesson:", error);
-    throw error;
-  }
+  const response = await apiFetch(`/student/lessons${queryString}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
 
-  return data ?? [];
+  const data = await response.json();
+
+  return data;
 }
 
 // Termin Anfrage in der DB Speichern
